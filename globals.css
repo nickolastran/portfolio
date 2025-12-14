@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+@layer base {
+    :root {
+        --background: 0 0% 4%;
+        --foreground: 0 0% 100%;
+        --card: 0 0% 10%;
+        --card-foreground: 0 0% 100%;
+        --popover: 0 0% 10%;
+        --popover-foreground: 0 0% 100%;
+        --primary: 217 91% 60%;
+        --primary-foreground: 0 0% 100%;
+        --secondary: 0 0% 63%;
+        --secondary-foreground: 0 0% 100%;
+        --muted: 0 0% 16%;
+        --muted-foreground: 0 0% 63%;
+        --accent: 217 91% 60%;
+        --accent-foreground: 0 0% 100%;
+        --destructive: 0 84% 60%;
+        --destructive-foreground: 0 0% 100%;
+        --border: 0 0% 16%;
+        --input: 0 0% 16%;
+        --ring: 217 91% 60%;
+        --radius: 0.5rem;
+    }
+
+    .light {
+        --background: 0 0% 100%;
+        --foreground: 0 0% 4%;
+        --card: 0 0% 96%;
+        --card-foreground: 0 0% 4%;
+        --popover: 0 0% 96%;
+        --popover-foreground: 0 0% 4%;
+        --primary: 221 83% 53%;
+        --primary-foreground: 0 0% 100%;
+        --secondary: 0 0% 40%;
+        --secondary-foreground: 0 0% 100%;
+        --muted: 0 0% 90%;
+        --muted-foreground: 0 0% 40%;
+        --accent: 221 83% 53%;
+        --accent-foreground: 0 0% 100%;
+        --destructive: 0 84% 60%;
+        --destructive-foreground: 0 0% 100%;
+        --border: 0 0% 88%;
+        --input: 0 0% 88%;
+        --ring: 221 83% 53%;
+    }
+
+    .navy {
+        --background: 216 50% 12%;
+        --foreground: 0 0% 100%;
+        --card: 217 41% 16%;
+        --card-foreground: 0 0% 100%;
+        --popover: 217 41% 16%;
+        --popover-foreground: 0 0% 100%;
+        --primary: 213 94% 68%;
+        --primary-foreground: 0 0% 100%;
+        --secondary: 215 20% 65%;
+        --secondary-foreground: 0 0% 100%;
+        --muted: 217 31% 25%;
+        --muted-foreground: 215 20% 65%;
+        --accent: 213 94% 68%;
+        --accent-foreground: 0 0% 100%;
+        --destructive: 0 84% 60%;
+        --destructive-foreground: 0 0% 100%;
+        --border: 217 31% 25%;
+        --input: 217 31% 25%;
+        --ring: 213 94% 68%;
+    }
+}
+
+@font-face {
+    font-family: "Century Gothic";
+    src:
+        local("Century Gothic"), local("CenturyGothic"), local("Futura"),
+        local("Avenir Next");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Century Gothic";
+    src:
+        local("Century Gothic Bold"), local("CenturyGothic-Bold"),
+        local("Futura Bold"), local("Avenir Next Bold");
+    font-weight: bold;
+    font-style: normal;
+}
+
+* {
+    border-color: hsl(var(--border));
+}
+
+body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family:
+        "Century Gothic",
+        "Futura",
+        "Avenir Next",
+        -apple-system,
+        BlinkMacSystemFont,
+        sans-serif;
+}
