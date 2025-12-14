@@ -1,5 +1,4 @@
 @import "tailwindcss";
-
 @layer base {
     :root {
         --background: 0 0% 4%;
@@ -23,7 +22,6 @@
         --ring: 217 91% 60%;
         --radius: 0.5rem;
     }
-
     .light {
         --background: 0 0% 100%;
         --foreground: 0 0% 4%;
@@ -45,7 +43,6 @@
         --input: 0 0% 88%;
         --ring: 221 83% 53%;
     }
-
     .navy {
         --background: 216 50% 12%;
         --foreground: 0 0% 100%;
@@ -68,36 +65,15 @@
         --ring: 213 94% 68%;
     }
 }
-
-@font-face {
-    font-family: "Century Gothic";
-    src:
-        local("Century Gothic"), local("CenturyGothic"), local("Futura"),
-        local("Avenir Next");
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: "Century Gothic";
-    src:
-        local("Century Gothic Bold"), local("CenturyGothic-Bold"),
-        local("Futura Bold"), local("Avenir Next Bold");
-    font-weight: bold;
-    font-style: normal;
-}
-
 * {
     border-color: hsl(var(--border));
 }
-
 body {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
     font-family:
-        "Century Gothic",
-        "Futura",
-        "Avenir Next",
+        Arial,
+        Helvetica,
         -apple-system,
         BlinkMacSystemFont,
         sans-serif;

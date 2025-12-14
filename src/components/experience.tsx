@@ -1,11 +1,15 @@
+"use client";
+
+import { useState } from "react";
+import ReactMarkdown from "react-markdown";
+
 const experiences = [
     {
         id: 1,
         title: "Undergraduate Researcher",
         company:
             "Artificial Intelligence Explainability Accountability (AIEA) Lab",
-        type: "Full-time",
-        period: "Mar. 2025 - Jun, 2025",
+        period: "Mar. 2025 - Jun. 2025",
         achievements: [
             "Boosted autonomous vehicle simulation throughput by 40% by containerizing workflows with Docker and orchestrating parallel test execution using Kubernetes",
             "Conducted large-scale CARLA-based adversarial sensor attack simulations, improving attack detection accuracy by 25% through scalable, automated testing pipelines.",
@@ -16,7 +20,6 @@ const experiences = [
         id: 2,
         title: "Program Lead",
         company: "Iron Campers Summer Robotics Camp",
-        type: "Full-time",
         period: "Aug. 2025 - Aug. 2025",
         achievements: [
             "Led and expanded a week-long robotics summer camp for rising 3rd–8th grade students, introducing core concepts in robotics, python programming, CAD (Tinkercad), and engineering design through hands-on projects.",
@@ -27,6 +30,16 @@ const experiences = [
 ];
 
 export default function Experience() {
+    const [expandedIds, setExpandedIds] = useState<number[]>([1]);
+
+    const toggleExpand = (id: number) => {
+        setExpandedIds((prev) =>
+            prev.includes(id)
+                ? prev.filter((expId) => expId !== id)
+                : [...prev, id],
+        );
+    };
+
     return (
         <section id="experience" className="py-20 px-6 bg-background">
             <div className="max-w-3xl mx-auto">
@@ -36,39 +49,97 @@ export default function Experience() {
 
                 <div className="space-y-6">
                     {experiences.map((exp) => (
-                        <div key={exp.id}>
-                            <div className="mb-2">
-                                <div className="flex justify-between items-baseline flex-wrap gap-2">
-                                    <div>
-                                        <span className="text-base font-bold text-white">
+                        <div
+                            key={exp.id}
+                            className="border-b border-gray-800 pb-6"
+                        >
+                            <button
+                                onClick={() => toggleExpand(exp.id)}
+                                className="w-full text-left group"
+                            >
+                                <div className="flex items-start justify-between gap-4">
+                                    <div className="flex-1">
+                                        <h3 className="text-base font-bold text-white mb-2">
                                             {exp.company}
-                                        </span>
-                                        <span className="text-gray-400 text-base mx-2">
-                                            |
-                                        </span>
-                                        <span className="text-base italic text-gray-400">
+                                        </h3>
+                                        <div className="text-sm text-gray-400">
                                             {exp.title}
-                                        </span>
+                                        </div>
                                     </div>
-                                    <span className="text-sm text-gray-400">
-                                        {exp.period}
-                                    </span>
-                                </div>
-                            </div>
-
-                            <ul className="space-y-1.5 ml-4">
-                                {exp.achievements.map((achievement, i) => (
-                                    <li
-                                        key={i}
-                                        className="flex items-start gap-2 text-gray-400 text-sm leading-relaxed"
-                                    >
-                                        <span className="mt-1.5 text-xs">
-                                            •
+                                    <div className="flex items-center gap-3 shrink-0">
+                                        <span className="text-sm text-gray-400 bg-gray-800/50 px-3 py-1 rounded-full">
+                                            {exp.period}
                                         </span>
-                                        <span>{achievement}</span>
-                                    </li>
-                                ))}
-                            </ul>
+                                        <svg
+                                            className={`w-4 h-4 text-gray-400 transition-transform duration-300 ${
+                                                expandedIds.includes(exp.id)
+                                                    ? "rotate-90"
+                                                    : ""
+                                            }`}
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M9 5l7 7-7 7"
+                                            />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </button>
+
+                            <div
+                                className={`overflow-hidden transition-all duration-500 ease-in-out ${
+                                    expandedIds.includes(exp.id)
+                                        ? "max-h-[2000px] opacity-100 mt-4"
+                                        : "max-h-0 opacity-0"
+                                }`}
+                            >
+                                <ul className="space-y-3">
+                                    {exp.achievements.map((achievement, i) => (
+                                        <li
+                                            key={i}
+                                            className="flex items-start gap-2 text-gray-400 text-sm leading-relaxed"
+                                        >
+                                            <span className="text-gray-500 mt-1.5 text-xs shrink-0">
+                                                •
+                                            </span>
+                                            <div className="flex-1">
+                                                <ReactMarkdown
+                                                    components={{
+                                                        p: (props) => (
+                                                            <span {...props} />
+                                                        ),
+                                                        strong: (props) => (
+                                                            <strong
+                                                                className="text-white font-semibold"
+                                                                {...props}
+                                                            />
+                                                        ),
+                                                        em: (props) => (
+                                                            <em
+                                                                className="text-gray-300 italic"
+                                                                {...props}
+                                                            />
+                                                        ),
+                                                        code: (props) => (
+                                                            <code
+                                                                className="bg-gray-800/50 text-gray-200 px-1.5 py-0.5 rounded text-xs font-mono"
+                                                                {...props}
+                                                            />
+                                                        ),
+                                                    }}
+                                                >
+                                                    {achievement}
+                                                </ReactMarkdown>
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
                         </div>
                     ))}
                 </div>
