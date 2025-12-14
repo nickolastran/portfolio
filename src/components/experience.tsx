@@ -1,44 +1,27 @@
-// src/components/Experience.tsx
 const experiences = [
     {
         id: 1,
-        title: "Senior Full Stack Developer",
-        company: "Tech Company Inc.",
+        title: "Undergraduate Researcher",
+        company:
+            "Artificial Intelligence Explainability Accountability (AIEA) Lab",
         type: "Full-time",
-        period: "Mar. 2022 - Present",
+        period: "Mar. 2025 - Jun, 2025",
         achievements: [
-            "Led development of scalable web applications serving 100k+ users, implementing microservices architecture with Docker and Kubernetes",
-            "Reduced page load time by 60% through code optimization, lazy loading, and CDN implementation",
-            "Mentored team of 5 junior developers, conducting code reviews and establishing best practices for React and Node.js development",
-            "Architected CI/CD pipeline using GitHub Actions, reducing deployment time from 2 hours to 15 minutes",
-            "Implemented real-time features using WebSockets and Redis, improving user engagement by 40%",
+            "Boosted autonomous vehicle simulation throughput by 40% by containerizing workflows with Docker and orchestrating parallel test execution using Kubernetes",
+            "Conducted large-scale CARLA-based adversarial sensor attack simulations, improving attack detection accuracy by 25% through scalable, automated testing pipelines.",
+            "Spearheaded a fault-tolerant AV testing infrastructure, increasing simulation uptime by 25% and enabling consistent evaluation of vehicle robustness during adversarial attack scenarios.",
         ],
     },
     {
         id: 2,
-        title: "Full Stack Developer",
-        company: "Startup Solutions",
+        title: "Program Lead",
+        company: "Iron Campers Summer Robotics Camp",
         type: "Full-time",
-        period: "Jun. 2020 - Feb. 2022",
+        period: "Aug. 2025 - Aug. 2025",
         achievements: [
-            "Developed customer-facing features and internal tools using React, TypeScript, and Node.js",
-            "Built real-time analytics dashboard processing 1M+ events daily, enabling data-driven decision making",
-            "Integrated Stripe payment processing and subscription management, handling $500k+ in monthly transactions",
-            "Collaborated with design team to improve UX, resulting in 40% increase in user engagement metrics",
-            "Implemented automated testing with Jest and Cypress, achieving 85% code coverage",
-        ],
-    },
-    {
-        id: 3,
-        title: "Junior Developer",
-        company: "Digital Agency",
-        type: "Full-time",
-        period: "Jan. 2019 - May 2020",
-        achievements: [
-            "Assisted in building responsive websites and web applications for 15+ clients across various industries",
-            "Delivered projects on time using Agile methodology, participating in daily standups and sprint planning",
-            "Improved code quality through implementation of ESLint, Prettier, and comprehensive unit testing",
-            "Learned modern development practices including Git workflows, code reviews, and pair programming",
+            "Led and expanded a week-long robotics summer camp for rising 3rd–8th grade students, introducing core concepts in robotics, python programming, CAD (Tinkercad), and engineering design through hands-on projects.",
+            "Instructed students in programming and mechanical design using FTC/XRP drive bases, supporting the creation of custom mechanisms and autonomous/teleop behaviors.",
+            "Mentored a team of counselors, ensuring smooth daily operations, consistent instruction, and a positive learning environment.",
         ],
     },
 ];
