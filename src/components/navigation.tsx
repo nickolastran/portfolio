@@ -23,14 +23,14 @@ export default function Navigation() {
         <nav
             className={`fixed top-0 w-full z-50 transition-all duration-300 ${
                 scrolled
-                    ? "bg-[#1a1a1a]/80 backdrop-blur-md shadow-lg border-b border-gray-800"
+                    ? "bg-background/80 backdrop-blur-md shadow-lg border-b border-border"
                     : "bg-transparent"
             }`}
         >
             <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
                 <button
                     onClick={() => scrollToSection("hero")}
-                    className="text-xl font-bold bg-linear-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent"
+                    className="text-xl font-bold bg-linear-to-r from-primary to-accent bg-clip-text text-transparent"
                 >
                     YourName
                 </button>
@@ -40,7 +40,7 @@ export default function Navigation() {
                             <button
                                 key={item}
                                 onClick={() => scrollToSection(item)}
-                                className="text-gray-400 hover:text-blue-400 transition-colors capitalize font-medium"
+                                className="text-muted-foreground hover:text-primary transition-colors capitalize font-medium"
                             >
                                 {item}
                             </button>

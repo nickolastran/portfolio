@@ -46,7 +46,7 @@ export default function Projects() {
     return (
         <section id="projects" className="py-20 px-6 bg-background">
             <div className="max-w-3xl mx-auto">
-                <h2 className="text-2xl font-bold mb-6 text-white uppercase tracking-wide">
+                <h2 className="text-2xl font-bold mb-6 text-foreground uppercase tracking-wide">
                     Projects
                 </h2>
 
@@ -56,17 +56,17 @@ export default function Projects() {
                             <div className="mb-2">
                                 <div className="flex justify-between items-baseline flex-wrap gap-2">
                                     <div>
-                                        <span className="text-base font-bold text-white">
+                                        <span className="text-base font-bold text-foreground">
                                             {project.title}
                                         </span>
-                                        <span className="text-gray-400 text-sm mx-2">
+                                        <span className="text-muted-foreground text-sm mx-2">
                                             |
                                         </span>
-                                        <span className="text-sm italic text-gray-400">
+                                        <span className="text-sm italic text-muted-foreground">
                                             {project.tech}
                                         </span>
                                     </div>
-                                    <span className="text-sm text-gray-400">
+                                    <span className="text-sm text-muted-foreground">
                                         {project.period}
                                     </span>
                                 </div>
@@ -76,7 +76,7 @@ export default function Projects() {
                                 {project.achievements.map((achievement, i) => (
                                     <li
                                         key={i}
-                                        className="flex items-start gap-2 text-gray-400 text-sm leading-relaxed"
+                                        className="flex items-start gap-2 text-muted-foreground text-sm leading-relaxed"
                                     >
                                         <span className="mt-1.5 text-xs">
                                             •

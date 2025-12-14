@@ -1,10 +1,11 @@
+// app/layout.tsx
 import type { Metadata } from "next";
 import "./globals.css";
-import { ThemeProvider } from "@/src/components/theme-provider";
+import { ThemeProvider } from "../components/theme-provider";
 
 export const metadata: Metadata = {
-    title: "Your Name - Portfolio",
-    description: "Full-stack developer portfolio",
+    title: "Nickolas Tran - Portfolio",
+    description: "Full-stack developer and ML/AI researcher",
 };
 
 export default function RootLayout({

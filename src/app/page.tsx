@@ -1,14 +1,13 @@
-// src/app/page.tsx
-import Hero from "@/src/components/hero";
-import Skills from "@/src/components/skills";
-import Projects from "@/src/components/projects";
-import Experience from "@/src/components/experience";
-import Education from "@/src/components/education";
-import FloatingNav from "@/src/components/floating-nav";
+import FloatingNav from "../components/floating-nav";
+import Hero from "../components/hero";
+import Education from "../components/education";
+import Experience from "../components/experience";
+import Projects from "../components/projects";
+import Skills from "../components/skills";
 
 export default function Home() {
     return (
-        <main className="min-h-screen bg-background">
+        <main className="min-h-screen">
             <FloatingNav />
             <Hero />
             <Experience />

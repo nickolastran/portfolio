@@ -9,10 +9,10 @@ export default function Hero() {
             <div className="max-w-3xl w-full">
                 <div>
                     <div>
-                        <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">
+                        <h1 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
                             Hi, I&apos;m Nickolas Tran. 👋
                         </h1>
-                        <p className="text-base text-gray-400 mb-6 leading-relaxed">
+                        <p className="text-base text-muted-foreground mb-6 leading-relaxed">
                             A current senior majoring in Computer Science at
                             University of California, Santa Cruz with research
                             interests in ML/AI. I&apos;m also a full-stack
@@ -20,10 +20,10 @@ export default function Hero() {
                             applications.
                         </p>
 
-                        <h2 className="text-2xl font-bold mt-10 mb-4 text-white">
+                        <h2 className="text-2xl font-bold mt-10 mb-4 text-foreground">
                             About
                         </h2>
-                        <p className="text-base text-gray-400 mb-3 leading-relaxed">
+                        <p className="text-base text-muted-foreground mb-3 leading-relaxed">
                             [insert text]
                         </p>
                     </div>

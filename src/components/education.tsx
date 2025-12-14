@@ -23,7 +23,7 @@ export default function Education() {
     return (
         <section id="education" className="py-20 px-6 bg-background">
             <div className="max-w-3xl mx-auto">
-                <h2 className="text-3xl md:text-4xl font-bold mb-8 text-white">
+                <h2 className="text-3xl md:text-4xl font-bold mb-8 text-foreground">
                     Education
                 </h2>
 
@@ -32,7 +32,7 @@ export default function Education() {
                         <div key={edu.id}>
                             <div className="flex gap-4 items-start py-4">
                                 <div className="shrink-0">
-                                    <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center overflow-hidden">
+                                    <div className="w-12 h-12 rounded-full bg-card flex items-center justify-center overflow-hidden border border-border">
                                         {edu.useImage ? (
                                             <div className="relative w-full h-full">
                                                 <Image
@@ -55,16 +55,16 @@ export default function Education() {
                                 <div className="flex-1 min-w-0">
                                     <div className="flex justify-between items-start gap-4">
                                         <div className="flex-1 min-w-0">
-                                            <h3 className="text-lg font-bold text-white mb-1">
+                                            <h3 className="text-lg font-bold text-foreground mb-1">
                                                 {edu.school}
                                             </h3>
                                             {edu.degree && (
-                                                <p className="text-sm text-gray-400 leading-relaxed">
+                                                <p className="text-sm text-muted-foreground leading-relaxed">
                                                     {edu.degree}
                                                 </p>
                                             )}
                                         </div>
-                                        <span className="text-xs text-gray-400 whitespace-nowrap shrink-0 px-2.5 py-1 bg-gray-800/50 rounded-full border border-gray-700">
+                                        <span className="text-xs text-muted-foreground whitespace-nowrap shrink-0 px-2.5 py-1 bg-muted rounded-full border border-border">
                                             {edu.period}
                                         </span>
                                     </div>
@@ -72,7 +72,7 @@ export default function Education() {
                             </div>
 
                             {index < education.length - 1 && (
-                                <div className="border-t border-gray-800 ml-16"></div>
+                                <div className="border-t border-border ml-16"></div>
                             )}
                         </div>
                     ))}

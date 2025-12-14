@@ -22,7 +22,7 @@ const experiences = [
         company: "Iron Campers Summer Robotics Camp",
         period: "Aug. 2025 - Aug. 2025",
         achievements: [
-            "Led and expanded a week-long robotics summer camp for rising 3rd–8th grade students, introducing core concepts in robotics, python programming, CAD (Tinkercad), and engineering design through hands-on projects.",
+            "Led and expanded a week-long robotics summer camp for rising 3rd—8th grade students, introducing core concepts in robotics, python programming, CAD (Tinkercad), and engineering design through hands-on projects.",
             "Instructed students in programming and mechanical design using FTC/XRP drive bases, supporting the creation of custom mechanisms and autonomous/teleop behaviors.",
             "Mentored a team of counselors, ensuring smooth daily operations, consistent instruction, and a positive learning environment.",
         ],
@@ -43,7 +43,7 @@ export default function Experience() {
     return (
         <section id="experience" className="py-20 px-6 bg-background">
             <div className="max-w-3xl mx-auto">
-                <h2 className="text-2xl font-bold mb-6 text-white uppercase tracking-wide">
+                <h2 className="text-2xl font-bold mb-6 text-foreground uppercase tracking-wide">
                     Experience
                 </h2>
 
@@ -51,7 +51,7 @@ export default function Experience() {
                     {experiences.map((exp) => (
                         <div
                             key={exp.id}
-                            className="border-b border-gray-800 pb-6"
+                            className="border-b border-border pb-6"
                         >
                             <button
                                 onClick={() => toggleExpand(exp.id)}
@@ -59,19 +59,19 @@ export default function Experience() {
                             >
                                 <div className="flex items-start justify-between gap-4">
                                     <div className="flex-1">
-                                        <h3 className="text-base font-bold text-white mb-2">
+                                        <h3 className="text-base font-bold text-foreground mb-2">
                                             {exp.company}
                                         </h3>
-                                        <div className="text-sm text-gray-400">
+                                        <div className="text-sm text-muted-foreground">
                                             {exp.title}
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-3 shrink-0">
-                                        <span className="text-sm text-gray-400 bg-gray-800/50 px-3 py-1 rounded-full">
+                                        <span className="text-sm text-muted-foreground bg-muted px-3 py-1 rounded-full border border-border">
                                             {exp.period}
                                         </span>
                                         <svg
-                                            className={`w-4 h-4 text-gray-400 transition-transform duration-300 ${
+                                            className={`w-4 h-4 text-muted-foreground transition-transform duration-300 ${
                                                 expandedIds.includes(exp.id)
                                                     ? "rotate-90"
                                                     : ""
@@ -102,9 +102,19 @@ export default function Experience() {
                                     {exp.achievements.map((achievement, i) => (
                                         <li
                                             key={i}
-                                            className="flex items-start gap-2 text-gray-400 text-sm leading-relaxed"
+                                            className={`flex items-start gap-2 text-muted-foreground text-sm leading-relaxed transition-all duration-500 ease-out ${
+                                                expandedIds.includes(exp.id)
+                                                    ? "opacity-100 translate-y-0"
+                                                    : "opacity-0 translate-y-2"
+                                            }`}
+                                            style={{
+                                                transitionDelay:
+                                                    expandedIds.includes(exp.id)
+                                                        ? `${i * 100}ms`
+                                                        : "0ms",
+                                            }}
                                         >
-                                            <span className="text-gray-500 mt-1.5 text-xs shrink-0">
+                                            <span className="text-muted-foreground/70 mt-1.5 text-xs shrink-0">
                                                 •
                                             </span>
                                             <div className="flex-1">
@@ -115,19 +125,19 @@ export default function Experience() {
                                                         ),
                                                         strong: (props) => (
                                                             <strong
-                                                                className="text-white font-semibold"
+                                                                className="text-foreground font-semibold"
                                                                 {...props}
                                                             />
                                                         ),
                                                         em: (props) => (
                                                             <em
-                                                                className="text-gray-300 italic"
+                                                                className="text-foreground/80 italic"
                                                                 {...props}
                                                             />
                                                         ),
                                                         code: (props) => (
                                                             <code
-                                                                className="bg-gray-800/50 text-gray-200 px-1.5 py-0.5 rounded text-xs font-mono"
+                                                                className="bg-muted text-foreground px-1.5 py-0.5 rounded text-xs font-mono"
                                                                 {...props}
                                                             />
                                                         ),
