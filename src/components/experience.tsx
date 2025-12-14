@@ -11,8 +11,8 @@ const experiences = [
             "Artificial Intelligence Explainability Accountability (AIEA) Lab",
         period: "Mar. 2025 - Jun. 2025",
         achievements: [
-            "Boosted autonomous vehicle simulation throughput by 40% by containerizing workflows with Docker and orchestrating parallel test execution using Kubernetes",
-            "Conducted large-scale CARLA-based adversarial sensor attack simulations, improving attack detection accuracy by 25% through scalable, automated testing pipelines.",
+            "Boosted autonomous vehicle simulation by 40% by containerizing workflows with Docker and orchestrating parallel test execution using Kubernetes.",
+            "Conducted large-scale CARLA-based adversarial sensor attack simulations, improving attack detection accuracy by **25%** through scalable, automated testing pipelines.",
             "Spearheaded a fault-tolerant AV testing infrastructure, increasing simulation uptime by 25% and enabling consistent evaluation of vehicle robustness during adversarial attack scenarios.",
         ],
     },
@@ -22,7 +22,7 @@ const experiences = [
         company: "Iron Campers Summer Robotics Camp",
         period: "Aug. 2025 - Aug. 2025",
         achievements: [
-            "Led and expanded a week-long robotics summer camp for rising 3rd—8th grade students, introducing core concepts in robotics, python programming, CAD (Tinkercad), and engineering design through hands-on projects.",
+            "Led and expanded a week-long robotics summer camp for rising 3rd–8th grade students, introducing core concepts in robotics, python programming, CAD (Tinkercad), and engineering design through hands-on projects.",
             "Instructed students in programming and mechanical design using FTC/XRP drive bases, supporting the creation of custom mechanisms and autonomous/teleop behaviors.",
             "Mentored a team of counselors, ensuring smooth daily operations, consistent instruction, and a positive learning environment.",
         ],
@@ -67,7 +67,7 @@ export default function Experience() {
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-3 shrink-0">
-                                        <span className="text-sm text-muted-foreground bg-muted px-3 py-1 rounded-full border border-border">
+                                        <span className="text-xs text-muted-foreground whitespace-nowrap bg-muted px-2.5 py-1 rounded-full border border-border">
                                             {exp.period}
                                         </span>
                                         <svg
