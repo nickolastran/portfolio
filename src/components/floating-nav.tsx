@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import React from "react";
-import { Home, User, Briefcase, Mail, Moon, Sun, Waves } from "lucide-react";
+import { Home, Moon, Sun, Waves } from "lucide-react";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { useTheme } from "next-themes";
 
@@ -11,9 +11,9 @@ export default function FloatingNav() {
     const [mounted, setMounted] = useState(false);
     const { theme, setTheme } = useTheme();
 
-    // Prevent hydration mismatch
     useEffect(() => {
-        setMounted(true);
+        const timer = setTimeout(() => setMounted(true), 0);
+        return () => clearTimeout(timer);
     }, []);
 
     const cycleTheme = () => {
@@ -24,7 +24,6 @@ export default function FloatingNav() {
     };
 
     const getThemeIcon = () => {
-        // Return default icon during SSR
         if (!mounted) return <Moon />;
 
         switch (theme) {
@@ -44,16 +43,6 @@ export default function FloatingNav() {
             label: "Home",
         },
         {
-            icon: <User />,
-            href: "#about",
-            label: "About",
-        },
-        {
-            icon: <Briefcase />,
-            href: "#projects",
-            label: "Projects",
-        },
-        {
             icon: <FaGithub />,
             href: "https://github.com/nickolastran",
             label: "GitHub",
@@ -64,11 +53,6 @@ export default function FloatingNav() {
             href: "https://linkedin.com/in/nickolas-tran/",
             label: "LinkedIn",
             external: true,
-        },
-        {
-            icon: <Mail />,
-            href: "#contact",
-            label: "Contact",
         },
         {
             icon: getThemeIcon(),
