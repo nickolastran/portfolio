@@ -1,44 +1,33 @@
-// src/components/Projects.tsx
 "use client";
+
+import { FaGithub } from "react-icons/fa";
 
 const projects = [
     {
         id: 1,
-        title: "CodeCompass - AI Powered Codebase Website",
-        tech: "Python, TypeScript, React, Rest API, PostgreSQL, Supabase",
+        title: "CodeCompass",
         period: "Dec. 2025",
-        achievements: [
-            "Engineered a code-understanding system that combines AST extraction (Tree-sitter + LSP) with vector embeddings (Voyage AI → ChromaDB) to enable semantic search and structural navigation of large codebases",
-            "Built universal connectors to index and parse codebases from GitHub, GitLab, Bitbucket, and local directories",
-            "Developed REST APIs for indexing, graph traversal, semantic retrieval, and code-centric query answering with optimized chunking, caching, and token-aware context assembly",
-            "Implemented a Next.js frontend for interactive browsing of source files, semantic results, and call/import graph visualizations",
+        description: "AI powered documentation and chatbot for codebases",
+        tech: [
+            "Python",
+            "TypeScript",
+            "React",
+            "REST API",
+            "PostgreSQL",
+            "Supabase",
         ],
+        image: "/project1.png",
+        github: "https://github.com/vinngo/codecompass",
     },
     {
         id: 2,
         title: "AI Sentiment Analyzer",
-        tech: "Python, Flask, React, MongoDB, VADER, REST API, Heroku, Netlify",
         period: "Jan. 2025",
-        achievements: [
-            "Created a full-stack sentiment analysis app using Flask for backend exposing RESTful endpoints for real-time NLP inference using the VADER model",
-            "Engineered a low-latency text-processing pipeline with request validation, rate-limiting middleware, and asynchronous React client-side fetch logic to maintain sub 100 ms response times",
-            "Implemented MongoDB schemas for persisting user input, per-request inference metadata, and aggregated sentiment statistics; optimized queries using indexed fields and TTL collections",
-            "Containerized the backend service and configured Heroku deployments with buildpacks, environment variable injection, and continuous integration hooks",
-            "Designed a React-based SPA with dynamic state management, client-side routing, and real-time visualization of sentiment distributions using charting libraries",
-            "Integrated production-grade logging and monitoring, including request tracing, error instrumentation, and automatic fallback handling for model failures",
-        ],
-    },
-    {
-        id: 3,
-        title: "What Type of Egg Are You?",
-        tech: "VS Code, Python, HTML/CSS, TypeScript, Git, Vercel",
-        period: "Jul. 2024",
-        achievements: [
-            "Developed a full-stack web application implementing a personality test to assign users a personality type depicted by an egg, based on a custom metric system",
-            "Designed and implemented a proprietary scoring algorithm based on MBTI principles, translating psychological metrics into engaging user personality profiles",
-            "Implemented client-side form validation to ensure data integrity and improve overall user experience",
-            "Shipped iterative feature improvements based on quantitative metrics and qualitative feedback, establishing a data-driven development cycle",
-        ],
+        description:
+            "An analysis application tracking sentiment of Reddit posts..",
+        tech: ["Python", "Flask", "React", "MongoDB", "VADER", "REST API"],
+        image: "/project2.png",
+        github: "https://github.com/nickolastran/sentiment-analyzer",
     },
 ];
 
@@ -46,45 +35,70 @@ export default function Projects() {
     return (
         <section id="projects" className="py-20 px-6 bg-background">
             <div className="max-w-3xl mx-auto">
-                <h2 className="text-2xl font-bold mb-6 text-foreground uppercase tracking-wide">
-                    Projects
-                </h2>
+                <div className="mb-12 text-center">
+                    <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
+                        Check out my latest work.
+                    </h2>
+                    <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
+                        I`&apos;ve worked on a variety of projects, from simple
+                        websites to complex web applications. Here are a few of
+                        my favorites.
+                    </p>
+                </div>
 
-                <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {projects.map((project) => (
-                        <div key={project.id}>
-                            <div className="mb-2">
-                                <div className="flex justify-between items-baseline flex-wrap gap-2">
-                                    <div>
-                                        <span className="text-base font-bold text-foreground">
-                                            {project.title}
-                                        </span>
-                                        <span className="text-muted-foreground text-sm mx-2">
-                                            |
-                                        </span>
-                                        <span className="text-sm italic text-muted-foreground">
-                                            {project.tech}
-                                        </span>
-                                    </div>
-                                    <span className="text-sm text-muted-foreground">
-                                        {project.period}
-                                    </span>
+                        <div
+                            key={project.id}
+                            className="bg-card border border-border rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-300 group"
+                        >
+                            {/* Project Image */}
+                            <div className="relative w-full aspect-video bg-muted overflow-hidden">
+                                <div className="absolute inset-0 flex items-center justify-center text-muted-foreground/30 text-sm">
+                                    Project Preview
                                 </div>
                             </div>
 
-                            <ul className="space-y-1.5 ml-4">
-                                {project.achievements.map((achievement, i) => (
-                                    <li
-                                        key={i}
-                                        className="flex items-start gap-2 text-muted-foreground text-sm leading-relaxed"
-                                    >
-                                        <span className="mt-1.5 text-xs">
-                                            •
+                            {/* Project Content */}
+                            <div className="p-6">
+                                <div className="flex items-start justify-between mb-3">
+                                    <div className="flex-1">
+                                        <h3 className="text-base font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
+                                            {project.title}
+                                        </h3>
+                                        <p className="text-sm text-muted-foreground">
+                                            {project.period}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                                    {project.description}
+                                </p>
+
+                                {/* Tech Stack Tags */}
+                                <div className="flex flex-wrap gap-2 mb-4">
+                                    {project.tech.map((tech, index) => (
+                                        <span
+                                            key={index}
+                                            className="text-xs px-2.5 py-1 bg-muted text-muted-foreground rounded-md border border-border"
+                                        >
+                                            {tech}
                                         </span>
-                                        <span>{achievement}</span>
-                                    </li>
-                                ))}
-                            </ul>
+                                    ))}
+                                </div>
+
+                                {/* GitHub Button */}
+                                <a
+                                    href={project.github}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-2 px-4 py-2 bg-foreground text-background rounded-lg text-sm font-medium hover:bg-foreground/90 transition-colors"
+                                >
+                                    <FaGithub className="w-4 h-4" />
+                                    Source
+                                </a>
+                            </div>
                         </div>
                     ))}
                 </div>
