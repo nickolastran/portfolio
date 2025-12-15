@@ -41,9 +41,12 @@ export default function Experience() {
     };
 
     return (
-        <section id="experience" className="py-20 px-6 bg-background">
+        <section
+            id="experience"
+            className="py-20 px-6 bg-background transition-colors duration-300"
+        >
             <div className="max-w-6xl mx-auto">
-                <h2 className="text-3xl md:text-4xl font-bold mb-12 text-foreground text-center">
+                <h2 className="text-3xl md:text-4xl font-bold mb-12 text-foreground text-center transition-colors duration-300">
                     Experience
                 </h2>
 
@@ -62,16 +65,16 @@ export default function Experience() {
                                         <h3 className="text-base font-bold text-foreground mb-2">
                                             {exp.company}
                                         </h3>
-                                        <div className="text-sm text-muted-foreground">
+                                        <div className="text-sm text-gray-400 transition-colors duration-300">
                                             {exp.title}
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-3 shrink-0">
-                                        <span className="text-xs text-muted-foreground whitespace-nowrap bg-muted px-2.5 py-1 rounded-full border border-border">
+                                        <span className="text-xs text-gray-400 whitespace-nowrap bg-muted px-2.5 py-1 rounded-full border border-border transition-colors duration-300">
                                             {exp.period}
                                         </span>
                                         <svg
-                                            className={`w-4 h-4 text-muted-foreground transition-transform duration-300 ${
+                                            className={`w-4 h-4 text-gray-400 transition-transform duration-300 ${
                                                 expandedIds.includes(exp.id)
                                                     ? "rotate-90"
                                                     : ""
@@ -102,19 +105,9 @@ export default function Experience() {
                                     {exp.achievements.map((achievement, i) => (
                                         <li
                                             key={i}
-                                            className={`flex items-start gap-2 text-muted-foreground text-sm leading-relaxed transition-all duration-500 ease-out ${
-                                                expandedIds.includes(exp.id)
-                                                    ? "opacity-100 translate-y-0"
-                                                    : "opacity-0 translate-y-2"
-                                            }`}
-                                            style={{
-                                                transitionDelay:
-                                                    expandedIds.includes(exp.id)
-                                                        ? `${i * 100}ms`
-                                                        : "0ms",
-                                            }}
+                                            className="flex items-start gap-2 text-gray-400 text-sm leading-relaxed transition-colors duration-300"
                                         >
-                                            <span className="text-muted-foreground/70 mt-1.5 text-xs shrink-0">
+                                            <span className="text-gray-400/70 mt-1.5 text-xs shrink-0 transition-colors duration-300">
                                                 •
                                             </span>
                                             <div className="flex-1">
@@ -125,19 +118,19 @@ export default function Experience() {
                                                         ),
                                                         strong: (props) => (
                                                             <strong
-                                                                className="text-foreground font-semibold"
+                                                                className="text-foreground font-semibold transition-colors duration-300"
                                                                 {...props}
                                                             />
                                                         ),
                                                         em: (props) => (
                                                             <em
-                                                                className="text-foreground/80 italic"
+                                                                className="text-foreground/80 italic transition-colors duration-300"
                                                                 {...props}
                                                             />
                                                         ),
                                                         code: (props) => (
                                                             <code
-                                                                className="bg-muted text-foreground px-1.5 py-0.5 rounded text-xs font-mono"
+                                                                className="bg-muted text-foreground px-1.5 py-0.5 rounded text-xs font-mono transition-colors duration-300"
                                                                 {...props}
                                                             />
                                                         ),

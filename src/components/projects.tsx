@@ -33,13 +33,16 @@ const projects = [
 
 export default function Projects() {
     return (
-        <section id="projects" className="py-20 px-6 bg-background">
+        <section
+            id="projects"
+            className="py-20 px-6 bg-background transition-colors duration-300"
+        >
             <div className="max-w-3xl mx-auto">
                 <div className="mb-12 text-center">
-                    <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
+                    <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground transition-colors duration-300">
                         Check out my latest work.
                     </h2>
-                    <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
+                    <p className="text-sm text-gray-400 max-w-2xl mx-auto transition-colors duration-300">
                         I`&apos;ve worked on a variety of projects, from simple
                         websites to complex web applications. Here are a few of
                         my favorites.
@@ -53,8 +56,8 @@ export default function Projects() {
                             className="bg-card border border-border rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-300 group"
                         >
                             {/* Project Image */}
-                            <div className="relative w-full aspect-video bg-muted overflow-hidden">
-                                <div className="absolute inset-0 flex items-center justify-center text-muted-foreground/30 text-sm">
+                            <div className="relative w-full aspect-video bg-muted overflow-hidden transition-colors duration-300">
+                                <div className="absolute inset-0 flex items-center justify-center text-muted-foreground/30 text-sm transition-colors duration-300">
                                     Project Preview
                                 </div>
                             </div>
@@ -63,16 +66,16 @@ export default function Projects() {
                             <div className="p-6">
                                 <div className="flex items-start justify-between mb-3">
                                     <div className="flex-1">
-                                        <h3 className="text-base font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
+                                        <h3 className="text-base font-bold text-foreground mb-1 group-hover:text-primary transition-colors duration-300">
                                             {project.title}
                                         </h3>
-                                        <p className="text-sm text-muted-foreground">
+                                        <p className="text-sm text-gray-400 transition-colors duration-300">
                                             {project.period}
                                         </p>
                                     </div>
                                 </div>
 
-                                <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                                <p className="text-sm text-gray-400 leading-relaxed mb-4 transition-colors duration-300">
                                     {project.description}
                                 </p>
 
@@ -81,7 +84,7 @@ export default function Projects() {
                                     {project.tech.map((tech, index) => (
                                         <span
                                             key={index}
-                                            className="text-xs px-2.5 py-1 bg-muted text-muted-foreground rounded-md border border-border"
+                                            className="text-xs px-2.5 py-1 bg-muted text-gray-400 rounded-md border border-border transition-colors duration-300"
                                         >
                                             {tech}
                                         </span>
@@ -93,10 +96,21 @@ export default function Projects() {
                                     href={project.github}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-2 px-4 py-2 bg-foreground text-background rounded-lg text-sm font-medium hover:bg-foreground/90 transition-colors"
+                                    className="inline-flex items-center gap-2 px-4 py-2 bg-foreground text-background rounded-lg text-sm font-medium hover:bg-foreground/90 transition-[background-color,color] duration-300"
                                 >
-                                    <FaGithub className="w-4 h-4" />
-                                    Source
+                                    <FaGithub
+                                        className="w-4 h-4"
+                                        style={{
+                                            transition: "color 0.3s ease",
+                                        }}
+                                    />
+                                    <span
+                                        style={{
+                                            transition: "color 0.3s ease",
+                                        }}
+                                    >
+                                        Source
+                                    </span>
                                 </a>
                             </div>
                         </div>

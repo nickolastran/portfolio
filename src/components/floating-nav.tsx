@@ -138,7 +138,7 @@ export default function FloatingNav() {
                             >
                                 <div
                                     style={{
-                                        transform: `scale(${isExpanded ? 1 : 0.75}) rotate(${hoveredIndex === index ? "12deg" : "0deg"})`,
+                                        transform: `scale(${isExpanded ? 1 : 0.75})`,
                                         transition:
                                             "all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)",
                                     }}

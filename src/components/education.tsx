@@ -21,9 +21,12 @@ const education = [
 
 export default function Education() {
     return (
-        <section id="education" className="py-20 px-6 bg-background">
+        <section
+            id="education"
+            className="py-20 px-6 bg-background transition-colors duration-300"
+        >
             <div className="max-w-6xl mx-auto">
-                <h2 className="text-3xl md:text-4xl font-bold mb-12 text-foreground text-center">
+                <h2 className="text-3xl md:text-4xl font-bold mb-12 text-foreground text-center transition-colors duration-300">
                     Education
                 </h2>
 
@@ -32,7 +35,7 @@ export default function Education() {
                         <div key={edu.id}>
                             <div className="flex gap-4 items-start py-4">
                                 <div className="shrink-0">
-                                    <div className="w-12 h-12 rounded-full bg-card flex items-center justify-center overflow-hidden border border-border">
+                                    <div className="w-12 h-12 rounded-full bg-card flex items-center justify-center overflow-hidden border border-border transition-colors duration-300">
                                         {edu.useImage ? (
                                             <div className="relative w-full h-full">
                                                 <Image
@@ -55,16 +58,16 @@ export default function Education() {
                                 <div className="flex-1 min-w-0">
                                     <div className="flex justify-between items-start gap-4">
                                         <div className="flex-1 min-w-0">
-                                            <h3 className="text-lg font-bold text-foreground mb-1">
+                                            <h3 className="text-lg font-bold text-foreground mb-1 transition-colors duration-300">
                                                 {edu.school}
                                             </h3>
                                             {edu.degree && (
-                                                <p className="text-sm text-muted-foreground leading-relaxed">
+                                                <p className="text-sm text-gray-400 leading-relaxed transition-colors duration-300">
                                                     {edu.degree}
                                                 </p>
                                             )}
                                         </div>
-                                        <span className="text-xs text-muted-foreground whitespace-nowrap shrink-0 px-2.5 py-1 bg-muted rounded-full border border-border">
+                                        <span className="text-xs text-gray-400 whitespace-nowrap shrink-0 px-2.5 py-1 bg-muted rounded-full border border-border transition-colors duration-300">
                                             {edu.period}
                                         </span>
                                     </div>
@@ -72,7 +75,7 @@ export default function Education() {
                             </div>
 
                             {index < education.length - 1 && (
-                                <div className="border-t border-border ml-16"></div>
+                                <div className="border-t border-border ml-16 transition-colors duration-300"></div>
                             )}
                         </div>
                     ))}

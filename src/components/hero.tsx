@@ -12,19 +12,13 @@ export default function Hero() {
                         <h1 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
                             Hi, I&apos;m Nickolas Tran. 👋
                         </h1>
-                        <p className="text-base text-muted-foreground mb-6 leading-relaxed">
-                            A current senior majoring in Computer Science at
+                        <p className="text-lg text-gray-400 mb-6 leading-relaxed">
+                            A current undergraduate senior majoring in Computer
+                            Science and minoring in Applied Mathematics at
                             University of California, Santa Cruz with research
                             interests in ML/AI. I&apos;m also a full-stack
                             software engineer building fun and meaningful
                             applications.
-                        </p>
-
-                        <h2 className="text-2xl font-bold mt-10 mb-4 text-foreground">
-                            About
-                        </h2>
-                        <p className="text-base text-muted-foreground mb-3 leading-relaxed">
-                            [insert text]
                         </p>
                     </div>
                 </div>
