@@ -22,12 +22,12 @@ const education = [
 export default function Education() {
     return (
         <section id="education" className="py-20 px-6 bg-background">
-            <div className="max-w-3xl mx-auto">
-                <h2 className="text-3xl md:text-4xl font-bold mb-8 text-foreground">
+            <div className="max-w-6xl mx-auto">
+                <h2 className="text-3xl md:text-4xl font-bold mb-12 text-foreground text-center">
                     Education
                 </h2>
 
-                <div className="space-y-1">
+                <div className="space-y-1 max-w-3xl mx-auto">
                     {education.map((edu, index) => (
                         <div key={edu.id}>
                             <div className="flex gap-4 items-start py-4">
