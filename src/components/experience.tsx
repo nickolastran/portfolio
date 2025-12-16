@@ -11,9 +11,9 @@ const experiences = [
     company: "Artificial Intelligence Explainability Accountability (AIEA) Lab",
     period: "Mar. 2025 - Jun. 2025",
     achievements: [
-      "Boosted autonomous vehicle simulation by **40%** by containerizing workflows with Docker and orchestrating parallel test execution using Kubernetes.",
+      "Boosted autonomous vehicle simulation by 40% by containerizing workflows with Docker and orchestrating parallel test execution using Kubernetes.",
       "Conducted large-scale CARLA-based adversarial sensor attack simulations, improving attack detection accuracy by **25%** through scalable, automated testing pipelines.",
-      "Spearheaded a fault-tolerant AV testing infrastructure, increasing simulation uptime by **25%** and enabling consistent evaluation of vehicle robustness during adversarial attack scenarios.",
+      "Spearheaded a fault-tolerant AV testing infrastructure, increasing simulation uptime by 25% and enabling consistent evaluation of vehicle robustness during adversarial attack scenarios.",
     ],
   },
   {
@@ -50,7 +50,7 @@ export default function Experience() {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.5 }}
-          className="text-3xl md:text-4xl font-bold mb-12 text-foreground text-center transition-colors duration-300"
+          className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-12 text-foreground text-center transition-colors duration-300"
         >
           Experience
         </motion.h2>

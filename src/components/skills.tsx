@@ -236,10 +236,10 @@ export default function Skills({ delay = 0 }: TechStackProps) {
         >
           <div className="flex flex-col items-center justify-center space-y-4 text-center">
             <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl transition-colors duration-300">
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl transition-colors duration-300">
                 Tech Stack.
               </h2>
-              <p className="text-gray-400 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed transition-colors duration-300">
+              <p className="text-gray-400 text-base md:text-lg max-w-2xl mx-auto transition-colors duration-300">
                 Technologies and tools I work with to build innovative
                 solutions.
               </p>
