@@ -87,7 +87,7 @@ export default function GitHubContributions() {
                     "background-color 0.3s ease, box-shadow 0.2s ease",
                 }}
               >
-                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10">
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10 shadow-lg border border-gray-400/30">
                   <div className="font-medium">
                     {day.contributionCount} contribution
                     {day.contributionCount !== 1 ? "s" : ""}
@@ -151,7 +151,7 @@ export default function GitHubContributions() {
             <div className="flex justify-center">
               {/* Mobile: Scrollable */}
               <div className="md:hidden w-full max-w-4xl">
-                <div className="bg-card border border-border rounded-xl p-4 transition-colors duration-300">
+                <div className="bg-card border border-gray-400/30 rounded-xl p-4 transition-colors duration-300">
                   <div className="flex items-center gap-4 mb-4 justify-center">
                     <div className="flex items-center gap-2">
                       <div
@@ -190,7 +190,7 @@ export default function GitHubContributions() {
               </div>
 
               {/* Desktop: Full Width */}
-              <div className="hidden md:block bg-card border border-border rounded-xl p-6 transition-colors duration-300">
+              <div className="hidden md:block bg-card border border-gray-400/30 rounded-xl p-6 transition-colors duration-300">
                 <div className="flex items-center gap-4 mb-4 justify-center">
                   <div className="flex items-center gap-2">
                     <div
