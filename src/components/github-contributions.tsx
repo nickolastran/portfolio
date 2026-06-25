@@ -65,7 +65,7 @@ export default function GitHubContributions() {
     const days = contributions;
     const weeks = [];
 
-    // Group days into weeks (7 days per week)
+    // Group days into weeks
     for (let i = 0; i < days.length; i += 7) {
       weeks.push(days.slice(i, i + 7));
     }
@@ -87,7 +87,11 @@ export default function GitHubContributions() {
                     "background-color 0.3s ease, box-shadow 0.2s ease",
                 }}
               >
-                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10 shadow-lg border border-gray-400/30">
+                <div
+                  className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs
+                    rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200
+                    pointer-events-none z-10 shadow-lg border border-gray-400/30"
+                >
                   <div className="font-medium">
                     {day.contributionCount} contribution
                     {day.contributionCount !== 1 ? "s" : ""}
