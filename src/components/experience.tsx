@@ -62,7 +62,7 @@ export default function Experience() {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="border-b border-border pb-6"
+              className="border-b border-gray-400/30 pb-6 transition-colors duration-300"
             >
               <button
                 onClick={() => toggleExpand(exp.id)}
@@ -78,7 +78,7 @@ export default function Experience() {
                     </div>
                   </div>
                   <div className="flex items-center gap-3 shrink-0">
-                    <span className="text-xs text-gray-400 whitespace-nowrap bg-muted px-2.5 py-1 rounded-full border border-border transition-colors duration-300">
+                    <span className="text-xs text-gray-400 whitespace-nowrap bg-muted px-2.5 py-1 rounded-full border border-gray-400/30 transition-colors duration-300">
                       {exp.period}
                     </span>
                     <motion.svg

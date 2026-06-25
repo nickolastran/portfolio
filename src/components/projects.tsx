@@ -64,7 +64,7 @@ export default function Projects() {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="bg-card border border-border rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-300 group"
+              className="bg-card border border-gray-400/30 rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-300 group"
             >
               {/* Project Image */}
               <div className="relative w-full aspect-video bg-muted overflow-hidden transition-colors duration-300">
@@ -95,7 +95,7 @@ export default function Projects() {
                   {project.tech.map((tech, techIndex) => (
                     <span
                       key={techIndex}
-                      className="text-xs px-2.5 py-1 bg-muted text-gray-400 rounded-md border border-border transition-colors duration-300"
+                      className="text-xs px-2.5 py-1 bg-muted text-gray-400 rounded-md border border-gray-400/30 transition-colors duration-300"
                     >
                       {tech}
                     </span>

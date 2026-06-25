@@ -53,7 +53,7 @@ export default function Education() {
             >
               <div className="flex gap-4 items-start py-4">
                 <div className="shrink-0">
-                  <div className="w-12 h-12 rounded-full bg-card flex items-center justify-center overflow-hidden border border-border transition-colors duration-300">
+                  <div className="w-12 h-12 rounded-full bg-card flex items-center justify-center overflow-hidden border border-gray-400/30 transition-colors duration-300">
                     {edu.useImage ? (
                       <div className="relative w-full h-full">
                         <Image
@@ -83,7 +83,7 @@ export default function Education() {
                         </p>
                       )}
                     </div>
-                    <span className="text-xs text-gray-400 whitespace-nowrap shrink-0 px-2.5 py-1 bg-muted rounded-full border border-border transition-colors duration-300">
+                    <span className="text-xs text-gray-400 whitespace-nowrap shrink-0 px-2.5 py-1 bg-muted rounded-full border border-gray-400/30 transition-colors duration-300">
                       {edu.period}
                     </span>
                   </div>
@@ -91,7 +91,7 @@ export default function Education() {
               </div>
 
               {index < education.length - 1 && (
-                <div className="border-t border-border ml-16 transition-colors duration-300"></div>
+                <div className="border-t border-gray-400/30 ml-16 transition-colors duration-300"></div>
               )}
             </motion.div>
           ))}
