@@ -6,6 +6,7 @@ import Skills from "../components/skills";
 import TableOfContents from "../components/table-of-contents";
 import GitHubContributions from "../components/github-contributions";
 import SnowEffect from "../components/snow-effect";
+import Footer from "../components/footer";
 
 export default function Home() {
     return (
@@ -18,6 +19,7 @@ export default function Home() {
             <Projects />
             <GitHubContributions />
             <Skills />
+            <Footer />
         </main>
     );
 }
