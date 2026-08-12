@@ -1,38 +1,35 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
-import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
 
 export default function ThemeToggle() {
-    const { theme, setTheme } = useTheme();
-    const [mounted, setMounted] = useState(false);
-
-    useEffect(() => setMounted(true), []);
-
-    // theme is unknown until mounted; render a placeholder of the same size
-    if (!mounted) {
-        return (
-            <div className="h-9 w-9 rounded-full bg-neutral-200 dark:bg-neutral-800 animate-pulse" />
-        );
-    }
-
-    const isLight = theme === "light";
+    const { setTheme } = useTheme();
 
     return (
         <button
-            onClick={() => setTheme(isLight ? "dark" : "light")}
-            className="h-9 w-9 flex items-center justify-center rounded-full bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition-colors cursor-pointer"
-            aria-label={isLight ? "Switch to dark mode" : "Switch to light mode"}
+            // read the class instead of `theme`, so the first click works
+            // before next-themes has hydrated
+            onClick={() =>
+                setTheme(
+                    document.documentElement.classList.contains("dark")
+                        ? "light"
+                        : "dark",
+                )
+            }
+            className="relative h-9 w-9 flex items-center justify-center rounded-full bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-700 cursor-pointer"
+            aria-label="Toggle theme"
         >
-            <motion.div
-                initial={false}
-                animate={{ rotate: isLight ? 0 : 180 }}
-                transition={{ duration: 0.3 }}
-            >
-                {isLight ? <Moon size={18} /> : <Sun size={18} />}
-            </motion.div>
+            {/* both icons render server-side; the dark variant swaps them, so
+                there is no post-hydration flash */}
+            <Moon
+                size={18}
+                className="absolute rotate-0 scale-100 transition-transform duration-300 dark:-rotate-90 dark:scale-0"
+            />
+            <Sun
+                size={18}
+                className="absolute rotate-90 scale-0 transition-transform duration-300 dark:rotate-0 dark:scale-100"
+            />
         </button>
     );
 }

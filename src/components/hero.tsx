@@ -9,6 +9,7 @@ import { HiOutlineMail } from "react-icons/hi";
 
 import { PORTFOLIO } from "../constants/portfolio";
 import BentoCard from "./bento-card";
+import PlaceholderCard from "./placeholder-card";
 import LiveClock from "./live-clock";
 import ThemeToggle from "./theme-toggle";
 
@@ -195,21 +196,6 @@ function SocialsCard() {
                     );
                 })}
             </div>
-        </BentoCard>
-    );
-}
-
-/* Empty slots filling out the grid — swap the inner div for real content. */
-function PlaceholderCard({
-    className = "",
-    delay,
-}: {
-    className?: string;
-    delay: number;
-}) {
-    return (
-        <BentoCard className={`border-dashed ${className}`} delay={delay}>
-            <div className="h-full min-h-[180px]" />
         </BentoCard>
     );
 }

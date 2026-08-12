@@ -1,3 +1,4 @@
+import PlaceholderCard from "../../components/placeholder-card";
 import { SECTION } from "../../components/section-header";
 
 export const metadata = { title: "About Me - Nickolas Tran" };
@@ -12,6 +13,22 @@ export default function About() {
                 <p className="text-neutral-600 dark:text-neutral-500 text-sm mt-1">
                     This section is a work in progress.
                 </p>
+                <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 md:auto-rows-[minmax(220px,auto)]">
+                    <PlaceholderCard
+                        className="lg:col-span-2 lg:row-span-2"
+                        delay={0}
+                    />
+                    <PlaceholderCard delay={0.05} />
+                    <PlaceholderCard className="lg:row-span-2" delay={0.1} />
+                    <PlaceholderCard delay={0.15} />
+                    <PlaceholderCard className="lg:col-span-3" delay={0.2} />
+                    <PlaceholderCard delay={0.25} />
+                    <PlaceholderCard className="lg:col-span-2" delay={0.3} />
+                    <PlaceholderCard className="lg:row-span-2" delay={0.35} />
+                    <PlaceholderCard delay={0.4} />
+                    <PlaceholderCard className="lg:col-span-2" delay={0.45} />
+                    <PlaceholderCard delay={0.5} />
+                </div>
             </section>
         </main>
     );
