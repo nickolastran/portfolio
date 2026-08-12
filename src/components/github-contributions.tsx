@@ -8,69 +8,48 @@ import SectionHeader, { SECTION } from "./section-header";
 
 interface ContributionDay {
   date: string;
-  contributionCount: number;
-  color: string;
+  count: number;
+  level: number;
 }
 
-// GitHub green color function
-const getGreenColor = (count: number): string => {
-  if (count === 0) return "var(--gh-empty)";
-  if (count <= 3) return "#9be9a8";
-  if (count <= 6) return "#40c463";
-  if (count <= 9) return "#30a14e";
-  return "#216e39";
-};
+// GitHub's own level scale (0-4)
+const LEVEL_COLORS = [
+  "var(--gh-empty)",
+  "#9be9a8",
+  "#40c463",
+  "#30a14e",
+  "#216e39",
+];
 
 export default function GitHubContributions() {
   const [contributions, setContributions] = useState<ContributionDay[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchContributions = async () => {
-      try {
-        // Using GitHub contributions API
-        const username = "nickolastran";
-        const response = await fetch(
-          `https://github-contributions-api.jogruber.de/v4/${username}?y=last`,
-        );
-        const data = await response.json();
-
-        if (data.contributions) {
-          // Get all contributions from the response
-          const allContributions = data.contributions;
-
-          // Get the last 365 days or all available data
-          const contributionsToShow = allContributions.slice(-365);
-
-          const formattedContributions = contributionsToShow.map(
-            (day: { date: string; count: number }) => ({
-              date: day.date,
-              contributionCount: day.count,
-              color: getGreenColor(day.count),
-            }),
-          );
-
-          setContributions(formattedContributions);
-        }
-      } catch (error) {
-        console.error("Error fetching GitHub contributions:", error);
-        setContributions([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchContributions();
+    fetch("/api/contributions")
+      .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+      .then(setContributions)
+      .catch((error) =>
+        console.error("Error fetching GitHub contributions:", error),
+      )
+      .finally(() => setLoading(false));
   }, []);
 
   const renderContributionGraph = () => {
-    // Use all contributions data, not just last 365
     const days = contributions;
     const weeks = [];
 
-    // Group days into weeks
+    // Data starts on a Sunday, so straight chunks of 7 line up as columns
     for (let i = 0; i < days.length; i += 7) {
       weeks.push(days.slice(i, i + 7));
+    }
+
+    if (weeks.length === 0) {
+      return (
+        <p className="text-sm text-neutral-500 dark:text-neutral-400 py-8">
+          Couldn&apos;t load contributions right now.
+        </p>
+      );
     }
 
     return (
@@ -82,10 +61,7 @@ export default function GitHubContributions() {
                 key={dayIndex}
                 className="w-3 h-3 rounded-sm hover:ring-2 hover:ring-blue-500/50 cursor-pointer transition-all duration-300 relative group"
                 style={{
-                  backgroundColor:
-                    day.contributionCount > 0
-                      ? getGreenColor(day.contributionCount)
-                      : "var(--gh-empty)",
+                  backgroundColor: LEVEL_COLORS[day.level] ?? LEVEL_COLORS[0],
                   transition:
                     "background-color 0.3s ease, box-shadow 0.2s ease",
                 }}
@@ -96,11 +72,10 @@ export default function GitHubContributions() {
                     pointer-events-none z-10 shadow-lg border border-white/10"
                 >
                   <div className="font-medium">
-                    {day.contributionCount} contribution
-                    {day.contributionCount !== 1 ? "s" : ""}
+                    {day.count} contribution{day.count !== 1 ? "s" : ""}
                   </div>
                   <div className="text-gray-300">
-                    {new Date(day.date).toLocaleDateString("en-US", {
+                    {new Date(`${day.date}T00:00:00`).toLocaleDateString("en-US", {
                       weekday: "short",
                       month: "short",
                       day: "numeric",

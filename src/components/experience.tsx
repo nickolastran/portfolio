@@ -12,7 +12,7 @@ const AIEA_LAB =
 const experiences = [
     {
         id: 1,
-        title: "Undergraduate Researcher",
+        title: (<>Undergraduate Researcher @ <i>University of California, Santa Cruz</i></>),
         company: AIEA_LAB,
         period: "Jan. 2026 - Jun. 2026",
         achievements: [
@@ -23,18 +23,7 @@ const experiences = [
     },
     {
         id: 2,
-        title: "Program Lead",
-        company: "Iron Campers Summer Robotics Camp",
-        period: "Aug. 2025 - Aug. 2025",
-        achievements: [
-            "Led and expanded a week-long robotics summer camp for rising 3rd–8th grade students, introducing core concepts in robotics, python programming, CAD (Tinkercad), and engineering design through hands-on projects.",
-            "Instructed students in programming and mechanical design using FTC/XRP drive bases, supporting the creation of custom mechanisms and autonomous/teleop behaviors.",
-            "Mentored a team of counselors, ensuring smooth daily operations, consistent instruction, and a positive learning environment.",
-        ],
-    },
-    {
-        id: 3,
-        title: "Undergraduate Researcher",
+        title: (<>Undergraduate Researcher @ <i>University of California, Santa Cruz</i></>),
         company: AIEA_LAB,
         period: "Mar. 2025 - Dec. 2025",
         achievements: [
