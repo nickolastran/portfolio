@@ -126,7 +126,7 @@ export default function TableOfContents() {
                                         "w-2.5 h-2.5 rounded-full transition-all duration-300",
                                         activeSection === section.id
                                             ? "bg-blue-500 scale-125"
-                                            : "bg-gray-400 group-hover:bg-blue-400",
+                                            : "bg-neutral-400 dark:bg-neutral-600 group-hover:bg-blue-400",
                                     )}
                                 />
                             </a>
@@ -142,10 +142,10 @@ export default function TableOfContents() {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={handleNextSection}
-                    className="size-12 bg-background/90 backdrop-blur-lg border border-border rounded-full flex items-center justify-center shadow-lg [box-shadow:0_0_0_1px_rgba(0,0,0,.03),0_2px_4px_rgba(0,0,0,.05),0_12px_24px_rgba(0,0,0,.05)] dark:[border:1px_solid_rgba(255,255,255,.1)] dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset] transition-colors duration-300"
+                    className="size-12 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-lg border border-neutral-200 dark:border-white/10 rounded-full flex items-center justify-center shadow-lg [box-shadow:0_0_0_1px_rgba(0,0,0,.03),0_2px_4px_rgba(0,0,0,.05),0_12px_24px_rgba(0,0,0,.05)] dark:[border:1px_solid_rgba(255,255,255,.1)] dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset] transition-colors duration-300"
                     title="Next Section"
                 >
-                    <ChevronDown className="size-4 text-foreground transition-colors duration-300" />
+                    <ChevronDown className="size-4 text-neutral-900 dark:text-white" />
                 </motion.button>
 
                 {/* Menu Dropdown */}
@@ -155,7 +155,7 @@ export default function TableOfContents() {
                             initial={{ opacity: 0, y: -20 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -20 }}
-                            className="absolute top-14 right-0 bg-background/90 backdrop-blur-lg border border-border rounded-xl shadow-xl [box-shadow:0_0_0_1px_rgba(0,0,0,.03),0_2px_4px_rgba(0,0,0,.05),0_12px_24px_rgba(0,0,0,.05)] dark:[border:1px_solid_rgba(255,255,255,.1)] dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset] p-3 min-w-[200px]"
+                            className="absolute top-14 right-0 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-lg border border-neutral-200 dark:border-white/10 rounded-xl shadow-xl [box-shadow:0_0_0_1px_rgba(0,0,0,.03),0_2px_4px_rgba(0,0,0,.05),0_12px_24px_rgba(0,0,0,.05)] dark:[border:1px_solid_rgba(255,255,255,.1)] dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset] p-3 min-w-[200px]"
                         >
                             <ul className="flex flex-col space-y-1">
                                 {sections.map((section) => (
@@ -170,7 +170,7 @@ export default function TableOfContents() {
                                                 "flex items-center px-3 py-2 text-sm rounded-lg transition-colors",
                                                 activeSection === section.id
                                                     ? "bg-blue-500/10 text-blue-500 font-medium"
-                                                    : "text-muted-foreground hover:text-foreground hover:bg-muted",
+                                                    : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-white/5",
                                             )}
                                         >
                                             {section.label}
@@ -187,12 +187,12 @@ export default function TableOfContents() {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                    className="size-12 bg-background/90 backdrop-blur-lg border border-border rounded-full flex items-center justify-center shadow-lg [box-shadow:0_0_0_1px_rgba(0,0,0,.03),0_2px_4px_rgba(0,0,0,.05),0_12px_24px_rgba(0,0,0,.05)] dark:[border:1px_solid_rgba(255,255,255,.1)] dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset] transition-colors duration-300"
+                    className="size-12 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-lg border border-neutral-200 dark:border-white/10 rounded-full flex items-center justify-center shadow-lg [box-shadow:0_0_0_1px_rgba(0,0,0,.03),0_2px_4px_rgba(0,0,0,.05),0_12px_24px_rgba(0,0,0,.05)] dark:[border:1px_solid_rgba(255,255,255,.1)] dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset] transition-colors duration-300"
                 >
                     <motion.div
                         animate={{ rotate: isMobileMenuOpen ? 45 : 0 }}
                         transition={{ duration: 0.3 }}
-                        className="text-foreground transition-colors duration-300"
+                        className="text-neutral-900 dark:text-white"
                     >
                         <ChevronRight className="size-4" />
                     </motion.div>

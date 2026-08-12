@@ -74,7 +74,7 @@ export default function SnowEffect() {
                     {snowflakes.map((flake) => (
                         <div
                             key={flake.id}
-                            className="absolute text-foreground"
+                            className="absolute text-neutral-700 dark:text-white"
                             style={{
                                 left: `${flake.left}%`,
                                 top: "-20px",

@@ -3,7 +3,9 @@
 import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import Image from "next/image";
-import { Grid3X3, ArrowLeft } from "lucide-react";
+import { Grid3X3, ArrowLeft, Terminal } from "lucide-react";
+
+import SectionHeader, { SECTION } from "./section-header";
 
 interface TechItem {
   name: string;
@@ -189,7 +191,7 @@ const TechItem = ({
         />
       </div>
       {showName && (
-        <span className="text-xs font-medium text-muted-foreground text-center mt-2 whitespace-nowrap">
+        <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400 text-center mt-2 whitespace-nowrap">
           {tech.name}
         </span>
       )}
@@ -222,11 +224,14 @@ export default function Skills({ delay = 0 }: TechStackProps) {
   const duplicatedTechStack = [...allTechItems, ...allTechItems];
 
   return (
-    <section
-      id="skills"
-      className="py-20 px-6 bg-background transition-colors duration-300"
-    >
-      <div className="max-w-4xl mx-auto">
+    <section id="skills" className={SECTION}>
+      <SectionHeader
+        icon={Terminal}
+        iconClassName="text-purple-500"
+        title="Tech Stack"
+        subtitle="Technologies and tools I work with to build innovative solutions."
+      />
+      <div>
         <motion.div
           ref={ref}
           variants={containerVariants}
@@ -234,18 +239,6 @@ export default function Skills({ delay = 0 }: TechStackProps) {
           animate={isInView ? "visible" : "hidden"}
           className="space-y-8"
         >
-          <div className="flex flex-col items-center justify-center space-y-4 text-center">
-            <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl transition-colors duration-300">
-                Tech Stack.
-              </h2>
-              <p className="text-gray-400 text-base md:text-lg max-w-2xl mx-auto transition-colors duration-300">
-                Technologies and tools I work with to build innovative
-                solutions.
-              </p>
-            </div>
-          </div>
-
           {!showAll ? (
             <>
               {/* Elegant scrolling logos */}
@@ -275,7 +268,7 @@ export default function Skills({ delay = 0 }: TechStackProps) {
               <div className="flex justify-center">
                 <button
                   onClick={() => setShowAll(true)}
-                  className="h-10 w-10 inline-flex items-center justify-center rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-colors"
+                  className="h-10 w-10 inline-flex items-center justify-center rounded-xl border border-neutral-200 dark:border-white/10 bg-white/70 dark:bg-neutral-900/70 text-neutral-700 dark:text-neutral-300 hover:border-blue-500/50 hover:scale-105 transition-all cursor-pointer"
                   title="Show all technologies"
                 >
                   <Grid3X3 className="h-4 w-4" />
@@ -296,7 +289,7 @@ export default function Skills({ delay = 0 }: TechStackProps) {
                     }}
                     className="space-y-6"
                   >
-                    <h3 className="text-2xl font-bold text-center text-foreground transition-colors duration-300">
+                    <h3 className="text-2xl font-bold text-center text-neutral-900 dark:text-white">
                       {category.category}
                     </h3>
 
@@ -304,7 +297,7 @@ export default function Skills({ delay = 0 }: TechStackProps) {
                       <div className="space-y-8">
                         {category.subcategories.map((subcategory, subIndex) => (
                           <div key={subcategory.name} className="space-y-4">
-                            <h4 className="text-lg font-semibold text-gray-400 text-center transition-colors duration-300">
+                            <h4 className="text-lg font-semibold text-neutral-500 dark:text-neutral-400 text-center">
                               {subcategory.name}
                             </h4>
                             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 justify-items-center">
@@ -363,7 +356,7 @@ export default function Skills({ delay = 0 }: TechStackProps) {
               <div className="flex justify-center">
                 <button
                   onClick={() => setShowAll(false)}
-                  className="h-10 w-10 inline-flex items-center justify-center rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-colors"
+                  className="h-10 w-10 inline-flex items-center justify-center rounded-xl border border-neutral-200 dark:border-white/10 bg-white/70 dark:bg-neutral-900/70 text-neutral-700 dark:text-neutral-300 hover:border-blue-500/50 hover:scale-105 transition-all cursor-pointer"
                   title="Back to scrolling view"
                 >
                   <ArrowLeft className="h-4 w-4" />
