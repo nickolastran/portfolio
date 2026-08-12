@@ -15,7 +15,28 @@
 body {
     @apply bg-neutral-50 text-neutral-800 dark:bg-neutral-950 dark:text-neutral-200;
     letter-spacing: -0.04em;
-    transition: background-color 0.3s ease;
+}
+
+/* Every colour change eases, so flipping the theme fades instead of snapping.
+   Utilities that declare their own `transition` still win over this. */
+*,
+*::before,
+*::after {
+    transition:
+        background-color 0.3s ease,
+        border-color 0.3s ease,
+        color 0.3s ease,
+        fill 0.3s ease,
+        stroke 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition: none;
+    }
 }
 
 @layer utilities {
