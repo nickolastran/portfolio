@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "../components/theme-provider";
+import Navbar from "../components/navbar";
 import { Manrope } from "next/font/google";
 
 const manrope = Manrope({
@@ -29,6 +30,7 @@ export default function RootLayout({
           enableSystem={false}
           themes={["dark", "light"]}
         >
+          <Navbar />
           {children}
         </ThemeProvider>
       </body>
