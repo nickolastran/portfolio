@@ -10,8 +10,9 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "NICKOLAS TRAN",
+  title: "Nickolas Tran - Full Stack Developer",
   description: "Full-stack developer and ML/AI researcher",
+  icons: { icon: "/anyapfp.jpg" },
 };
 
 export default function RootLayout({
@@ -26,7 +27,7 @@ export default function RootLayout({
           attribute="class"
           defaultTheme="dark"
           enableSystem={false}
-          themes={["dark", "light", "navy"]}
+          themes={["dark", "light"]}
         >
           {children}
         </ThemeProvider>

@@ -1,162 +1,189 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+import { Briefcase } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
+import SectionHeader, { SECTION } from "./section-header";
+
+const AIEA_LAB =
+    "Artificial Intelligence Explainability Accountability (AIEA) Lab";
+
 const experiences = [
-  {
-    id: 1,
-    title: "Undergraduate Researcher",
-    company: "Artificial Intelligence Explainability Accountability (AIEA) Lab",
-    period: "Mar. 2025 - Jun. 2025",
-    achievements: [
-      "Boosted autonomous vehicle simulation by 40% by containerizing workflows with Docker and orchestrating parallel test execution using Kubernetes.",
-      "Conducted large-scale CARLA-based adversarial sensor attack simulations, improving attack detection accuracy by **25%** through scalable, automated testing pipelines.",
-      "Spearheaded a fault-tolerant AV testing infrastructure, increasing simulation uptime by 25% and enabling consistent evaluation of vehicle robustness during adversarial attack scenarios.",
-    ],
-  },
-  {
-    id: 2,
-    title: "Program Lead",
-    company: "Iron Campers Summer Robotics Camp",
-    period: "Aug. 2025 - Aug. 2025",
-    achievements: [
-      "Led and expanded a week-long robotics summer camp for rising 3rd–8th grade students, introducing core concepts in robotics, python programming, CAD (Tinkercad), and engineering design through hands-on projects.",
-      "Instructed students in programming and mechanical design using FTC/XRP drive bases, supporting the creation of custom mechanisms and autonomous/teleop behaviors.",
-      "Mentored a team of counselors, ensuring smooth daily operations, consistent instruction, and a positive learning environment.",
-    ],
-  },
+    {
+        id: 1,
+        title: "Undergraduate Researcher",
+        company: AIEA_LAB,
+        period: "Jan. 2026 - Jun. 2026",
+        achievements: [
+            "Engineered an Explainable AI (xAI) autograder system to evaluate student source code, replacing binary output testing with structured feedback that identified **100%** of core logic and syntax misconceptions in student submissions.",
+            "Developed automated semantic analysis pipelines that reduced grading turn-around time for instructors by **35%**, optimizing curriculum evaluation through automated aggregation of performance trends in undergraduate courses.",
+            "Integrated formative feedback mechanisms based on educational research frameworks, improving student learning efficiency and boosting subsequent assignment scores by an average of **15%** due to clearer outcomes.",
+        ],
+    },
+    {
+        id: 2,
+        title: "Program Lead",
+        company: "Iron Campers Summer Robotics Camp",
+        period: "Aug. 2025 - Aug. 2025",
+        achievements: [
+            "Led and expanded a week-long robotics summer camp for rising 3rd–8th grade students, introducing core concepts in robotics, python programming, CAD (Tinkercad), and engineering design through hands-on projects.",
+            "Instructed students in programming and mechanical design using FTC/XRP drive bases, supporting the creation of custom mechanisms and autonomous/teleop behaviors.",
+            "Mentored a team of counselors, ensuring smooth daily operations, consistent instruction, and a positive learning environment.",
+        ],
+    },
+    {
+        id: 3,
+        title: "Undergraduate Researcher",
+        company: AIEA_LAB,
+        period: "Mar. 2025 - Dec. 2025",
+        achievements: [
+            "Boosted autonomous vehicle (AV) simulation efficiency by **35%** by architecting scalable testing environments using Docker containers and Kubernetes orchestration for parallelized adversarial sensor attack simulations.",
+            "Improved adversarial sensor attack detection accuracy by **20%** by leveraging CARLA simulator integrated with a Kubernetes-based distributed testing pipeline.",
+            "Engineered a high-availability, fault-tolerant testing framework for AV simulations, utilizing container orchestration to increase system uptime by **25%** and ensure rigorous, reproducible performance evaluation during stress testing.",
+        ],
+    },
 ];
 
+const isPresent = (period: string) => /\b(present|current)\b/i.test(period);
+
+// react-markdown passes a `node` prop that must not reach the DOM.
+type MdProps<T extends keyof React.JSX.IntrinsicElements> =
+    React.ComponentProps<T> & { node?: unknown };
+
+const markdownComponents = {
+    p: ({ node, ...props }: MdProps<"span">) => <span {...props} />,
+    strong: ({ node, ...props }: MdProps<"strong">) => (
+        <strong
+            className="text-neutral-900 dark:text-neutral-100 font-semibold"
+            {...props}
+        />
+    ),
+    em: ({ node, ...props }: MdProps<"em">) => (
+        <em className="text-neutral-700 dark:text-neutral-300 italic" {...props} />
+    ),
+    code: ({ node, ...props }: MdProps<"code">) => (
+        <code
+            className="bg-neutral-100 dark:bg-white/10 text-neutral-900 dark:text-neutral-100 px-1.5 py-0.5 rounded text-xs font-mono"
+            {...props}
+        />
+    ),
+};
+
 export default function Experience() {
-  const [expandedIds, setExpandedIds] = useState<number[]>([1]);
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+    return (
+        <section id="experience" className={SECTION}>
+            <SectionHeader
+                icon={Briefcase}
+                iconClassName="text-blue-500"
+                title="Experience"
+                subtitle="Where I've worked and what I built there."
+            />
 
-  const toggleExpand = (id: number) => {
-    setExpandedIds((prev) =>
-      prev.includes(id) ? prev.filter((expId) => expId !== id) : [...prev, id],
-    );
-  };
+            <div className="relative border-l border-neutral-200 dark:border-white/10 ml-6 md:ml-12">
+                {experiences.map((exp) => {
+                    const present = isPresent(exp.period);
+                    return (
+                        <div key={exp.id} className="relative pl-6 sm:pl-8 py-6 group">
+                            <motion.div
+                                initial={{ scale: 0, opacity: 0 }}
+                                whileInView={{ scale: 1, opacity: 1 }}
+                                viewport={{ once: true, margin: "-50px" }}
+                                transition={{
+                                    type: "spring",
+                                    stiffness: 300,
+                                    damping: 20,
+                                    delay: 0.1,
+                                }}
+                                className={`absolute -left-[5px] top-8 w-2.5 h-2.5 rounded-full ring-4 ring-neutral-50 dark:ring-neutral-950 z-10 ${
+                                    present
+                                        ? "bg-blue-500 dark:bg-blue-400"
+                                        : "bg-neutral-300 dark:bg-neutral-600 group-hover:bg-neutral-400 dark:group-hover:bg-neutral-500"
+                                } transition-colors`}
+                            />
+                            {present && (
+                                <div className="absolute -left-[5px] top-8 w-2.5 h-2.5 rounded-full bg-blue-500 dark:bg-blue-400 animate-ping opacity-75" />
+                            )}
 
-  return (
-    <section
-      id="experience"
-      className="py-20 px-6 bg-background transition-colors duration-300"
-    >
-      <div className="max-w-6xl mx-auto">
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.5 }}
-          className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-12 text-foreground text-center transition-colors duration-300"
-        >
-          Experience
-        </motion.h2>
-
-        <div ref={ref} className="space-y-6 max-w-3xl mx-auto">
-          {experiences.map((exp, index) => (
-            <motion.div
-              key={exp.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="border-b border-gray-400/30 pb-6 transition-colors duration-300"
-            >
-              <button
-                onClick={() => toggleExpand(exp.id)}
-                className="w-full text-left group"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1">
-                    <h3 className="text-base font-bold text-foreground mb-2">
-                      {exp.company}
-                    </h3>
-                    <div className="text-sm text-gray-400 transition-colors duration-300">
-                      {exp.title}
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3 shrink-0">
-                    <span className="text-xs text-gray-400 whitespace-nowrap bg-muted px-2.5 py-1 rounded-full border border-gray-400/30 transition-colors duration-300">
-                      {exp.period}
-                    </span>
-                    <motion.svg
-                      animate={{
-                        rotate: expandedIds.includes(exp.id) ? 90 : 0,
-                      }}
-                      transition={{ duration: 0.3 }}
-                      className="w-4 h-4 text-gray-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5l7 7-7 7"
-                      />
-                    </motion.svg>
-                  </div>
-                </div>
-              </button>
-
-              <AnimatePresence initial={false}>
-                {expandedIds.includes(exp.id) && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3, ease: "easeInOut" }}
-                    className="overflow-hidden"
-                  >
-                    <ul className="space-y-3 mt-4">
-                      {exp.achievements.map((achievement, i) => (
-                        <li
-                          key={i}
-                          className="flex items-start gap-2 text-gray-400 text-sm leading-relaxed transition-colors duration-300"
-                        >
-                          <span className="text-gray-400/70 mt-1.5 text-xs shrink-0 transition-colors duration-300">
-                            •
-                          </span>
-                          <div className="flex-1">
-                            <ReactMarkdown
-                              components={{
-                                p: (props) => <span {...props} />,
-                                strong: (props) => (
-                                  <strong
-                                    className="text-foreground font-semibold transition-colors duration-300"
-                                    {...props}
-                                  />
-                                ),
-                                em: (props) => (
-                                  <em
-                                    className="text-foreground/80 italic transition-colors duration-300"
-                                    {...props}
-                                  />
-                                ),
-                                code: (props) => (
-                                  <code
-                                    className="bg-muted text-foreground px-1.5 py-0.5 rounded text-xs font-mono transition-colors duration-300"
-                                    {...props}
-                                  />
-                                ),
-                              }}
+                            <motion.div
+                                initial={{ opacity: 0, x: -20 }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                viewport={{ once: true, margin: "-50px" }}
+                                transition={{ duration: 0.4, delay: 0.2 }}
                             >
-                              {achievement}
-                            </ReactMarkdown>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                    <h3
+                                        className={`text-xl font-bold ${
+                                            present
+                                                ? "text-neutral-900 dark:text-white"
+                                                : "text-neutral-700 dark:text-neutral-300"
+                                        }`}
+                                    >
+                                        {exp.title}
+                                    </h3>
+                                    <p
+                                        className={`text-sm font-medium ${
+                                            present
+                                                ? "text-blue-600 dark:text-blue-400"
+                                                : "text-neutral-500 dark:text-neutral-400"
+                                        }`}
+                                    >
+                                        {exp.period}
+                                    </p>
+                                </div>
+
+                                <div className="flex flex-wrap items-center gap-3 mt-1">
+                                    <span
+                                        className={`text-base font-semibold ${
+                                            present
+                                                ? "text-blue-600 dark:text-blue-400"
+                                                : "text-neutral-600 dark:text-neutral-400"
+                                        }`}
+                                    >
+                                        {exp.company}
+                                    </span>
+                                    {present && (
+                                        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold tracking-wider bg-blue-100 dark:bg-blue-500/10 text-blue-700 dark:text-blue-400 uppercase ring-1 ring-blue-500/20">
+                                            Current
+                                        </span>
+                                    )}
+                                </div>
+                            </motion.div>
+
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true, margin: "-50px" }}
+                                transition={{ duration: 0.4, delay: 0.3 }}
+                                className="mt-4 space-y-3"
+                            >
+                                {exp.achievements.map((achievement, i) => (
+                                    <motion.div
+                                        key={i}
+                                        initial={{ opacity: 0, x: -10 }}
+                                        whileInView={{ opacity: 1, x: 0 }}
+                                        viewport={{ once: true, margin: "-50px" }}
+                                        transition={{
+                                            duration: 0.3,
+                                            delay: 0.4 + i * 0.1,
+                                        }}
+                                        className="flex items-start gap-3 group/point"
+                                    >
+                                        <div className="w-5 h-5 rounded-full bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-white/5 flex items-center justify-center shrink-0 mt-0.5 group-hover/point:border-blue-500/30 group-hover/point:bg-blue-50 dark:group-hover/point:bg-blue-500/10 transition-colors shadow-sm">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-neutral-400 dark:bg-neutral-500 group-hover/point:bg-blue-500 dark:group-hover/point:bg-blue-400 transition-colors" />
+                                        </div>
+                                        <span className="text-sm md:text-[15px] text-neutral-600 dark:text-neutral-400 group-hover/point:text-neutral-900 dark:group-hover/point:text-neutral-200 transition-colors flex-1 leading-relaxed">
+                                            <ReactMarkdown components={markdownComponents}>
+                                                {achievement}
+                                            </ReactMarkdown>
+                                        </span>
+                                    </motion.div>
+                                ))}
+                            </motion.div>
+                        </div>
+                    );
+                })}
+            </div>
+        </section>
+    );
 }
