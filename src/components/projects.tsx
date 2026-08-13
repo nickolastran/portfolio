@@ -8,7 +8,6 @@ import { FaGithub } from "react-icons/fa";
 import BentoCard from "./bento-card";
 import SectionHeader, { SECTION } from "./section-header";
 
-/** Cards fully visible before the fold; the next row peeks by PEEK px. */
 const VISIBLE_COUNT = 4;
 const PEEK = 90;
 

@@ -12,6 +12,7 @@ import BentoCard from "./bento-card";
 import PlaceholderCard from "./placeholder-card";
 import LiveClock from "./live-clock";
 import ThemeToggle from "./theme-toggle";
+import VisitorCounter from "./visitor-counter";
 
 const SOCIAL_ICONS = {
     GitHub: FaGithub,
@@ -212,7 +213,7 @@ export default function Hero() {
                 <LocationCard />
                 <SocialsCard />
                 <PlaceholderCard className="lg:col-span-2" delay={0.3} />
-                <PlaceholderCard delay={0.4} />
+                <VisitorCounter delay={0.4} />
             </div>
         </section>
     );

@@ -1,6 +1,5 @@
 const USERNAME = "nickolastran";
 
-// GitHub's own calendar HTML — no token, no third-party API.
 export async function GET() {
   const html = await fetch(
     `https://github.com/users/${USERNAME}/contributions`,

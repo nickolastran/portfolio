@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+
 import {
     Canvas,
     extend,
@@ -8,12 +9,14 @@ import {
     useThree,
     type ThreeElement,
 } from "@react-three/fiber";
+
 import {
     useGLTF,
     useTexture,
     Environment,
     Lightformer,
 } from "@react-three/drei";
+
 import {
     BallCollider,
     CuboidCollider,
@@ -23,11 +26,10 @@ import {
     useSphericalJoint,
     type RapierRigidBody,
 } from "@react-three/rapier";
+
 import { MeshLineGeometry, MeshLineMaterial } from "meshline";
 import * as THREE from "three";
 
-// Ported from react-bits' Lanyard: assets live in /public since Next has no
-// asset-import pipeline for .glb.
 const CARD_GLB = "/lanyard/card.glb";
 const LANYARD_PNG = "/lanyard/lanyard.png";
 
