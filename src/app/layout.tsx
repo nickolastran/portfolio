@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { ThemeProvider } from "../components/theme-provider";
 import Navbar from "../components/navbar";
 import { Manrope } from "next/font/google";
 
@@ -22,17 +21,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    /* Dark only — the `dark` class stays put, so every dark: utility applies. */
+    <html lang="en" className="dark" style={{ colorScheme: "dark" }}>
       <body className={manrope.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem={false}
-          themes={["dark", "light"]}
-        >
-          <Navbar />
-          {children}
-        </ThemeProvider>
+        <Navbar />
+        {children}
       </body>
     </html>
   );

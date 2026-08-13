@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* next-themes sets class="dark" on <html>; Tailwind v4 defaults to
+/* <html> is hardcoded to class="dark"; Tailwind v4 defaults to
    prefers-color-scheme, so point the variant at the class instead. */
 @variant dark (&:where(.dark, .dark *));
 
@@ -18,24 +18,27 @@ body {
 }
 
 /* Every colour change eases, so flipping the theme fades instead of snapping.
-   Utilities that declare their own `transition` still win over this. */
-*,
-*::before,
-*::after {
-    transition:
-        background-color 0.3s ease,
-        border-color 0.3s ease,
-        color 0.3s ease,
-        fill 0.3s ease,
-        stroke 0.3s ease,
-        box-shadow 0.3s ease;
-}
-
-@media (prefers-reduced-motion: reduce) {
+   Must live in @layer base: unlayered rules outrank @layer utilities, so at
+   top level this shorthand silently ate every `transition-*` utility. */
+@layer base {
     *,
     *::before,
     *::after {
-        transition: none;
+        transition:
+            background-color 0.3s ease,
+            border-color 0.3s ease,
+            color 0.3s ease,
+            fill 0.3s ease,
+            stroke 0.3s ease,
+            box-shadow 0.3s ease;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            transition: none;
+        }
     }
 }
 

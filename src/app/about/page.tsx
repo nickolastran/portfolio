@@ -14,20 +14,14 @@ const CONCERTS = [
     { src: "/ultra.jpg", caption: "Ultra Miami Festival — Bayfront Park, March 29, 2026" },
     { src: "/knock2.jpg", caption: "Knock2 — The Midway, November 22, 2025" },
     { src: "/niteharts.jpg", caption: "Niteharts Festival — Snapdragon Stadium, October 10-11, 2025" },
-    { src: "/lessera.jpg", caption: "Lesserafim — Bill Graham Civic Auditorium, September 14, 2025" },
+    { src: "/lessera.jpg", caption: "Le Sserafim — Bill Graham Civic Auditorium, September 14, 2025" },
 ];
 
 const inter = Inter({ subsets: ["latin"], display: "swap" });
 
 export const metadata = { title: "About Me - Nickolas Tran" };
 
-const ACCENTS = {
-    rust: "bg-[#c1502e] dark:bg-[#c1502e]",
-    charcoal: "bg-[#3b3c37] dark:bg-[#3b3c37]",
-} as const;
-
 function Card({
-    accent,
     photo,
     media,
     alt = "",
@@ -36,7 +30,6 @@ function Card({
     delay,
     className = "",
 }: {
-    accent: keyof typeof ACCENTS;
     photo?: string | string[] | true;
     media?: React.ReactNode;
     alt?: string;
@@ -48,9 +41,12 @@ function Card({
     return (
         <BentoCard
             className={cn(
-                ACCENTS[accent],
-                "border-transparent dark:border-transparent hover:border-transparent dark:hover:border-transparent",
-                "shadow-none transition-all hover:scale-[1.01] hover:ring-2 hover:ring-white/40 hover:shadow-[0_0_40px_-8px_rgba(193,80,46,0.55)]",
+                /* benxhan/portfolio's .about-card: transform + box-shadow only,
+                   0.38s on a back-out spring, lift 7px and drop the shadow.
+                   v4 compiles scale/translate to their own properties, so the
+                   transition has to name those instead of `transform`. */
+                "transform-gpu transition-[scale,translate,box-shadow] duration-[380ms] ease-[cubic-bezier(0.34,1.56,0.64,1)]",
+                "shadow-[0_2px_1px_rgba(0,0,0,0.5)] hover:-translate-y-[7px] hover:scale-[1.03] hover:shadow-none",
                 className,
             )}
             delay={delay}
@@ -97,8 +93,10 @@ function Card({
                     )
                 )}
                 <div>
-                    <h2 className="text-lg font-bold text-white">{title}</h2>
-                    <div className="mt-1 space-y-2 text-sm leading-relaxed text-white/85">
+                    <h2 className="text-lg font-bold text-neutral-900 dark:text-white">
+                        {title}
+                    </h2>
+                    <div className="mt-1 space-y-2 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
                         {children}
                     </div>
                 </div>
@@ -120,7 +118,6 @@ export default function About() {
 
                 <div className="mt-8 grid gap-5 md:grid-cols-2 items-start">
                     <Card
-                        accent="rust"
                         photo=""
                         alt=""
                         title=""
@@ -132,7 +129,6 @@ export default function About() {
                     </Card>
 
                     <Card
-                        accent="charcoal"
                         media={<PhotoCarousel photos={CONCERTS} />}
                         title="Concerts!"
                         delay={0.05}
@@ -144,7 +140,7 @@ export default function About() {
                         </p>
                     </Card>
 
-                    <Card accent="charcoal" title="" delay={0.1}>
+                    <Card title="" delay={0.1}>
                         <ul className="list-disc space-y-1 pl-5">
                             <li></li>
                             <li></li>
@@ -154,7 +150,6 @@ export default function About() {
                     </Card>
 
                     <Card
-                        accent="rust"
                         title="[title]"
                         delay={0.15}
                     >
@@ -165,7 +160,6 @@ export default function About() {
                     </Card>
 
                     <Card
-                        accent="charcoal"
                         photo={["/am1.jpg", "/am2.jpg", "/am3.jpg"]}
                         alt="AMD Advancing AI Conference in San Francisco"
                         title="AMD Advancing AI Conference"
@@ -179,12 +173,11 @@ export default function About() {
                         </p>
                     </Card>
 
-                    <Card accent="rust" photo title="[title]" delay={0.25}>
+                    <Card photo title="[title]" delay={0.25}>
                         <p>[placeholder]</p>
                     </Card>
 
                     <Card
-                        accent="charcoal"
                         photo
                         title="[title]"
                         delay={0.3}
