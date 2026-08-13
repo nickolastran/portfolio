@@ -1,6 +1,5 @@
 import type { LucideIcon } from "lucide-react";
 
-/** Shared shell for every top-level section, so widths and rhythm match. */
 export const SECTION =
     "max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20 scroll-mt-20";
 
