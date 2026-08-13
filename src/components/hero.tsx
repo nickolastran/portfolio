@@ -11,7 +11,6 @@ import { PORTFOLIO } from "../constants/portfolio";
 import BentoCard from "./bento-card";
 import PlaceholderCard from "./placeholder-card";
 import LiveClock from "./live-clock";
-import ThemeToggle from "./theme-toggle";
 import VisitorCounter from "./visitor-counter";
 
 const SOCIAL_ICONS = {
@@ -79,7 +78,6 @@ function NameRow() {
                 <span className="text-sm font-medium text-green-600 dark:text-green-500 whitespace-nowrap">
                     {PORTFOLIO.availability}
                 </span>
-                <ThemeToggle />
             </div>
         </motion.div>
     );

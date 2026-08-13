@@ -54,14 +54,16 @@ export default function PhotoCarousel({
             </div>
 
             <div className="mt-2 flex items-center justify-between gap-3">
-                <p className="text-xs text-white/60">{photos[i].caption}</p>
+                <p className="text-xs text-neutral-600 dark:text-neutral-500">
+                    {photos[i].caption}
+                </p>
                 <div className="flex shrink-0 gap-1.5">
                     {photos.map((p, n) => (
                         <button
                             key={p.src}
                             aria-label={`Show photo ${n + 1}`}
                             onClick={() => setI(n)}
-                            className={`h-1.5 w-1.5 rounded-full ${n === i ? "bg-white" : "bg-white/35"}`}
+                            className={`h-1.5 w-1.5 rounded-full ${n === i ? "bg-neutral-900 dark:bg-white" : "bg-neutral-400 dark:bg-white/30"}`}
                         />
                     ))}
                 </div>
