@@ -7,7 +7,6 @@ import { ChevronRight, ChevronDown } from "lucide-react";
 const sections = [
     { id: "hero", label: "Home" },
     { id: "experience", label: "Experience" },
-    { id: "education", label: "Education" },
     { id: "projects", label: "Projects" },
     { id: "contributions", label: "Contributions" },
     { id: "skills", label: "Skills" },

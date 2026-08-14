@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 
 import BentoCard from "../../components/bento-card";
 import PhotoCarousel from "../../components/photo-carousel";
+import SpotifyNowPlaying from "../../components/spotify-now-playing";
 import { SECTION } from "../../components/section-header";
 import { cn } from "../../lib/utils";
 
@@ -15,6 +16,13 @@ const CONCERTS = [
     { src: "/knock2.jpg", caption: "Knock2 — The Midway, November 22, 2025" },
     { src: "/niteharts.jpg", caption: "Niteharts Festival — Snapdragon Stadium, October 10-11, 2025" },
     { src: "/lessera.jpg", caption: "Le Sserafim — Bill Graham Civic Auditorium, September 14, 2025" },
+];
+
+const SCHOOL = [
+    { src: "/school1.jpg", caption: "UCSC VSA — Class of 2026 Senior Banquet" },
+    { src: "/school2.jpg", caption: "UCSC VSA — Culture Show" },
+    { src: "/school3.png", caption: "UCSC VSA — Famolympics" },
+    { src: "/school4.png", caption: "UCSC VSA — Retreat" },
 ];
 
 const inter = Inter({ subsets: ["latin"], display: "swap" });
@@ -41,10 +49,6 @@ function Card({
     return (
         <BentoCard
             className={cn(
-                /* benxhan/portfolio's .about-card: transform + box-shadow only,
-                   0.38s on a back-out spring, lift 7px and drop the shadow.
-                   v4 compiles scale/translate to their own properties, so the
-                   transition has to name those instead of `transform`. */
                 "transform-gpu transition-[scale,translate,box-shadow] duration-[380ms] ease-[cubic-bezier(0.34,1.56,0.64,1)]",
                 "shadow-[0_2px_1px_rgba(0,0,0,0.5)] hover:-translate-y-[7px] hover:scale-[1.03] hover:shadow-none",
                 className,
@@ -113,78 +117,88 @@ export default function About() {
                     About Me
                 </h1>
                 <p className="text-neutral-600 dark:text-neutral-500 text-sm mt-1">
-                    This section is a work in progress.
+                    hey !! thank you for visiting my website !!
                 </p>
 
-                <div className="mt-8 grid gap-5 md:grid-cols-2 items-start">
-                    <Card
-                        photo=""
-                        alt=""
-                        title=""
-                        delay={0}
-                    >
-                        <p>
-                            [placeholder]
-                        </p>
-                    </Card>
+                <div className="mt-8 flex flex-col gap-5 md:flex-row">
+                    <div className="flex flex-1 flex-col gap-5">
+                        <Card
+                            photo="/baybridge.jpg"
+                            alt="The Bay Bridge, San Francisco"
+                            title="Where I am from 🌉"
+                            delay={0}
+                        >
+                            <p>I am from San Bruno, California in the heart of the Bay Area.</p>
+                        </Card>
 
-                    <Card
-                        media={<PhotoCarousel photos={CONCERTS} />}
-                        title="Concerts!"
-                        delay={0.05}
-                    >
-                        <p>
-                            I love to go out and explore my differentiating
-                            interests of music. Check out some of the concerts
-                            I have been to in the last year!
-                        </p>
-                    </Card>
+                        <Card
+                            media={<SpotifyNowPlaying />}
+                            title="What I'm listening to 🎶"
+                            delay={0.1}
+                        >
+                            <p>
+                                Check out what I am currently listening to on Spotify — whatever is playing right
+                                now, refreshed every 30 seconds.
+                            </p>
+                        </Card>
 
-                    <Card title="" delay={0.1}>
-                        <ul className="list-disc space-y-1 pl-5">
-                            <li></li>
-                            <li></li>
-                            <li></li>
-                            <li></li>
-                        </ul>
-                    </Card>
+                        <Card
+                            media={<PhotoCarousel photos={CONCERTS} />}
+                            title="Concerts!"
+                            delay={0.2}
+                        >
+                            <p>
+                                I love to go out and explore my differentiating
+                                interests of music. Check out some of the concerts
+                                I have been to in the last year!
+                            </p>
+                        </Card>
+                    </div>
 
-                    <Card
-                        title="[title]"
-                        delay={0.15}
-                    >
-                        <p>
-                            [placeholder]
-                        </p>
-                        <p>[placeholder]</p>
-                    </Card>
+                    <div className="flex flex-1 flex-col gap-5">
+                        <Card
+                            media={<PhotoCarousel photos={SCHOOL} />}
+                            title="University of California, Santa Cruz 🍌🐌"
+                            delay={0.05}
+                        >
+                            <p>
+                                I attended University of California, Santa Cruz from 2022 - 2026
+                                and invested a lot of my extra curricular time to the Vietnamese Student
+                                Association and created so many amazing memories there.
+                            </p>
+                        </Card>
 
-                    <Card
-                        photo={["/am1.jpg", "/am2.jpg", "/am3.jpg"]}
-                        alt="AMD Advancing AI Conference in San Francisco"
-                        title="AMD Advancing AI Conference"
-                        delay={0.2}
-                        className="md:col-span-2"
-                    >
-                        <p>
-                            I attended the AMD Advancing AI Conference in San
-                            Francisco on July 22–23 and met so many cool people
-                            and saw so many innovative products.
-                        </p>
-                    </Card>
+                        <Card title="Some stuff that I love..." delay={0.15}>
+                            <ul className="list-disc space-y-1 pl-5">
+                                <li>Games (minecraft, valorant, mlb the show)</li>
+                                <li>Sports (basketball, baseball, football, swimming)</li>
+                            </ul>
+                        </Card>
 
-                    <Card photo title="[title]" delay={0.25}>
-                        <p>[placeholder]</p>
-                    </Card>
-
-                    <Card
-                        photo
-                        title="[title]"
-                        delay={0.3}
-                    >
-                        <p>[placeholder]</p>
-                    </Card>
+                        <Card
+                            photo
+                            title="[title]"
+                            delay={0.25}
+                            className="border-dashed"
+                        >
+                            <p>[placeholder]</p>
+                        </Card>
+                    </div>
                 </div>
+
+                <Card
+                    photo={["/am1.jpg", "/am2.jpg", "/am3.jpg"]}
+                    alt="AMD Advancing AI Conference in San Francisco"
+                    title="AMD Advancing AI Conference"
+                    delay={0.3}
+                    className="mt-5"
+                >
+                    <p>
+                        I attended the AMD Advancing AI Conference in San
+                        Francisco on July 22–23 and met so many cool people and
+                        saw so many innovative products.
+                    </p>
+                </Card>
             </section>
         </main>
     );

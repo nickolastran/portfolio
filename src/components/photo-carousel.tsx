@@ -45,6 +45,7 @@ export default function PhotoCarousel({
                             src={photos[i].src}
                             alt={photos[i].caption}
                             fill
+                            priority={i === 0}
                             draggable={false}
                             className="object-cover select-none"
                             sizes="(max-width: 768px) 100vw, 50vw"
