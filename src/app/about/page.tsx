@@ -9,20 +9,20 @@ import { SECTION } from "../../components/section-header";
 import { cn } from "../../lib/utils";
 
 const CONCERTS = [
-    { src: "/ariana.jpg", caption: "Ariana Grande — Oakland Arena, June 6, 2026" },
-    { src: "/bts.jpg", caption: "BTS — Stanford Stadium, May 17, 2026" },
-    { src: "/iso.jpg", caption: "ISOxo — Cow Palace, April 4, 2026" },
-    { src: "/ultra.jpg", caption: "Ultra Miami Festival — Bayfront Park, March 29, 2026" },
-    { src: "/knock2.jpg", caption: "Knock2 — The Midway, November 22, 2025" },
-    { src: "/niteharts.jpg", caption: "Niteharts Festival — Snapdragon Stadium, October 10-11, 2025" },
-    { src: "/lessera.jpg", caption: "Le Sserafim — Bill Graham Civic Auditorium, September 14, 2025" },
+    { src: "/about/ariana.jpg", caption: "Ariana Grande — Oakland Arena, June 6, 2026" },
+    { src: "/about/bts.jpg", caption: "BTS — Stanford Stadium, May 17, 2026" },
+    { src: "/about/iso.jpg", caption: "ISOxo — Cow Palace, April 4, 2026" },
+    { src: "/about/ultra.jpg", caption: "Ultra Miami Festival — Bayfront Park, March 29, 2026" },
+    { src: "/about/knock2.jpg", caption: "Knock2 — The Midway, November 22, 2025" },
+    { src: "/about/niteharts.jpg", caption: "Niteharts Festival — Snapdragon Stadium, October 10-11, 2025" },
+    { src: "/about/lessera.jpg", caption: "Le Sserafim — Bill Graham Civic Auditorium, September 14, 2025" },
 ];
 
 const SCHOOL = [
-    { src: "/school1.jpg", caption: "UCSC VSA — Class of 2026 Senior Banquet" },
-    { src: "/school2.jpg", caption: "UCSC VSA — Culture Show" },
-    { src: "/school3.png", caption: "UCSC VSA — Famolympics" },
-    { src: "/school4.png", caption: "UCSC VSA — Retreat" },
+    { src: "/about/school1.jpg", caption: "UCSC VSA — Class of 2026 Senior Banquet" },
+    { src: "/about/school2.jpg", caption: "UCSC VSA — Culture Show" },
+    { src: "/about/school3.png", caption: "UCSC VSA — Famolympics" },
+    { src: "/about/school4.png", caption: "UCSC VSA — Retreat" },
 ];
 
 const inter = Inter({ subsets: ["latin"], display: "swap" });
@@ -123,7 +123,7 @@ export default function About() {
                 <div className="mt-8 flex flex-col gap-5 md:flex-row">
                     <div className="flex flex-1 flex-col gap-5">
                         <Card
-                            photo="/baybridge.jpg"
+                            photo="/about/baybridge.jpg"
                             alt="The Bay Bridge, San Francisco"
                             title="Where I am from 🌉"
                             delay={0}
@@ -187,7 +187,7 @@ export default function About() {
                 </div>
 
                 <Card
-                    photo={["/am1.jpg", "/am2.jpg", "/am3.jpg"]}
+                    photo={["/about/am1.jpg", "/about/am2.jpg", "/about/am3.jpg"]}
                     alt="AMD Advancing AI Conference in San Francisco"
                     title="AMD Advancing AI Conference"
                     delay={0.3}

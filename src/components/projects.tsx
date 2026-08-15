@@ -1,14 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { BookOpen, ChevronDown } from "lucide-react";
+import { BookOpen, ChevronDown, SquareArrowOutUpRight } from "lucide-react";
 import { FaGithub } from "react-icons/fa";
 
 import BentoCard from "./bento-card";
 import SectionHeader, { SECTION } from "./section-header";
 
-const VISIBLE_COUNT = 4;
+const VISIBLE_COUNT = 3;
 const PEEK = 90;
 
 interface Project {
@@ -19,6 +20,21 @@ interface Project {
     tech: string[];
     points?: string[];
     github?: string;
+    /* Live site. Without one the demo button just points at the repo. */
+    demo?: string;
+    /* Hover preview. Drop a file in /public and point at it, e.g.
+       image: "/projects/stat-sightline.png". Without one the card falls back
+       to GitHub's own social-preview card for the repo. */
+    image?: string;
+}
+
+/* github.com/owner/repo -> opengraph.githubassets.com/1/owner/repo, the same
+   PNG GitHub renders when a repo link is unfurled. */
+function previewSrc(project: Project) {
+    if (project.image) return project.image;
+    if (!project.github) return null;
+    const repo = new URL(project.github).pathname.replace(/^\/|\/$/g, "");
+    return `https://opengraph.githubassets.com/1/${repo}`;
 }
 
 const projects: Project[] = [
@@ -28,7 +44,7 @@ const projects: Project[] = [
         period: "Jul. 2026",
         description:
             "Projection model for MLB pitcher strikeout prop lines.",
-        tech: ["Python", "JavaScript", "HTML"],
+        tech: ["Python", "JavaScript", "HTML", "Reinforced Learning"],
         github: "https://github.com/nickolastran/strikeout-prop-projections",
     },
     {
@@ -36,7 +52,7 @@ const projects: Project[] = [
         title: "MLB Standing Predictor",
         period: "Jul. 2026",
         description: "Model forecasting MLB final season standings.",
-        tech: ["Python", "TypeScript", "CSS"],
+        tech: ["Python", "TypeScript", "CSS", "Reinforced Learning"],
         github: "https://github.com/nickolastran/MLB-Standing-Pred",
     },
     {
@@ -59,8 +75,11 @@ const projects: Project[] = [
             "REST API",
             "PostgreSQL",
             "Supabase",
+            "RAG",
         ],
-        github: "https://github.com/vinngo/codecompass",
+        github: "https://github.com/nickolastran/codecompass",
+        demo: "https://codecompass-eight.vercel.app",
+        image: "/projects/codecompass.jpg",
     },
     {
         id: 5,
@@ -76,28 +95,100 @@ const projects: Project[] = [
 const foldButton =
     "group/btn flex items-center gap-2 px-6 py-3 rounded-full bg-white/70 dark:bg-neutral-900/70 backdrop-blur-md border border-neutral-200 dark:border-white/10 text-neutral-800 dark:text-neutral-200 font-semibold text-sm shadow-md hover:shadow-lg hover:border-blue-500/50 hover:scale-105 transition-all duration-300 cursor-pointer";
 
+const iconLink =
+    "rounded-lg p-1.5 text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-white/10 dark:hover:text-white transition-colors";
+
+const PREVIEW_W = 280;
+const PREVIEW_H = 190;
+
 function ProjectCard({ project }: { project: Project }) {
+    const [broken, setBroken] = useState(false);
+    const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
+    const src = broken ? null : previewSrc(project);
+
+    // Offset from the cursor, clamped so the popup never leaves the viewport.
+    const track = (e: React.MouseEvent) =>
+        setPos({
+            x: Math.min(e.clientX + 20, window.innerWidth - PREVIEW_W - 12),
+            y: Math.min(e.clientY + 20, window.innerHeight - PREVIEW_H - 12),
+        });
+
     return (
-        <div className="flex flex-col h-full gap-4">
-            <div className="flex items-start justify-between gap-4">
-                <h3 className="text-lg font-bold text-neutral-900 dark:text-white">
-                    {project.title}
-                </h3>
-                <span className="text-xs text-neutral-500 dark:text-neutral-400 whitespace-nowrap shrink-0 px-2.5 py-1 bg-neutral-100 dark:bg-white/5 rounded-full border border-neutral-200 dark:border-white/10">
-                    {project.period}
-                </span>
+        <div
+            className="flex flex-col h-full gap-4"
+            onMouseMove={src ? track : undefined}
+            onMouseLeave={() => setPos(null)}
+        >
+            {/* Portal: the card clips its overflow, the popup must not be cut. */}
+            {src &&
+                pos &&
+                createPortal(
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.96 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.15 }}
+                        style={{ left: pos.x, top: pos.y, width: PREVIEW_W }}
+                        className="pointer-events-none fixed z-50 overflow-hidden rounded-xl border border-white/10 bg-neutral-900 shadow-2xl"
+                    >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                            src={src}
+                            alt=""
+                            onError={() => setBroken(true)}
+                            className="aspect-[2/1] w-full object-cover"
+                        />
+                        <p className="truncate px-3 py-2 text-center text-xs font-bold text-white">
+                            {project.title}
+                        </p>
+                    </motion.div>,
+                    document.body,
+                )}
+            <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                    <h3 className="text-base font-bold text-neutral-900 dark:text-white">
+                        {project.title}
+                    </h3>
+                    <span className="text-[11px] text-neutral-500 dark:text-neutral-400">
+                        {project.period}
+                    </span>
+                </div>
+
+                <div className="flex shrink-0 items-center gap-1">
+                    {(project.demo ?? project.github) && (
+                        <a
+                            href={project.demo ?? project.github}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`${project.title} demo`}
+                            className={iconLink}
+                        >
+                            <SquareArrowOutUpRight className="h-4 w-4" />
+                        </a>
+                    )}
+                    {project.github && (
+                        <a
+                            href={project.github}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`${project.title} source`}
+                            className={iconLink}
+                        >
+                            <FaGithub className="h-4 w-4" />
+                        </a>
+                    )}
+                </div>
             </div>
 
-            <p className="text-[15px] text-neutral-600 dark:text-neutral-400 leading-relaxed">
+            <p className="text-[13px] text-neutral-600 dark:text-neutral-400 leading-relaxed">
                 {project.description}
             </p>
 
             {project.points && (
-                <ul className="space-y-2">
+                <ul className="space-y-1.5">
                     {project.points.map((point, i) => (
                         <li
                             key={i}
-                            className="flex items-start gap-2.5 text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed"
+                            className="flex items-start gap-2 text-[13px] text-neutral-600 dark:text-neutral-400 leading-relaxed"
                         >
                             <span className="mt-[7px] w-1 h-1 rounded-full bg-neutral-400 dark:bg-neutral-500 shrink-0" />
                             <span>{point}</span>
@@ -106,28 +197,61 @@ function ProjectCard({ project }: { project: Project }) {
                 </ul>
             )}
 
-            <div className="flex flex-wrap gap-2">
-                {project.tech.map((tech) => (
-                    <span
-                        key={tech}
-                        className="text-[12px] font-medium bg-neutral-100/50 dark:bg-white/5 border border-neutral-200 dark:border-white/10 py-1 px-2.5 rounded-lg text-neutral-700 dark:text-neutral-300 hover:border-blue-500/50 transition-colors"
-                    >
-                        {tech}
-                    </span>
-                ))}
-            </div>
+            <TechRow tech={project.tech} />
+        </div>
+    );
+}
 
-            {project.github && (
-                <a
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-auto inline-flex items-center self-start gap-2 px-4 py-2 rounded-xl text-sm font-bold bg-neutral-900 dark:bg-white text-white dark:text-black hover:scale-105 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-all shadow-sm"
-                >
-                    <FaGithub className="w-4 h-4" />
-                    Source
-                </a>
-            )}
+const chipClass =
+    "shrink-0 text-[11px] font-medium bg-neutral-100/50 dark:bg-white/5 border border-neutral-200 dark:border-white/10 py-0.5 px-2 rounded-md text-neutral-700 dark:text-neutral-300";
+
+/* One line always. If the chips overflow the card they scroll themselves,
+   otherwise they sit still — a marquee on three chips just looks broken. */
+function TechRow({ tech }: { tech: string[] }) {
+    const boxRef = useRef<HTMLDivElement>(null);
+    const trackRef = useRef<HTMLDivElement>(null);
+    const [marquee, setMarquee] = useState(false);
+
+    useEffect(() => {
+        const box = boxRef.current;
+        const track = trackRef.current;
+        if (!box || !track) return;
+
+        // Measured against the *first* copy only: comparing the doubled track
+        // would keep the condition true forever once it flipped on.
+        const measure = () =>
+            setMarquee(track.scrollWidth > box.clientWidth + 1);
+        measure();
+        const observer = new ResizeObserver(measure);
+        observer.observe(box);
+        return () => observer.disconnect();
+    }, [tech]);
+
+    const chips = tech.map((t) => (
+        <span key={t} className={chipClass}>
+            {t}
+        </span>
+    ));
+
+    return (
+        <div ref={boxRef} className="mt-auto overflow-hidden pt-1">
+            <div
+                className={`flex w-max gap-1.5 ${marquee ? "marquee" : ""}`}
+                style={
+                    {
+                        "--marquee-duration": `${tech.length * 7}s`,
+                    } as React.CSSProperties
+                }
+            >
+                <div ref={trackRef} className="flex shrink-0 gap-1.5">
+                    {chips}
+                </div>
+                {marquee && (
+                    <div aria-hidden className="flex shrink-0 gap-1.5">
+                        {chips}
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
@@ -180,10 +304,14 @@ export default function Projects() {
                 >
                     <div
                         ref={gridRef}
-                        className="relative grid grid-cols-1 md:grid-cols-2 gap-5"
+                        className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
                     >
                         {projects.map((project, index) => (
-                            <BentoCard key={project.id} delay={index * 0.05}>
+                            <BentoCard
+                                key={project.id}
+                                delay={index * 0.05}
+                                className="rounded-2xl p-4 md:p-4"
+                            >
                                 <ProjectCard project={project} />
                             </BentoCard>
                         ))}

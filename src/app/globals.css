@@ -50,4 +50,23 @@ body {
         -ms-overflow-style: none;
         scrollbar-width: none;
     }
+
+    /* Marquee: the track holds two identical copies separated by the same
+       gap-1.5 (0.375rem) as the items, so a full loop is half the track plus
+       half a gap — anything less and the seam visibly jumps. */
+    .marquee {
+        animation: marquee var(--marquee-duration, 14s) linear infinite;
+    }
+
+    @keyframes marquee {
+        to {
+            transform: translateX(calc(-50% - 0.1875rem));
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .marquee {
+            animation: none;
+        }
+    }
 }
