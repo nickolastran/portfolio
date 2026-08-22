@@ -78,7 +78,7 @@ const projects: Project[] = [
             "RAG",
         ],
         github: "https://github.com/nickolastran/codecompass",
-        demo: "https://codecompass-eight.vercel.app",
+        demo: "https://codecompass-iota.vercel.app/",
         image: "/projects/codecompass.jpg",
     },
     {
