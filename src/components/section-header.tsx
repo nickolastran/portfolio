@@ -9,7 +9,9 @@ export default function SectionHeader({
     title,
     subtitle,
 }: {
-    icon: LucideIcon;
+    /* A lucide component, or a path to an image in /public — the image is used
+       as a mask so it picks up iconClassName's color like a real icon. */
+    icon: LucideIcon | string;
     iconClassName: string;
     title: string;
     subtitle?: string;
@@ -17,7 +19,23 @@ export default function SectionHeader({
     return (
         <div className="mb-8">
             <div className="flex items-center gap-3">
-                <Icon className={iconClassName} size={24} />
+                {typeof Icon === "string" ? (
+                    <span
+                        className={`${iconClassName} h-6 w-6 shrink-0 bg-current`}
+                        style={{
+                            maskImage: `url(${Icon})`,
+                            WebkitMaskImage: `url(${Icon})`,
+                            maskSize: "contain",
+                            WebkitMaskSize: "contain",
+                            maskRepeat: "no-repeat",
+                            WebkitMaskRepeat: "no-repeat",
+                            maskPosition: "center",
+                            WebkitMaskPosition: "center",
+                        }}
+                    />
+                ) : (
+                    <Icon className={iconClassName} size={24} />
+                )}
                 <h2 className="text-2xl font-bold text-neutral-900 dark:text-white">
                     {title}
                 </h2>

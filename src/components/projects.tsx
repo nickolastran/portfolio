@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { BookOpen, ChevronDown, SquareArrowOutUpRight } from "lucide-react";
+import { ChevronDown, SquareArrowOutUpRight } from "lucide-react";
 import { FaGithub } from "react-icons/fa";
 
 import BentoCard from "./bento-card";
@@ -22,6 +22,7 @@ interface Project {
     github?: string;
     /* Live site. Without one the demo button just points at the repo. */
     demo?: string;
+    featured?: boolean;
     /* Hover preview. Drop a file in /public and point at it, e.g.
        image: "/projects/stat-sightline.png". Without one the card falls back
        to GitHub's own social-preview card for the repo. */
@@ -40,31 +41,6 @@ function previewSrc(project: Project) {
 const projects: Project[] = [
     {
         id: 1,
-        title: "Strikeout Prop Projections",
-        period: "Jul. 2026",
-        description:
-            "Projection model for MLB pitcher strikeout prop lines.",
-        tech: ["Python", "JavaScript", "HTML", "Reinforced Learning"],
-        github: "https://github.com/nickolastran/strikeout-prop-projections",
-    },
-    {
-        id: 2,
-        title: "MLB Standing Predictor",
-        period: "Jul. 2026",
-        description: "Model forecasting MLB final season standings.",
-        tech: ["Python", "TypeScript", "CSS", "Reinforced Learning"],
-        github: "https://github.com/nickolastran/MLB-Standing-Pred",
-    },
-    {
-        id: 3,
-        title: "Stat Sightline",
-        period: "Apr. 2026",
-        description: "MLB advanced metrics and predictive modeling.",
-        tech: ["Python", "sklearn", "Matplotlib", "PostgreSQL"],
-        github: "https://github.com/nickolastran/stat-sightline"
-    },
-    {
-        id: 4,
         title: "CodeCompass",
         period: "Dec. 2025",
         description: "AI powered documentation and chatbot for codebases using RAG.",
@@ -80,6 +56,35 @@ const projects: Project[] = [
         github: "https://github.com/nickolastran/codecompass",
         demo: "https://codecompass-iota.vercel.app/",
         image: "/projects/codecompass.jpg",
+        featured: true,
+    },
+    {
+        id: 2,
+        title: "MLB Standing Predictor",
+        period: "Jul. 2026",
+        description: "Model forecasting MLB final season standings.",
+        tech: ["Python", "TypeScript", "CSS", "Reinforced Learning"],
+        github: "https://github.com/nickolastran/MLB-Standing-Pred",
+    },
+    {
+        id: 3,
+        title: "Stat Sightline",
+        period: "Apr. 2026",
+        description: "MLB advanced metrics and predictive modeling.",
+        tech: ["Python", "sklearn", "Matplotlib", "PostgreSQL", "TypeScript", "Data Queries"],
+        demo: "https://stat-sightline.vercel.app/",
+        github: "https://github.com/nickolastran/stat-sightline",
+        image: "/projects/statsightline.png",
+        featured: true
+    },
+    {
+        id: 4,
+        title: "Strikeout Prop Projections",
+        period: "Jul. 2026",
+        description:
+            "Projection model for MLB pitcher strikeout prop lines.",
+        tech: ["Python", "JavaScript", "HTML", "Reinforced Learning"],
+        github: "https://github.com/nickolastran/strikeout-prop-projections",
     },
     {
         id: 5,
@@ -145,9 +150,16 @@ function ProjectCard({ project }: { project: Project }) {
                 )}
             <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                    <h3 className="text-base font-bold text-neutral-900 dark:text-white">
-                        {project.title}
-                    </h3>
+                    <div className="flex items-center gap-2">
+                        <h3 className="text-base font-bold text-neutral-900 dark:text-white">
+                            {project.title}
+                        </h3>
+                        {project.featured && (
+                            <span className="shrink-0 rounded-md border border-blue-500/30 bg-blue-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-blue-600 dark:text-blue-400">
+                                Featured
+                            </span>
+                        )}
+                    </div>
                     <span className="text-[11px] text-neutral-500 dark:text-neutral-400">
                         {project.period}
                     </span>
@@ -287,7 +299,7 @@ export default function Projects() {
     return (
         <section id="projects" className={SECTION}>
             <SectionHeader
-                icon={BookOpen}
+                icon="/file-management.png"
                 iconClassName="text-blue-500"
                 title="Featured Projects"
                 subtitle="A few of the things I've built."
