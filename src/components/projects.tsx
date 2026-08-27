@@ -71,10 +71,11 @@ const projects: Project[] = [
         title: "Stat Sightline",
         period: "Apr. 2026",
         description: "MLB advanced metrics and predictive modeling.",
-        tech: ["Python", "sklearn", "Matplotlib", "PostgreSQL"],
+        tech: ["Python", "sklearn", "Matplotlib", "PostgreSQL", "TypeScript", "Data Queries"],
         demo: "https://stat-sightline.vercel.app/",
         github: "https://github.com/nickolastran/stat-sightline",
-        image: "/projects/statsightline.png"
+        image: "/projects/statsightline.png",
+        featured: true
     },
     {
         id: 4,
