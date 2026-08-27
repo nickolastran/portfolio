@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Github } from "lucide-react";
 
 import BlurFade from "./blur-fade";
 import SectionHeader, { SECTION } from "./section-header";
@@ -95,7 +94,7 @@ export default function GitHubContributions() {
     return (
       <section id="contributions" className={SECTION}>
         <SectionHeader
-          icon={Github}
+          icon="/github.png"
           iconClassName="text-emerald-500"
           title="GitHub Activity"
           subtitle="My contribution graph over the past year."
@@ -110,7 +109,7 @@ export default function GitHubContributions() {
   return (
     <section id="contributions" className={SECTION}>
       <SectionHeader
-        icon={Github}
+        icon="/github.png"
         iconClassName="text-emerald-500"
         title="GitHub Activity"
         subtitle="My contribution graph over the past year."

@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import Image from "next/image";
-import { Grid3X3, ArrowLeft, Terminal } from "lucide-react";
+import { Grid3X3, ArrowLeft } from "lucide-react";
 
 import SectionHeader, { SECTION } from "./section-header";
 
@@ -226,7 +226,7 @@ export default function Skills({ delay = 0 }: TechStackProps) {
   return (
     <section id="skills" className={SECTION}>
       <SectionHeader
-        icon={Terminal}
+        icon="/layer.png"
         iconClassName="text-purple-500"
         title="Tech Stack"
         subtitle="Technologies and tools I work with to build innovative solutions."

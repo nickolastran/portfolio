@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Briefcase } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
 import SectionHeader, { SECTION } from "./section-header";
@@ -63,7 +62,7 @@ export default function Experience() {
     return (
         <section id="experience" className={SECTION}>
             <SectionHeader
-                icon={Briefcase}
+                icon="/briefcase.png"
                 iconClassName="text-blue-500"
                 title="Experience"
                 subtitle="Where I've worked and what I built there."
