@@ -9,7 +9,6 @@ const sections = [
     { id: "experience", label: "Experience" },
     { id: "projects", label: "Projects" },
     { id: "contributions", label: "Contributions" },
-    { id: "skills", label: "Skills" },
 ];
 
 function cn(...classes: (string | undefined | null | false)[]) {

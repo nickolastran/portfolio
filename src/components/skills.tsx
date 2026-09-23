@@ -1,11 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import Image from "next/image";
-import { Grid3X3, ArrowLeft } from "lucide-react";
-
-import SectionHeader, { SECTION } from "./section-header";
 
 interface TechItem {
   name: string;
@@ -21,7 +17,7 @@ interface TechCategory {
   items?: TechItem[];
 }
 
-const techCategories: TechCategory[] = [
+export const techCategories: TechCategory[] = [
   {
     category: "Languages",
     items: [
@@ -161,14 +157,14 @@ const techCategories: TechCategory[] = [
   },
 ];
 
-// Flatten all items for the scrolling marquee
-const allTechItems: TechItem[] = techCategories.flatMap((category) =>
+// Flattened for the hero card's marquee
+export const allTechItems: TechItem[] = techCategories.flatMap((category) =>
   category.subcategories
     ? category.subcategories.flatMap((sub) => sub.items)
     : category.items || [],
 );
 
-const TechItem = ({
+export const TechItem = ({
   tech,
   showName = false,
 }: {
@@ -199,173 +195,82 @@ const TechItem = ({
   );
 };
 
-interface TechStackProps {
-  delay?: number;
-}
-
-export default function Skills({ delay = 0 }: TechStackProps) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const [showAll, setShowAll] = useState(false);
-
-  const containerVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.8,
-        delay: delay,
-      },
-    },
-  };
-
-  // Duplicate the tech stack for seamless infinite scroll
-  const duplicatedTechStack = [...allTechItems, ...allTechItems];
-
+/* Categorized grid for the hero tech stack popout. */
+export function TechCategories() {
   return (
-    <section id="skills" className={SECTION}>
-      <SectionHeader
-        icon="/layer.png"
-        iconClassName="text-purple-500"
-        title="Tech Stack"
-        subtitle="Technologies and tools I work with to build innovative solutions."
-      />
-      <div>
+    <div className="space-y-12">
+      {techCategories.map((category, categoryIndex) => (
         <motion.div
-          ref={ref}
-          variants={containerVariants}
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-          className="space-y-8"
+          key={category.category}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            delay: categoryIndex * 0.1,
+          }}
+          className="space-y-6"
         >
-          {!showAll ? (
-            <>
-              {/* Elegant scrolling logos */}
-              <div className="relative w-full overflow-hidden py-8">
-                {/* Floating logos */}
+          <h3 className="text-2xl font-bold text-center text-neutral-900 dark:text-white">
+            {category.category}
+          </h3>
+
+          {category.subcategories ? (
+            <div className="space-y-8">
+              {category.subcategories.map((subcategory, subIndex) => (
+                <div key={subcategory.name} className="space-y-4">
+                  <h4 className="text-lg font-semibold text-neutral-500 dark:text-neutral-400 text-center">
+                    {subcategory.name}
+                  </h4>
+                  <div className="flex flex-wrap justify-center gap-6">
+                    {subcategory.items.map((tech, techIndex) => (
+                      <motion.div
+                        key={tech.name}
+                        initial={{
+                          opacity: 0,
+                          y: 20,
+                        }}
+                        animate={{
+                          opacity: 1,
+                          y: 0,
+                        }}
+                        transition={{
+                          delay:
+                            categoryIndex * 0.1 +
+                            subIndex * 0.05 +
+                            techIndex * 0.03,
+                        }}
+                      >
+                        <TechItem tech={tech} showName={true} />
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-wrap justify-center gap-6">
+              {category.items?.map((tech, techIndex) => (
                 <motion.div
-                  className="flex items-center"
+                  key={tech.name}
+                  initial={{
+                    opacity: 0,
+                    y: 20,
+                  }}
                   animate={{
-                    x: [0, "-50%"],
+                    opacity: 1,
+                    y: 0,
                   }}
                   transition={{
-                    x: {
-                      repeat: Infinity,
-                      repeatType: "loop",
-                      duration: 45,
-                      ease: "linear",
-                    },
+                    delay: categoryIndex * 0.1 + techIndex * 0.03,
                   }}
                 >
-                  {duplicatedTechStack.map((tech, index) => (
-                    <TechItem key={`${tech.name}-${index}`} tech={tech} />
-                  ))}
+                  <TechItem tech={tech} showName={true} />
                 </motion.div>
-              </div>
-
-              {/* Icon-only Show All Button */}
-              <div className="flex justify-center">
-                <button
-                  onClick={() => setShowAll(true)}
-                  className="h-10 w-10 inline-flex items-center justify-center rounded-xl border border-neutral-200 dark:border-white/10 bg-white/70 dark:bg-neutral-900/70 text-neutral-700 dark:text-neutral-300 hover:border-blue-500/50 hover:scale-105 transition-all cursor-pointer"
-                  title="Show all technologies"
-                >
-                  <Grid3X3 className="h-4 w-4" />
-                </button>
-              </div>
-            </>
-          ) : (
-            <>
-              {/* Organized category view */}
-              <div className="py-8 space-y-12">
-                {techCategories.map((category, categoryIndex) => (
-                  <motion.div
-                    key={category.category}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{
-                      delay: categoryIndex * 0.1,
-                    }}
-                    className="space-y-6"
-                  >
-                    <h3 className="text-2xl font-bold text-center text-neutral-900 dark:text-white">
-                      {category.category}
-                    </h3>
-
-                    {category.subcategories ? (
-                      <div className="space-y-8">
-                        {category.subcategories.map((subcategory, subIndex) => (
-                          <div key={subcategory.name} className="space-y-4">
-                            <h4 className="text-lg font-semibold text-neutral-500 dark:text-neutral-400 text-center">
-                              {subcategory.name}
-                            </h4>
-                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 justify-items-center">
-                              {subcategory.items.map((tech, techIndex) => (
-                                <motion.div
-                                  key={tech.name}
-                                  initial={{
-                                    opacity: 0,
-                                    y: 20,
-                                  }}
-                                  animate={{
-                                    opacity: 1,
-                                    y: 0,
-                                  }}
-                                  transition={{
-                                    delay:
-                                      categoryIndex * 0.1 +
-                                      subIndex * 0.05 +
-                                      techIndex * 0.03,
-                                  }}
-                                >
-                                  <TechItem tech={tech} showName={true} />
-                                </motion.div>
-                              ))}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 justify-items-center">
-                        {category.items?.map((tech, techIndex) => (
-                          <motion.div
-                            key={tech.name}
-                            initial={{
-                              opacity: 0,
-                              y: 20,
-                            }}
-                            animate={{
-                              opacity: 1,
-                              y: 0,
-                            }}
-                            transition={{
-                              delay: categoryIndex * 0.1 + techIndex * 0.03,
-                            }}
-                          >
-                            <TechItem tech={tech} showName={true} />
-                          </motion.div>
-                        ))}
-                      </div>
-                    )}
-                  </motion.div>
-                ))}
-              </div>
-
-              {/* Icon-only Back Button */}
-              <div className="flex justify-center">
-                <button
-                  onClick={() => setShowAll(false)}
-                  className="h-10 w-10 inline-flex items-center justify-center rounded-xl border border-neutral-200 dark:border-white/10 bg-white/70 dark:bg-neutral-900/70 text-neutral-700 dark:text-neutral-300 hover:border-blue-500/50 hover:scale-105 transition-all cursor-pointer"
-                  title="Back to scrolling view"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                </button>
-              </div>
-            </>
+              ))}
+            </div>
           )}
         </motion.div>
-      </div>
-    </section>
+      ))}
+    </div>
   );
 }
+

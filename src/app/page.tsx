@@ -1,7 +1,6 @@
 import Hero from "../components/hero";
 import Experience from "../components/experience";
 import Projects from "../components/projects";
-import Skills from "../components/skills";
 import TableOfContents from "../components/table-of-contents";
 import GitHubContributions from "../components/github-contributions";
 import SnowEffect from "../components/snow-effect";
@@ -16,7 +15,6 @@ export default function Home() {
             <Experience />
             <Projects />
             <GitHubContributions />
-            <Skills />
             <Footer />
         </main>
     );
