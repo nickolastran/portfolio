@@ -21,7 +21,7 @@ interface TechCategory {
   items?: TechItem[];
 }
 
-const techCategories: TechCategory[] = [
+export const techCategories: TechCategory[] = [
   {
     category: "Languages",
     items: [
@@ -162,13 +162,13 @@ const techCategories: TechCategory[] = [
 ];
 
 // Flatten all items for the scrolling marquee
-const allTechItems: TechItem[] = techCategories.flatMap((category) =>
+export const allTechItems: TechItem[] = techCategories.flatMap((category) =>
   category.subcategories
     ? category.subcategories.flatMap((sub) => sub.items)
     : category.items || [],
 );
 
-const TechItem = ({
+export const TechItem = ({
   tech,
   showName = false,
 }: {
@@ -198,6 +198,85 @@ const TechItem = ({
     </div>
   );
 };
+
+/* Categorized grid — shared by this section and the hero's tech stack popout. */
+export function TechCategories() {
+  return (
+    <div className="space-y-12">
+      {techCategories.map((category, categoryIndex) => (
+        <motion.div
+          key={category.category}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            delay: categoryIndex * 0.1,
+          }}
+          className="space-y-6"
+        >
+          <h3 className="text-2xl font-bold text-center text-neutral-900 dark:text-white">
+            {category.category}
+          </h3>
+
+          {category.subcategories ? (
+            <div className="space-y-8">
+              {category.subcategories.map((subcategory, subIndex) => (
+                <div key={subcategory.name} className="space-y-4">
+                  <h4 className="text-lg font-semibold text-neutral-500 dark:text-neutral-400 text-center">
+                    {subcategory.name}
+                  </h4>
+                  <div className="flex flex-wrap justify-center gap-6">
+                    {subcategory.items.map((tech, techIndex) => (
+                      <motion.div
+                        key={tech.name}
+                        initial={{
+                          opacity: 0,
+                          y: 20,
+                        }}
+                        animate={{
+                          opacity: 1,
+                          y: 0,
+                        }}
+                        transition={{
+                          delay:
+                            categoryIndex * 0.1 +
+                            subIndex * 0.05 +
+                            techIndex * 0.03,
+                        }}
+                      >
+                        <TechItem tech={tech} showName={true} />
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-wrap justify-center gap-6">
+              {category.items?.map((tech, techIndex) => (
+                <motion.div
+                  key={tech.name}
+                  initial={{
+                    opacity: 0,
+                    y: 20,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                  }}
+                  transition={{
+                    delay: categoryIndex * 0.1 + techIndex * 0.03,
+                  }}
+                >
+                  <TechItem tech={tech} showName={true} />
+                </motion.div>
+              ))}
+            </div>
+          )}
+        </motion.div>
+      ))}
+    </div>
+  );
+}
 
 interface TechStackProps {
   delay?: number;
@@ -277,79 +356,8 @@ export default function Skills({ delay = 0 }: TechStackProps) {
             </>
           ) : (
             <>
-              {/* Organized category view */}
-              <div className="py-8 space-y-12">
-                {techCategories.map((category, categoryIndex) => (
-                  <motion.div
-                    key={category.category}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{
-                      delay: categoryIndex * 0.1,
-                    }}
-                    className="space-y-6"
-                  >
-                    <h3 className="text-2xl font-bold text-center text-neutral-900 dark:text-white">
-                      {category.category}
-                    </h3>
-
-                    {category.subcategories ? (
-                      <div className="space-y-8">
-                        {category.subcategories.map((subcategory, subIndex) => (
-                          <div key={subcategory.name} className="space-y-4">
-                            <h4 className="text-lg font-semibold text-neutral-500 dark:text-neutral-400 text-center">
-                              {subcategory.name}
-                            </h4>
-                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 justify-items-center">
-                              {subcategory.items.map((tech, techIndex) => (
-                                <motion.div
-                                  key={tech.name}
-                                  initial={{
-                                    opacity: 0,
-                                    y: 20,
-                                  }}
-                                  animate={{
-                                    opacity: 1,
-                                    y: 0,
-                                  }}
-                                  transition={{
-                                    delay:
-                                      categoryIndex * 0.1 +
-                                      subIndex * 0.05 +
-                                      techIndex * 0.03,
-                                  }}
-                                >
-                                  <TechItem tech={tech} showName={true} />
-                                </motion.div>
-                              ))}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 justify-items-center">
-                        {category.items?.map((tech, techIndex) => (
-                          <motion.div
-                            key={tech.name}
-                            initial={{
-                              opacity: 0,
-                              y: 20,
-                            }}
-                            animate={{
-                              opacity: 1,
-                              y: 0,
-                            }}
-                            transition={{
-                              delay: categoryIndex * 0.1 + techIndex * 0.03,
-                            }}
-                          >
-                            <TechItem tech={tech} showName={true} />
-                          </motion.div>
-                        ))}
-                      </div>
-                    )}
-                  </motion.div>
-                ))}
+              <div className="py-8">
+                <TechCategories />
               </div>
 
               {/* Icon-only Back Button */}

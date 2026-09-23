@@ -9,7 +9,7 @@ import { HiOutlineMail } from "react-icons/hi";
 
 import { PORTFOLIO } from "../constants/portfolio";
 import BentoCard from "./bento-card";
-import PlaceholderCard from "./placeholder-card";
+import TechStackCard from "./tech-stack-card";
 import LiveClock from "./live-clock";
 import VisitorCounter from "./visitor-counter";
 
@@ -210,7 +210,7 @@ export default function Hero() {
                 <AboutCard />
                 <LocationCard />
                 <SocialsCard />
-                <PlaceholderCard className="lg:col-span-2" delay={0.3} />
+                <TechStackCard className="lg:col-span-2" delay={0.3} />
                 <VisitorCounter delay={0.4} />
             </div>
         </section>
