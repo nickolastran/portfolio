@@ -1,11 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import Image from "next/image";
-import { Grid3X3, ArrowLeft } from "lucide-react";
-
-import SectionHeader, { SECTION } from "./section-header";
 
 interface TechItem {
   name: string;
@@ -161,7 +157,7 @@ export const techCategories: TechCategory[] = [
   },
 ];
 
-// Flatten all items for the scrolling marquee
+// Flattened for the hero card's marquee
 export const allTechItems: TechItem[] = techCategories.flatMap((category) =>
   category.subcategories
     ? category.subcategories.flatMap((sub) => sub.items)
@@ -199,7 +195,7 @@ export const TechItem = ({
   );
 };
 
-/* Categorized grid — shared by this section and the hero's tech stack popout. */
+/* Categorized grid for the hero tech stack popout. */
 export function TechCategories() {
   return (
     <div className="space-y-12">
@@ -278,102 +274,3 @@ export function TechCategories() {
   );
 }
 
-interface TechStackProps {
-  delay?: number;
-}
-
-export default function Skills({ delay = 0 }: TechStackProps) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const [showAll, setShowAll] = useState(false);
-
-  const containerVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.8,
-        delay: delay,
-      },
-    },
-  };
-
-  // Duplicate the tech stack for seamless infinite scroll
-  const duplicatedTechStack = [...allTechItems, ...allTechItems];
-
-  return (
-    <section id="skills" className={SECTION}>
-      <SectionHeader
-        icon="/layer.png"
-        iconClassName="text-purple-500"
-        title="Tech Stack"
-        subtitle="Technologies and tools I work with to build innovative solutions."
-      />
-      <div>
-        <motion.div
-          ref={ref}
-          variants={containerVariants}
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-          className="space-y-8"
-        >
-          {!showAll ? (
-            <>
-              {/* Elegant scrolling logos */}
-              <div className="relative w-full overflow-hidden py-8">
-                {/* Floating logos */}
-                <motion.div
-                  className="flex items-center"
-                  animate={{
-                    x: [0, "-50%"],
-                  }}
-                  transition={{
-                    x: {
-                      repeat: Infinity,
-                      repeatType: "loop",
-                      duration: 45,
-                      ease: "linear",
-                    },
-                  }}
-                >
-                  {duplicatedTechStack.map((tech, index) => (
-                    <TechItem key={`${tech.name}-${index}`} tech={tech} />
-                  ))}
-                </motion.div>
-              </div>
-
-              {/* Icon-only Show All Button */}
-              <div className="flex justify-center">
-                <button
-                  onClick={() => setShowAll(true)}
-                  className="h-10 w-10 inline-flex items-center justify-center rounded-xl border border-neutral-200 dark:border-white/10 bg-white/70 dark:bg-neutral-900/70 text-neutral-700 dark:text-neutral-300 hover:border-blue-500/50 hover:scale-105 transition-all cursor-pointer"
-                  title="Show all technologies"
-                >
-                  <Grid3X3 className="h-4 w-4" />
-                </button>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="py-8">
-                <TechCategories />
-              </div>
-
-              {/* Icon-only Back Button */}
-              <div className="flex justify-center">
-                <button
-                  onClick={() => setShowAll(false)}
-                  className="h-10 w-10 inline-flex items-center justify-center rounded-xl border border-neutral-200 dark:border-white/10 bg-white/70 dark:bg-neutral-900/70 text-neutral-700 dark:text-neutral-300 hover:border-blue-500/50 hover:scale-105 transition-all cursor-pointer"
-                  title="Back to scrolling view"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                </button>
-              </div>
-            </>
-          )}
-        </motion.div>
-      </div>
-    </section>
-  );
-}
