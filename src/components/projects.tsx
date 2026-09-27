@@ -40,6 +40,28 @@ function previewSrc(project: Project) {
 
 const projects: Project[] = [
     {
+        id: 9,
+        title: "NBA Savant",
+        period: "Sept. 2026",
+        description:
+            "Baseball Savant style NBA tracker with live scores, box scores, percentile rankings.",
+        tech: ["TypeScript", "Next.js", "PostgreSQL", "Prisma", "Data Queries", "REST API"],
+        github: "https://github.com/nickolastran/nbasavant",
+        demo: "https://github.com/nickolastran/nbasavant",
+        image: "/projects/nbasavant.png",
+    },
+        {
+        id: 7,
+        title: "TalentLens",
+        period: "Aug. 2026",
+        description:
+            "Resume to job description matcher scoring fit from an uploaded PDF and a pasted posting.",
+        tech: ["TypeScript", "Next.js", "Gemini API", "CSS"],
+        github: "https://github.com/nickolastran/TalentLens",
+        demo: "https://github.com/nickolastran/TalentLens",
+        image: "/projects/talentlens.png",
+    },
+    {
         id: 1,
         title: "AV Fleet Operations",
         period: "Aug. 2026",
@@ -105,17 +127,6 @@ const projects: Project[] = [
         featured: true,
     },
     {
-        id: 7,
-        title: "TalentLens",
-        period: "Sept. 2026",
-        description:
-            "Resume to job description matcher scoring fit from an uploaded PDF and a pasted posting.",
-        tech: ["TypeScript", "Next.js", "Gemini API", "CSS"],
-        github: "https://github.com/nickolastran/TalentLens",
-        demo: "https://github.com/nickolastran/TalentLens",
-        image: "/projects/talentlens.png",
-    },
-    {
         id: 8,
         title: "AI Sentiment Analyzer",
         period: "Jan. 2025",
@@ -125,6 +136,11 @@ const projects: Project[] = [
         github: "https://github.com/nickolastran/sentiment-analyzer",
     },
 ];
+
+// Featured first; sort is stable, so everything else keeps its listed order.
+const sortedProjects = [...projects].sort(
+    (a, b) => Number(!!b.featured) - Number(!!a.featured),
+);
 
 const foldButton =
     "group/btn flex items-center gap-2 px-6 py-3 rounded-full bg-white/70 dark:bg-neutral-900/70 backdrop-blur-md border border-neutral-200 dark:border-white/10 text-neutral-800 dark:text-neutral-200 font-semibold text-sm shadow-md hover:shadow-lg hover:border-blue-500/50 hover:scale-105 transition-all duration-300 cursor-pointer";
@@ -347,7 +363,7 @@ export default function Projects() {
                         ref={gridRef}
                         className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
                     >
-                        {projects.map((project, index) => (
+                        {sortedProjects.map((project, index) => (
                             <BentoCard
                                 key={project.id}
                                 delay={index * 0.05}
