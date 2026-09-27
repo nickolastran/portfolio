@@ -11,13 +11,13 @@ interface ContributionDay {
   level: number;
 }
 
-// GitHub's own level scale (0-4)
+// GitHub's level scale (0-4), greens reversed so more = lighter
 const LEVEL_COLORS = [
   "var(--gh-empty)",
-  "#9be9a8",
-  "#40c463",
-  "#30a14e",
   "#216e39",
+  "#30a14e",
+  "#40c463",
+  "#9be9a8",
 ];
 
 export default function GitHubContributions() {
@@ -135,7 +135,7 @@ export default function GitHubContributions() {
                       </span>
                     </div>
                     <div className="flex items-center gap-1">
-                      {["#9be9a8", "#40c463", "#30a14e", "#216e39"].map(
+                      {LEVEL_COLORS.slice(1).map(
                         (color, index) => (
                           <div
                             key={index}
@@ -174,7 +174,7 @@ export default function GitHubContributions() {
                     </span>
                   </div>
                   <div className="flex items-center gap-1">
-                    {["#9be9a8", "#40c463", "#30a14e", "#216e39"].map(
+                    {LEVEL_COLORS.slice(1).map(
                       (color, index) => (
                         <div
                           key={index}
