@@ -1,13 +1,14 @@
 import { Blocks, Gamepad2, Grid3x3, Type } from "lucide-react";
+import Link from "next/link";
 
 import BentoCard from "../../components/bento-card";
 import { SECTION } from "../../components/section-header";
 
 export const metadata = { title: "Games - Nickolas Tran" };
 
-const GAMES = [
+const GAMES: { name: string; icon: typeof Type; className: string; href?: string }[] = [
     { name: "Sudoku", icon: Grid3x3, className: "md:col-span-2 md:row-span-2" },
-    { name: "Crossword", icon: Type, className: "" },
+    { name: "Crossword", icon: Type, className: "", href: "/games/crossword" },
     { name: "Block Blast", icon: Blocks, className: "" },
     { name: "Tetris", icon: Gamepad2, className: "md:col-span-3" },
 ];
@@ -23,8 +24,11 @@ export default function Games() {
                     This section is a work in progress.
                 </p>
                 <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 md:auto-rows-[200px]">
-                    {GAMES.map(({ name, icon: Icon, className }, i) => (
+                    {GAMES.map(({ name, icon: Icon, className, href }, i) => (
                         <BentoCard key={name} className={className} delay={i * 0.1}>
+                            {href && (
+                                <Link href={href} aria-label={name} className="absolute inset-0 z-10" />
+                            )}
                             <div className="flex h-full min-h-32 flex-col justify-between">
                                 <Icon className="text-neutral-400" size={28} />
                                 <div>
@@ -32,7 +36,7 @@ export default function Games() {
                                         {name}
                                     </h2>
                                     <p className="text-neutral-600 dark:text-neutral-500 text-sm">
-                                        Coming soon
+                                        {href ? "Play" : "Coming soon"}
                                     </p>
                                 </div>
                             </div>
