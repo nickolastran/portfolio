@@ -1,0 +1,1003 @@
+/* Lumen Sudoku: a night-sky observatory. Given clues are fixed stars (cool,
+   bright, glowing); your entries are lamplight (warm, softer). Dawn is the
+   light alternative. Every color lives in the tokens below. */
+
+.lumen-page {
+    --sky-top: #0b0f2e;
+    --sky-bottom: #1c2263;
+    --surface: #161b4c;
+    --text: #dfe4ff;
+    --muted: #8f96c8;
+    --line: rgba(170, 182, 255, 0.13);
+    --line-strong: rgba(190, 200, 255, 0.42);
+    --cell-bg: rgba(8, 11, 38, 0.55);
+    --btn-bg: rgba(255, 255, 255, 0.045);
+    --btn-border: rgba(180, 190, 255, 0.2);
+    --star: #f2f5ff;
+    --star-glow: rgba(140, 170, 255, 0.7);
+    --lamp: #f2c58a;
+    --lamp-glow: rgba(242, 170, 90, 0.35);
+    --hint: #9fe3d2;
+    --comet: #8fb3ff;
+    --on-comet: #0b0f2e;
+    --band: rgba(143, 179, 255, 0.07);
+    --same: rgba(143, 179, 255, 0.2);
+    --rose: #ff8fa3;
+    --trace: #ffe2a8;
+    --sky-star: #fffaf0;
+    --glint: rgba(255, 255, 255, 0.4);
+    --dust: rgba(222, 230, 255, 0.75);
+    color-scheme: dark;
+}
+
+.lumen-page[data-theme="dawn"] {
+    --sky-top: #e4def6;
+    --sky-bottom: #fde3d6;
+    --surface: #fdf8f6;
+    --text: #23265c;
+    --muted: #686a95;
+    --line: rgba(35, 38, 92, 0.13);
+    --line-strong: rgba(35, 38, 92, 0.5);
+    --cell-bg: rgba(255, 255, 255, 0.62);
+    --btn-bg: rgba(255, 255, 255, 0.55);
+    --btn-border: rgba(35, 38, 92, 0.18);
+    --star: #1d215e;
+    --star-glow: transparent;
+    --lamp: #ad2f6c;
+    --lamp-glow: transparent;
+    --hint: #22796a;
+    --comet: #4652c8;
+    --on-comet: #fff;
+    --band: rgba(70, 82, 200, 0.06);
+    --same: rgba(70, 82, 200, 0.16);
+    --rose: #c0253f;
+    --trace: #4652c8;
+    --sky-star: #4652c8;
+    --glint: rgba(255, 255, 255, 0.9);
+    --dust: transparent;
+    color-scheme: light;
+}
+
+/* Same as above: "Match device" follows the system setting. */
+@media (prefers-color-scheme: light) {
+    .lumen-page[data-theme="system"] {
+        --sky-top: #e4def6;
+        --sky-bottom: #fde3d6;
+        --surface: #fdf8f6;
+        --text: #23265c;
+        --muted: #686a95;
+        --line: rgba(35, 38, 92, 0.13);
+        --line-strong: rgba(35, 38, 92, 0.5);
+        --cell-bg: rgba(255, 255, 255, 0.62);
+        --btn-bg: rgba(255, 255, 255, 0.55);
+        --btn-border: rgba(35, 38, 92, 0.18);
+        --star: #1d215e;
+        --star-glow: transparent;
+        --lamp: #ad2f6c;
+        --lamp-glow: transparent;
+        --hint: #22796a;
+        --comet: #4652c8;
+        --on-comet: #fff;
+        --band: rgba(70, 82, 200, 0.06);
+        --same: rgba(70, 82, 200, 0.16);
+        --rose: #c0253f;
+        --trace: #4652c8;
+    --sky-star: #4652c8;
+        --glint: rgba(255, 255, 255, 0.9);
+        --dust: transparent;
+        color-scheme: light;
+    }
+}
+
+/* ---------- Page ---------- */
+
+.lumen-page {
+    position: relative;
+    isolation: isolate;
+    min-height: 100svh;
+    background: linear-gradient(180deg, var(--sky-top), var(--sky-bottom));
+    color: var(--text);
+    font-family: var(--font-ui), system-ui, sans-serif;
+    letter-spacing: normal;
+}
+
+/* A scatter of background stars: a few dot tiles at co-prime sizes so the
+   repeat never lines up into a visible grid. */
+.lumen-page::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+        radial-gradient(1.2px 1.2px at 23px 41px, var(--dust), transparent),
+        radial-gradient(1px 1px at 120px 80px, var(--dust), transparent),
+        radial-gradient(1.5px 1.5px at 60px 150px, var(--dust), transparent),
+        radial-gradient(1px 1px at 190px 220px, var(--dust), transparent),
+        radial-gradient(1.8px 1.8px at 300px 60px, var(--dust), transparent);
+    background-size: 211px 211px, 173px 173px, 263px 263px, 331px 331px, 409px 409px;
+    opacity: 0.55;
+}
+
+.lumen {
+    max-width: 34rem;
+    margin: 0 auto;
+    padding: 5.5rem 1rem 3rem;
+}
+
+.lumen-page :focus-visible {
+    outline: 2px solid var(--comet);
+    outline-offset: 2px;
+}
+
+.lumen-page button {
+    cursor: pointer;
+}
+
+.lumen-page button:disabled {
+    cursor: default;
+}
+
+.lumen-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.lumen-head h1 {
+    font-family: var(--font-atlas), serif;
+    font-size: clamp(1.6rem, 6vw, 2.1rem);
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    color: var(--star);
+    text-shadow: 0 0 18px var(--star-glow);
+}
+
+.head-tools {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.icon-btn {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    color: var(--muted);
+}
+
+.icon-btn:hover:not(:disabled) {
+    color: var(--text);
+    background: var(--band);
+}
+
+.icon-btn:disabled {
+    opacity: 0.35;
+}
+
+.modes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+}
+
+.segmented {
+    display: inline-flex;
+    padding: 3px;
+    border: 1px solid var(--btn-border);
+    border-radius: 999px;
+    background: var(--btn-bg);
+}
+
+.segmented button {
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    color: var(--muted);
+    white-space: nowrap;
+}
+
+.segmented button:hover {
+    color: var(--text);
+}
+
+.segmented button[aria-pressed="true"] {
+    background: var(--comet);
+    color: var(--on-comet);
+    font-weight: 500;
+}
+
+.solved-star {
+    margin-left: 0.3em;
+    font-size: 0.75em;
+}
+
+.blurb {
+    margin-top: 0.75rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+}
+
+.status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 1rem 0 0.6rem;
+}
+
+.clock {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-right: auto;
+    margin-left: -0.5rem;
+}
+
+.time {
+    font-size: 1.05rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.btn {
+    padding: 0.45rem 1rem;
+    border: 1px solid var(--btn-border);
+    border-radius: 999px;
+    background: var(--btn-bg);
+    font-size: 0.875rem;
+    color: var(--text);
+}
+
+.btn:hover:not(:disabled) {
+    border-color: var(--comet);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+}
+
+.btn.primary {
+    border-color: var(--comet);
+    background: var(--comet);
+    color: var(--on-comet);
+    font-weight: 500;
+}
+
+/* ---------- Board ---------- */
+
+.board-frame {
+    position: relative;
+    container-type: inline-size;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-rows: repeat(9, 1fr);
+    aspect-ratio: 1;
+    overflow: hidden;
+    border: 2px solid var(--line-strong);
+    border-radius: 12px;
+    box-shadow: 0 0 40px -12px var(--star-glow);
+    transition: filter 0.25s, opacity 0.25s;
+}
+
+.board-row {
+    display: contents;
+}
+
+.cell {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-width: 0;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    background: var(--cell-bg);
+    transition:
+        background-color 0.1s,
+        box-shadow 0.1s,
+        opacity 0.2s;
+}
+
+.board-row > .cell:last-child {
+    border-right: 0;
+}
+
+.board-row:last-child > .cell {
+    border-bottom: 0;
+}
+
+.cell.edge-r {
+    border-right: 2px solid var(--line-strong);
+}
+
+.cell.edge-b {
+    border-bottom: 2px solid var(--line-strong);
+}
+
+.digit {
+    font-size: calc(100cqw / 9 * 0.56);
+    line-height: 1;
+}
+
+.given .digit {
+    color: var(--star);
+    font-weight: 500;
+    text-shadow:
+        0 0 2px var(--star-glow),
+        0 0 12px var(--star-glow);
+}
+
+.entry .digit {
+    color: var(--lamp);
+    font-weight: 300;
+    text-shadow: 0 0 10px var(--lamp-glow);
+}
+
+.hinted .digit {
+    color: var(--hint);
+    font-weight: 400;
+}
+
+/* Hints carry a small star, so they read as hints without color. */
+.hinted::before {
+    content: "✦";
+    position: absolute;
+    top: 6%;
+    right: 9%;
+    font-size: calc(100cqw / 9 * 0.17);
+    color: var(--hint);
+}
+
+.notes {
+    position: absolute;
+    inset: 7%;
+    display: grid;
+    grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+    place-items: center;
+    font-size: calc(100cqw / 9 * 0.22);
+    line-height: 1;
+    color: var(--muted);
+}
+
+.notes .hot {
+    color: var(--comet);
+    font-weight: 700;
+}
+
+/* Highlights: row/column/box faintly, matching digits more strongly with a
+   ring, the selection with a thick frame. */
+.cell.band {
+    background-color: color-mix(in srgb, var(--cell-bg), var(--comet) 9%);
+}
+
+.cell.same {
+    background-color: color-mix(in srgb, var(--cell-bg), var(--comet) 22%);
+    box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--comet) 60%, transparent);
+}
+
+.cell.selected {
+    background-color: color-mix(in srgb, var(--cell-bg), var(--comet) 26%);
+    box-shadow: inset 0 0 0 3px var(--comet);
+    z-index: 1;
+}
+
+.cell:focus-visible {
+    outline: none;
+}
+
+/* Conflicts: color, a dashed frame, and hatching. */
+.cell.conflict {
+    background-image: repeating-linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--rose) 22%, transparent) 0 3px,
+        transparent 3px 7px
+    );
+    outline: 2px dashed var(--rose);
+    outline-offset: -5px;
+}
+
+.cell.conflict .digit {
+    color: var(--rose);
+    text-shadow: none;
+}
+
+/* Checked and wrong: a slash through the digit. */
+.cell.wrong::after {
+    content: "";
+    position: absolute;
+    left: 20%;
+    right: 20%;
+    top: 50%;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--rose);
+    transform: rotate(-38deg);
+}
+
+.cell.wrong .digit {
+    color: var(--rose);
+}
+
+/* Focus Lens: only cells that could still hold the digit stay lit. */
+.cell.dim {
+    opacity: 0.2;
+}
+
+/* A finished row, column, or box: light sweeps along it, cell by cell. */
+.glint {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(115deg, transparent 25%, var(--glint) 50%, transparent 75%);
+    background-size: 300% 100%;
+    animation: glint 0.9s ease-out calc(var(--k) * 45ms) both;
+}
+
+@keyframes glint {
+    from {
+        background-position: 100% 0;
+        opacity: 1;
+    }
+    to {
+        background-position: 0 0;
+        opacity: 0;
+    }
+}
+
+/* Paused: contents are hidden outright (the blur is just atmosphere), so
+   there's nothing to study even mid-transition. */
+.board.veiled {
+    filter: blur(14px);
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.board.veiled .cell > * {
+    visibility: hidden;
+}
+
+.board-cover {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.9rem;
+    font-size: 1rem;
+    color: var(--text);
+}
+
+.board-cover p {
+    font-family: var(--font-atlas), serif;
+    font-size: 1.6rem;
+}
+
+.pulse-star {
+    font-size: 1.6rem;
+    color: var(--star);
+    text-shadow: 0 0 14px var(--star-glow);
+    animation: pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    50% {
+        opacity: 0.3;
+        transform: scale(0.8);
+    }
+}
+
+/* ---------- Constellations ---------- */
+
+.sky-line {
+    stroke: var(--trace);
+    stroke-width: 0.045;
+    stroke-linecap: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+    opacity: 0.85;
+}
+
+/* Filter lengths here are in board cells, not pixels. */
+.sky-star {
+    fill: var(--sky-star);
+    filter: drop-shadow(0 0 0.08px var(--trace));
+    transform-box: fill-box;
+    transform-origin: center;
+}
+
+.sky.drawing {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.sky.drawing .sky-star {
+    animation: star-in 0.6s ease-out calc(var(--k) * 0.12s) both;
+}
+
+.sky.drawing .sky-line {
+    animation: trace 0.55s ease-in-out calc(0.6s + var(--k) * 0.28s) both;
+}
+
+@keyframes star-in {
+    from {
+        opacity: 0;
+        transform: scale(0);
+    }
+}
+
+@keyframes trace {
+    from {
+        stroke-dashoffset: 1;
+    }
+}
+
+.sky.mini {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    border: 1px solid var(--btn-border);
+    border-radius: 10px;
+    background:
+        linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 33.34% 33.34%,
+        linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 33.34% 33.34%,
+        radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--comet) 14%, transparent), transparent 70%);
+}
+
+.sky-name {
+    margin-top: 0.75rem;
+    text-align: center;
+    font-family: var(--font-atlas), serif;
+    font-size: 1.35rem;
+    color: var(--trace);
+}
+
+/* ---------- Controls ---------- */
+
+.notice {
+    min-height: 2.8em;
+    margin: 0.6rem 0 0.4rem;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    text-align: center;
+    text-wrap: pretty;
+}
+
+.tools {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 2px;
+}
+
+.tool {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    width: 100%;
+    padding: 0.45rem 0 0.4rem;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    color: var(--muted);
+}
+
+.tool:hover:not(:disabled) {
+    color: var(--text);
+    background: var(--band);
+}
+
+.tool:disabled {
+    opacity: 0.35;
+}
+
+/* Toggled tools get a bar under the label, not just a color change. */
+.tool[aria-pressed="true"] {
+    color: var(--comet);
+    background: var(--band);
+}
+
+.tool[aria-pressed="true"]::after {
+    content: "";
+    position: absolute;
+    bottom: 2px;
+    width: 1.1rem;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+}
+
+.check {
+    position: relative;
+}
+
+.check-menu {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 6px);
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    min-width: 9rem;
+    padding: 0.3rem;
+    border: 1px solid var(--btn-border);
+    border-radius: 12px;
+    background: var(--surface);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+.check-menu button {
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    text-align: left;
+    font-size: 0.875rem;
+    color: var(--text);
+}
+
+.check-menu button:hover {
+    background: var(--band);
+}
+
+.pad {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 5px;
+    margin-top: 0.6rem;
+}
+
+.pad button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    height: 3.75rem;
+    border: 1px solid var(--btn-border);
+    border-radius: 10px;
+    background: var(--btn-bg);
+    transition:
+        opacity 0.2s,
+        border-color 0.1s;
+}
+
+.pad button:hover {
+    border-color: var(--comet);
+}
+
+.pad-digit {
+    font-size: 1.6rem;
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--text);
+}
+
+.pad-left {
+    font-size: 0.7rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Every copy placed: the key fades back. */
+.pad button.spent {
+    opacity: 0.3;
+}
+
+/* Note mode: dashed keys and small digits, like pencil marks. */
+.pad.noting button {
+    border-style: dashed;
+}
+
+.pad.noting .pad-digit {
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--muted);
+}
+
+.keys {
+    margin-top: 1.25rem;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: var(--muted);
+}
+
+@media (hover: none) {
+    .keys {
+        display: none;
+    }
+}
+
+/* ---------- Dialogs ---------- */
+
+.lumen-dialog {
+    width: min(34rem, calc(100vw - 2rem));
+    max-height: calc(100svh - 2rem);
+    margin: auto;
+    padding: 0;
+    border: 1px solid var(--btn-border);
+    border-radius: 16px;
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.6);
+}
+
+.lumen-dialog::backdrop {
+    background: rgba(5, 7, 25, 0.55);
+    backdrop-filter: blur(3px);
+}
+
+.dialog-body {
+    padding: 1.1rem 1.25rem 1.4rem;
+}
+
+.dialog-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.9rem;
+}
+
+.dialog-head h2 {
+    font-family: var(--font-atlas), serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+}
+
+.dialog-head .icon-btn {
+    margin-right: -0.5rem;
+}
+
+.fine {
+    font-size: 0.8rem;
+    line-height: 1.45;
+    color: var(--muted);
+}
+
+.empty {
+    padding: 1.5rem 0;
+    color: var(--muted);
+    line-height: 1.5;
+}
+
+.dialog-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1.4rem;
+}
+
+.theme-pick {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.2rem;
+}
+
+.theme-pick legend {
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+
+.theme-pick label {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.theme-pick input {
+    accent-color: var(--comet);
+}
+
+.switches {
+    margin-top: 1.1rem;
+    border-top: 1px solid var(--line);
+}
+
+.switches label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.95rem;
+}
+
+/* The knob's position says on/off, the fill color repeats it. */
+input[role="switch"] {
+    appearance: none;
+    flex-shrink: 0;
+    position: relative;
+    width: 2.5rem;
+    height: 1.4rem;
+    border: 1px solid var(--btn-border);
+    border-radius: 999px;
+    background: var(--btn-bg);
+    cursor: pointer;
+}
+
+input[role="switch"]::before {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: calc(1.4rem - 6px);
+    height: calc(1.4rem - 6px);
+    border-radius: 50%;
+    background: var(--muted);
+    transition: transform 0.15s;
+}
+
+input[role="switch"]:checked {
+    border-color: var(--comet);
+    background: var(--comet);
+}
+
+input[role="switch"]:checked::before {
+    background: var(--on-comet);
+    transform: translateX(1.1rem);
+}
+
+.stats {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+.stats th,
+.stats td {
+    padding: 0.5rem 0.25rem;
+    border-bottom: 1px solid var(--line);
+}
+
+.stats thead th {
+    font-weight: 500;
+    color: var(--muted);
+}
+
+.stats tbody th {
+    text-align: left;
+    font-weight: 400;
+}
+
+.stats td {
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+.stats + .fine {
+    margin-top: 0.8rem;
+}
+
+.chart {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+    gap: 1rem;
+}
+
+.chart-name {
+    margin-top: 0.4rem;
+    font-family: var(--font-atlas), serif;
+    font-size: 1rem;
+}
+
+.done-hero {
+    display: grid;
+    grid-template-columns: 6.5rem 1fr;
+    align-items: center;
+    gap: 1rem;
+}
+
+.done-name {
+    font-family: var(--font-atlas), serif;
+    font-size: 1.45rem;
+    color: var(--trace);
+}
+
+.done-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+    margin-top: 1.2rem;
+    padding: 0.8rem 0;
+    border-block: 1px solid var(--line);
+    text-align: center;
+}
+
+.done-stats dt {
+    font-size: 0.75rem;
+    color: var(--muted);
+}
+
+.done-stats dd {
+    font-size: 1.1rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.journal {
+    margin-top: 1.1rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.journal h3 {
+    margin-bottom: 0.4rem;
+    font-family: var(--font-atlas), serif;
+    font-size: 1.15rem;
+    font-weight: 400;
+}
+
+.journal h4 {
+    margin-top: 1rem;
+    font-weight: 500;
+}
+
+.chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin: 0.4rem 0 0.7rem;
+}
+
+.chips li {
+    padding: 0.15rem 0.6rem;
+    border: 1px solid var(--btn-border);
+    border-radius: 999px;
+    font-size: 0.8rem;
+}
+
+.learned div {
+    margin-top: 0.6rem;
+}
+
+.learned dt {
+    color: var(--trace);
+}
+
+.learned dd {
+    color: var(--muted);
+}
+
+@media (max-width: 420px) {
+    .lumen {
+        padding-inline: 1rem;
+    }
+
+    .segmented button {
+        padding-inline: 0.6rem;
+    }
+
+    .pad {
+        gap: 3px;
+    }
+
+    .pad button {
+        height: 3.4rem;
+    }
+
+    .done-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .glint,
+    .pulse-star,
+    .sky.drawing .sky-star,
+    .sky.drawing .sky-line {
+        animation: none;
+    }
+
+    .board,
+    .cell,
+    input[role="switch"]::before {
+        transition: none;
+    }
+}
