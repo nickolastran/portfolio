@@ -47,8 +47,9 @@ const projects: Project[] = [
             "Random forest salary models flagging which MLB players are underpaid or overpaid, 2016–2026.",
         tech: ["TypeScript", "React", "Python", "sklearn", "Plotly", "Random Forest"],
         github: "https://github.com/nickolastran/mlb-player-value",
-        demo: "https://github.com/nickolastran/mlb-player-value",
+        demo: "https://nickolastran.github.io/mlb-player-value/",
         image: "/projects/mlbplayervalue.png",
+        featured: true,
     },
     {
         id: 9,
