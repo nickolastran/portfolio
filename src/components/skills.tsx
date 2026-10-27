@@ -51,7 +51,7 @@ export const techCategories: TechCategory[] = [
       },
       {
         name: "LaTeX",
-        logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/latex/latex-original.svg",
+        logo: "https://cdn.simpleicons.org/latex/white",
       },
       {
         name: "MATLAB",
@@ -126,6 +126,22 @@ export const techCategories: TechCategory[] = [
             name: "scikit-learn",
             logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/scikitlearn/scikitlearn-original.svg",
           },
+          {
+            name: "Supabase",
+            logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/supabase/supabase-original.svg",
+          },
+          {
+            name: "Prisma",
+            logo: "https://cdn.simpleicons.org/prisma/white",
+          },
+          {
+            name: "Flask",
+            logo: "https://cdn.simpleicons.org/flask/white",
+          },
+          {
+            name: "Plotly",
+            logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/plotly/plotly-original.svg",
+          },
         ],
       },
     ],
@@ -139,7 +155,7 @@ export const techCategories: TechCategory[] = [
       },
       {
         name: "GitHub",
-        logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg",
+        logo: "https://cdn.simpleicons.org/github/white",
       },
       {
         name: "Docker",
@@ -152,6 +168,14 @@ export const techCategories: TechCategory[] = [
       {
         name: "Kubernetes",
         logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-plain.svg",
+      },
+      {
+        name: "Tableau",
+        logo: "https://cdn.worldvectorlogo.com/logos/tableau-software.svg",
+      },
+      {
+        name: "Qlik Sense",
+        logo: "https://cdn.simpleicons.org/qlik",
       },
     ],
   },
