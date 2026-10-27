@@ -7,7 +7,7 @@ import { SECTION } from "../../components/section-header";
 export const metadata = { title: "Games - Nickolas Tran" };
 
 const GAMES: { name: string; icon: typeof Type; className: string; href?: string }[] = [
-    { name: "Sudoku", icon: Grid3x3, className: "md:col-span-2 md:row-span-2" },
+    { name: "Sudoku", icon: Grid3x3, className: "md:col-span-2 md:row-span-2", href: "/games/sudoku" },
     { name: "Crossword", icon: Type, className: "", href: "/games/crossword" },
     { name: "Block Blast", icon: Blocks, className: "" },
     { name: "Tetris", icon: Gamepad2, className: "md:col-span-3" },
