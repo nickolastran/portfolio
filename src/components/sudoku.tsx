@@ -1,31 +1,30 @@
 "use client";
 
-import { ChartColumn, CheckCheck, Eraser, Focus, Lightbulb, Pause, Pencil, Play, Redo2, Settings as Gear, Sparkles, Telescope, Undo2 } from "lucide-react";
+import { ChartColumn, CheckCheck, ChevronLeft, Eraser, Focus, Lightbulb, Pause, Pencil, Play, Redo2, Settings as Gear, Sparkles, Undo2 } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
-import { boxOf, colOf, describeHint, digitsOf, findHint, hashSeed, rowOf, UNITS } from "../lib/sudoku.mjs";
+import { boxOf, colOf, describeHint, digitsOf, findHint, hashSeed, rowOf } from "../lib/sudoku.mjs";
 import {
     applyHint,
     completeUnits,
     conflicts,
-    constellation,
     couldHold,
     createGame,
     erase,
-    fillCandidates,
     isLocked,
     isSolved,
     place,
     redo,
     remaining,
-    streaks,
+    setAuto,
     toggleNote,
     undo,
 } from "../lib/sudoku-game.mjs";
 import { chime } from "../lib/sudoku-sound";
 import * as store from "../lib/sudoku-store";
 import { type Difficulty, type Game, LEVELS, type Puzzle, type Slot, time } from "../lib/sudoku-store";
-import { ChartDialog, DoneDialog, LABEL, SettingsDialog, Sky, StatsDialog } from "./sudoku-dialogs";
+import { DoneDialog, LABEL, SettingsDialog, StatsDialog } from "./sudoku-dialogs";
 import "./sudoku.css";
 
 type Kind = Slot["kind"];
@@ -46,16 +45,14 @@ function runWorker(difficulty: Difficulty, seed: number) {
 }
 
 const randomSeed = () => crypto.getRandomValues(new Uint32Array(1))[0];
-const reducedMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 const filling = new Set<Difficulty>();
 const NO_CELLS = new Set<number>();
 
-function Lumen() {
+function Game() {
     const [date] = useState(store.today);
     const [settings, setSettings] = useState(store.loadSettings);
     const [stats, setStats] = useState(store.loadStats);
     const [daily, setDaily] = useState(store.loadDaily);
-    const [chart, setChart] = useState(store.loadChart);
     const [{ kind, difficulty }, setMode] = useState(store.loadLast);
     const [slot, setSlot] = useState<Slot | null>(() => store.loadSlot(store.slotKey(kind, difficulty, date)));
     const [selected, setSelected] = useState(40);
@@ -64,8 +61,7 @@ function Lumen() {
     const [lastDigit, setLastDigit] = useState(0);
     const [paused, setPaused] = useState(false);
     const [notice, setNotice] = useState("");
-    const [shimmer, setShimmer] = useState<{ id: number; order: Map<number, number> } | null>(null);
-    const [dialog, setDialog] = useState<"settings" | "stats" | "chart" | "done" | null>(null);
+    const [dialog, setDialog] = useState<"settings" | "stats" | "done" | null>(null);
     const [checkMenu, setCheckMenu] = useState(false);
     const pool = useRef(store.loadPool());
     const request = useRef(0);
@@ -106,11 +102,11 @@ function Lumen() {
         job.then((puzzle) => {
             if (token !== request.current) return;
             const game = createGame(puzzle.puzzle, puzzle.solution);
-            setSlot({ key: store.slotKey(k, d, date), kind: k, date, puzzle, game, seconds: 0, auto: false, hints: [], marks: {}, solved: false, learned: [] });
+            setSlot({ key: store.slotKey(k, d, date), kind: k, date, puzzle, game, seconds: 0, hints: [], marks: {}, solved: false, learned: [] });
             setSelected(game.values.indexOf(0));
             bump(d, (s) => ({ ...s, played: s.played + 1 }));
             if (k === "classic") refill(d);
-        }).catch(() => token === request.current && setNotice("Couldn't make a puzzle. Reload the page to try again."));
+        }).catch(() => token === request.current && setNotice("Couldn't make a puzzle. Reload to try again."));
     };
 
     const open = (k: Kind, d: Difficulty) => {
@@ -195,8 +191,7 @@ function Lumen() {
             store.saveDaily(next);
         }
         if (settings.sound) chime.solve();
-        setNotice(`Solved in ${time(secs)}. ${constellation(slot.puzzle.seed).name} appears over the board.`);
-        setTimeout(() => setDialog("done"), reducedMotion() ? 0 : 2800);
+        setDialog("done");
     };
 
     // Every board change goes through here: completion effects, then save.
@@ -205,34 +200,23 @@ function Lumen() {
         setNotice("");
         if (isSolved(next)) return finish(next, patch);
         change({ ...patch, game: next });
-        const before = completeUnits(g);
-        const fresh: number[] = completeUnits(next).filter((u: number) => !before.includes(u));
-        if (fresh.length) {
-            const order = new Map<number, number>();
-            for (const u of fresh) UNITS[u].forEach((c, k) => order.set(c, Math.min(order.get(c) ?? k, k)));
-            const id = Date.now();
-            setShimmer({ id, order });
-            setTimeout(() => setShimmer((sh) => (sh?.id === id ? null : sh)), 1800);
-            if (settings.sound) chime.unit();
-        } else if (digit && settings.sound) chime.place(digit);
+        if (!settings.sound) return;
+        if (completeUnits(next).length > completeUnits(g).length) chime.unit();
+        else if (digit) chime.place(digit);
     };
 
     const input = (d: number) => {
         setLastDigit(d);
         if (!live || !g) return;
         if (noteMode) commit(toggleNote(g, selected, d));
-        else commit(place(g, selected, d, { autoRemove: settings.autoRemove, auto: slot.auto }), {}, d);
+        else commit(place(g, selected, d, { autoRemove: settings.autoRemove }), {}, d);
     };
 
-    const clear = () => live && g && commit(erase(g, selected, { auto: slot.auto }));
+    const clear = () => live && g && commit(erase(g, selected));
     const back = () => live && g && commit(undo(g));
     const forward = () => live && g && commit(redo(g));
 
-    const toggleAuto = () => {
-        if (!live || !g) return;
-        if (slot.auto) change({ auto: false });
-        else commit(fillCandidates(g), { auto: true });
-    };
+    const toggleAuto = () => live && g && commit(setAuto(g, !g.auto));
 
     const hint = () => {
         if (!live || !g) return;
@@ -249,10 +233,9 @@ function Lumen() {
         setCheckMenu(false);
         if (!live || !g) return;
         const v = g.values[selected];
-        if (!v || isLocked(g, selected)) return setNotice("Select a cell you've filled in, then check it.");
-        if (v === g.solution[selected]) return setNotice("That digit is correct.");
-        change({ marks: { ...slot.marks, [selected]: v } });
-        setNotice("That digit is wrong. It's marked with a slash.");
+        if (!v || isLocked(g, selected)) return setNotice("Select a filled cell.");
+        setNotice("");
+        if (v !== g.solution[selected]) change({ marks: { ...slot.marks, [selected]: v } });
     };
 
     const checkPuzzle = () => {
@@ -260,33 +243,12 @@ function Lumen() {
         if (!live || !g) return;
         const wrong = g.values.flatMap((v: number, i: number) => (v && v !== g.solution[i] ? [i] : []));
         change({ marks: { ...slot.marks, ...Object.fromEntries(wrong.map((i: number) => [i, g.values[i]])) } });
-        setNotice(
-            wrong.length
-                ? `${wrong.length} ${wrong.length === 1 ? "digit is" : "digits are"} wrong, marked with a slash.`
-                : "Everything you've placed so far is correct.",
-        );
+        setNotice("");
     };
 
     const updateSettings = (s: store.Settings) => {
         setSettings(s);
         store.saveSettings(s);
-    };
-
-    const saveToChart = () => {
-        if (!slot || chart.some((e) => e.key === `${slot.key}:${slot.puzzle.seed}`)) return;
-        const next = [
-            ...chart,
-            {
-                key: `${slot.key}:${slot.puzzle.seed}`,
-                seed: slot.puzzle.seed,
-                name: constellation(slot.puzzle.seed).name,
-                difficulty: slot.puzzle.difficulty,
-                date,
-                seconds: slot.seconds,
-            },
-        ];
-        setChart(next);
-        store.saveChart(next);
     };
 
     /* ---------- Keyboard ---------- */
@@ -301,7 +263,6 @@ function Lumen() {
             if (dialog) return;
             const t = e.target as HTMLElement;
             if (t.closest("input, select, textarea")) return;
-            const onControl = t.closest("button, a") && !t.closest(".board");
             const k = e.key.toLowerCase();
             const mod = e.ctrlKey || e.metaKey;
 
@@ -313,7 +274,8 @@ function Lumen() {
                 if (e.shiftKey && live && g) commit(toggleNote(g, selected, d));
                 else input(d);
             } else if (k === "backspace" || k === "delete" || k === "0") clear();
-            else if ((k === " " && !onControl) || k === "n") setNoteMode((m) => !m);
+            // Space always toggles notes, even with a button focused; Enter still clicks.
+            else if (k === " " || k === "n") setNoteMode((m) => !m);
             else {
                 const step = { arrowup: -9, w: -9, arrowdown: 9, s: 9, arrowleft: -1, a: -1, arrowright: 1, d: 1 }[k];
                 if (!step || paused) return;
@@ -329,56 +291,6 @@ function Lumen() {
 
     /* ---------- Render ---------- */
 
-    const theme = settings.theme;
-    const doneToday = (d: Difficulty) => daily[d].includes(date);
-    const streak = streaks(daily[difficulty], date).current;
-
-    const header = (
-        <header className="lumen-head">
-            <h1>Lumen Sudoku</h1>
-            <nav aria-label="Lumen Sudoku" className="head-tools">
-                <button className="icon-btn" aria-label="Star Chart" onClick={() => setDialog("chart")}>
-                    <Telescope size={20} />
-                </button>
-                <button className="icon-btn" aria-label="Statistics" onClick={() => setDialog("stats")}>
-                    <ChartColumn size={20} />
-                </button>
-                <button className="icon-btn" aria-label="Settings" onClick={() => setDialog("settings")}>
-                    <Gear size={20} />
-                </button>
-            </nav>
-        </header>
-    );
-
-    const modes = (
-        <div className="modes">
-            <div className="segmented" role="group" aria-label="Puzzle type">
-                {(["daily", "classic"] as const).map((k) => (
-                    <button key={k} aria-pressed={kind === k} onClick={() => kind !== k && open(k, difficulty)}>
-                        {k === "daily" ? "Daily" : "Classic"}
-                    </button>
-                ))}
-            </div>
-            <div className="segmented" role="group" aria-label="Difficulty">
-                {LEVELS.map((d) => (
-                    <button key={d} aria-pressed={difficulty === d} onClick={() => difficulty !== d && open(kind, d)}>
-                        {LABEL[d]}
-                        {kind === "daily" && doneToday(d) && (
-                            <span className="solved-star" role="img" aria-label="solved today">
-                                ✦
-                            </span>
-                        )}
-                    </button>
-                ))}
-            </div>
-        </div>
-    );
-
-    const blurb =
-        kind === "daily"
-            ? `The daily puzzle for ${new Date(`${date}T12:00:00`).toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" })}.${streak ? ` ${streak}-day streak.` : ""}`
-            : "A fresh puzzle whenever you want one.";
-
     const vals: number[] = g?.values ?? [];
     const selDigit = vals[selected] ?? 0;
     const lensDigit = selDigit || lastDigit;
@@ -387,207 +299,181 @@ function Lumen() {
     const left: number[] = g ? remaining(vals) : Array(10).fill(9);
     const sameBand = (i: number) => rowOf(i) === rowOf(selected) || colOf(i) === colOf(selected) || boxOf(i) === boxOf(selected);
 
-    const board = (
-        <div className="board-frame">
-            <div
-                ref={boardRef}
-                role="grid"
-                aria-label={`Sudoku board${paused ? ", hidden while paused" : ""}`}
-                inert={paused || !g}
-                className={`board${paused ? " veiled" : ""}${holdable ? " lensed" : ""}`}
-            >
-                {Array.from({ length: 9 }, (_, r) => (
-                    <div role="row" key={r} className="board-row">
-                        {Array.from({ length: 9 }, (_, c) => {
-                            const i = r * 9 + c;
-                            const v = vals[i] ?? 0;
-                            const given = !!g?.givens[i];
-                            const hinted = !!g?.hinted.includes(i);
-                            const notes = g?.notes[i] ?? 0;
-                            const wrong = !!v && slot?.marks[i] === v;
-                            const conflict = clash.has(i);
-                            const same = settings.sameDigits && !!v && v === selDigit && i !== selected;
-                            const order = shimmer?.order.get(i);
-                            const label = [
-                                `Row ${r + 1}, column ${c + 1}`,
-                                v ? `${v}${given ? ", given" : hinted ? ", hint" : ""}` : "empty",
-                                notes ? `notes ${digitsOf(notes).join(" ")}` : "",
-                                conflict ? "conflict" : "",
-                                wrong ? "incorrect" : "",
-                            ]
-                                .filter(Boolean)
-                                .join(", ");
-                            return (
-                                <button
-                                    key={i}
-                                    ref={(el) => {
-                                        cellRefs.current[i] = el;
-                                    }}
-                                    role="gridcell"
-                                    aria-label={label}
-                                    aria-selected={i === selected}
-                                    tabIndex={i === selected ? 0 : -1}
-                                    onClick={() => go(i)}
-                                    onFocus={() => setSelected(i)}
-                                    className={[
-                                        "cell",
-                                        given ? "given" : hinted ? "hinted" : v ? "entry" : "",
-                                        i === selected && "selected",
-                                        i !== selected && sameBand(i) && "band",
-                                        same && "same",
-                                        conflict && "conflict",
-                                        wrong && "wrong",
-                                        holdable && !holdable[i] && "dim",
-                                        c % 3 === 2 && c < 8 && "edge-r",
-                                        r % 3 === 2 && r < 8 && "edge-b",
-                                    ]
-                                        .filter(Boolean)
-                                        .join(" ")}
-                                >
-                                    {order !== undefined && (
-                                        <span key={shimmer!.id} className="glint" aria-hidden style={{ "--k": order } as React.CSSProperties} />
-                                    )}
-                                    {v ? (
-                                        <span className="digit">{v}</span>
-                                    ) : notes ? (
-                                        <span className="notes" aria-hidden>
-                                            {Array.from({ length: 9 }, (_, k) => (
-                                                <span key={k} className={notes & (1 << k) && k + 1 === lensDigit ? "hot" : undefined}>
-                                                    {notes & (1 << k) ? k + 1 : ""}
-                                                </span>
-                                            ))}
-                                        </span>
-                                    ) : null}
-                                </button>
-                            );
-                        })}
-                    </div>
-                ))}
-            </div>
-            {slot?.solved && <Sky seed={slot.puzzle.seed} className="sky drawing" />}
-            {!g && (
-                <div className="board-cover" role="status">
-                    <span className="pulse-star" aria-hidden>
-                        ✦
-                    </span>
-                    Charting a new sky
-                </div>
-            )}
-            {paused && g && (
-                <div className="board-cover">
-                    <p>Paused</p>
-                    <button className="btn primary" onClick={() => setPaused(false)} autoFocus>
-                        Resume
-                    </button>
-                </div>
-            )}
+    const segmented = <T extends string>(label: string, items: readonly T[], current: T, pick: (v: T) => void, name: (v: T) => string, done?: (v: T) => boolean) => (
+        <div className="segmented" role="group" aria-label={label}>
+            {items.map((v) => (
+                <button key={v} aria-pressed={current === v} onClick={() => current !== v && pick(v)}>
+                    {name(v)}
+                    {done?.(v) && <span className="dot" role="img" aria-label="solved today" />}
+                </button>
+            ))}
         </div>
     );
 
     const tool = (label: string, Icon: typeof Undo2, onClick: () => void, opts: { pressed?: boolean; disabled?: boolean } = {}) => (
-        <button className="tool" aria-pressed={opts.pressed} disabled={opts.disabled ?? !live} onClick={onClick}>
+        <button className="icon-btn" title={label} aria-label={label} aria-pressed={opts.pressed} disabled={opts.disabled ?? !live} onClick={onClick}>
             <Icon size={20} aria-hidden />
-            <span>{label}</span>
         </button>
     );
 
     return (
-        <div className="lumen-page" data-theme={theme}>
-            <div className="lumen">
-                {header}
-                {modes}
-                <p className="blurb">{blurb}</p>
+        <div className="sudoku">
+            <header className="bar">
+                <Link href="/games" className="icon-btn back" title="Games" aria-label="Back to games">
+                    <ChevronLeft size={22} />
+                </Link>
+                <h1>Sudoku</h1>
+                {tool("Statistics", ChartColumn, () => setDialog("stats"), { disabled: false })}
+                {tool("Settings", Gear, () => setDialog("settings"), { disabled: false })}
+            </header>
 
-                <div className="status">
-                    <div className="clock">
-                        <button
-                            className="icon-btn"
-                            aria-label={paused ? "Resume" : "Pause"}
-                            disabled={!slot || slot.solved}
-                            onClick={() => setPaused((p) => !p)}
-                        >
-                            {paused ? <Play size={18} /> : <Pause size={18} />}
-                        </button>
-                        {settings.showTimer && slot && (
-                            <span className="time" aria-label={`Time ${time(slot.seconds)}`}>
-                                {time(slot.seconds)}
-                            </span>
-                        )}
-                    </div>
-                    {slot?.solved && (
-                        <button className="btn" onClick={() => setDialog("done")}>
-                            Summary
-                        </button>
-                    )}
-                    {kind === "classic" && (
-                        <button className="btn primary" onClick={newPuzzle}>
-                            New puzzle
-                        </button>
-                    )}
-                </div>
+            <div className="bar">
+                {segmented("Puzzle type", ["daily", "classic"] as const, kind, (k) => open(k, difficulty), (k) => (k === "daily" ? "Daily" : "Classic"))}
+                {segmented("Difficulty", LEVELS, difficulty, (d) => open(kind, d), (d) => LABEL[d], (d) => kind === "daily" && daily[d].includes(date))}
+            </div>
 
-                {board}
-                {slot?.solved && <p className="sky-name">{constellation(slot.puzzle.seed).name}</p>}
-                <p className="notice" aria-live="polite">
-                    {notice}
-                </p>
+            <div className="bar">
+                {tool(paused ? "Resume" : "Pause", paused ? Play : Pause, () => setPaused((p) => !p), { disabled: !slot || slot.solved })}
+                {settings.showTimer && slot && <span className="time">{time(slot.seconds)}</span>}
+                <span className="grow" />
+                {slot?.solved && (
+                    <button className="btn" onClick={() => setDialog("done")}>
+                        Summary
+                    </button>
+                )}
+                {kind === "classic" && (
+                    <button className="btn primary" onClick={newPuzzle}>
+                        New puzzle
+                    </button>
+                )}
+            </div>
 
-                <div className="tools">
-                    {tool("Undo", Undo2, back, { disabled: !live || !g?.past.length })}
-                    {tool("Redo", Redo2, forward, { disabled: !live || !g?.future.length })}
-                    {tool("Erase", Eraser, clear)}
-                    {tool("Notes", Pencil, () => setNoteMode((m) => !m), { pressed: noteMode, disabled: false })}
-                    {tool("Auto", Sparkles, toggleAuto, { pressed: !!slot?.auto })}
-                    {tool("Hint", Lightbulb, hint)}
-                    <div
-                        className="check"
-                        onBlur={(e) => !e.currentTarget.contains(e.relatedTarget) && setCheckMenu(false)}
-                        onKeyDown={(e) => e.key === "Escape" && setCheckMenu(false)}
-                    >
-                        {tool("Check", CheckCheck, () => setCheckMenu((m) => !m), { pressed: checkMenu })}
-                        {checkMenu && (
-                            <div className="check-menu">
-                                <button onClick={checkCell}>Check cell</button>
-                                <button onClick={checkPuzzle}>Check puzzle</button>
-                            </div>
-                        )}
-                    </div>
-                    {tool("Lens", Focus, () => setLens((l) => !l), { pressed: lens, disabled: false })}
-                </div>
-
-                <div className={`pad${noteMode ? " noting" : ""}`} role="group" aria-label={noteMode ? "Notes" : "Digits"}>
-                    {Array.from({ length: 9 }, (_, k) => k + 1).map((d) => (
-                        <button
-                            key={d}
-                            className={left[d] <= 0 ? "spent" : undefined}
-                            aria-label={`${noteMode ? "Note" : "Place"} ${d}, ${Math.max(0, left[d])} left`}
-                            onClick={() => input(d)}
-                        >
-                            <span className="pad-digit">{d}</span>
-                            <span className="pad-left" aria-hidden>
-                                {Math.max(0, left[d])}
-                            </span>
-                        </button>
+            <div className="board-frame">
+                <div
+                    ref={boardRef}
+                    role="grid"
+                    aria-label="Sudoku board"
+                    aria-busy={!g}
+                    inert={paused || !g}
+                    className={`board${paused ? " veiled" : ""}${g ? "" : " loading"}`}
+                >
+                    {Array.from({ length: 9 }, (_, r) => (
+                        <div role="row" key={r} className="board-row">
+                            {Array.from({ length: 9 }, (_, c) => {
+                                const i = r * 9 + c;
+                                const v = vals[i] ?? 0;
+                                const given = !!g?.givens[i];
+                                const hinted = !!g?.hinted.includes(i);
+                                const notes = g?.notes[i] ?? 0;
+                                const wrong = !!v && slot?.marks[i] === v;
+                                const conflict = clash.has(i);
+                                const same = settings.sameDigits && !!v && v === selDigit && i !== selected;
+                                const label = [
+                                    `Row ${r + 1}, column ${c + 1}`,
+                                    v ? `${v}${given ? ", given" : hinted ? ", hint" : ""}` : "empty",
+                                    notes ? `notes ${digitsOf(notes).join(" ")}` : "",
+                                    conflict ? "conflict" : "",
+                                    wrong ? "incorrect" : "",
+                                ]
+                                    .filter(Boolean)
+                                    .join(", ");
+                                return (
+                                    <button
+                                        key={i}
+                                        ref={(el) => {
+                                            cellRefs.current[i] = el;
+                                        }}
+                                        role="gridcell"
+                                        aria-label={label}
+                                        aria-selected={i === selected}
+                                        tabIndex={i === selected ? 0 : -1}
+                                        onClick={() => go(i)}
+                                        onFocus={() => setSelected(i)}
+                                        className={[
+                                            "cell",
+                                            given ? "given" : hinted ? "hinted" : v ? "entry" : "",
+                                            i === selected && "selected",
+                                            i !== selected && sameBand(i) && "band",
+                                            same && "same",
+                                            conflict && "conflict",
+                                            wrong && "wrong",
+                                            holdable && !holdable[i] && "dim",
+                                            c % 3 === 2 && c < 8 && "edge-r",
+                                            r % 3 === 2 && r < 8 && "edge-b",
+                                        ]
+                                            .filter(Boolean)
+                                            .join(" ")}
+                                    >
+                                        {v ? (
+                                            <span className="digit">{v}</span>
+                                        ) : notes ? (
+                                            <span className="notes" aria-hidden>
+                                                {Array.from({ length: 9 }, (_, k) => (
+                                                    <span key={k} className={notes & (1 << k) && k + 1 === lensDigit ? "hot" : undefined}>
+                                                        {notes & (1 << k) ? k + 1 : ""}
+                                                    </span>
+                                                ))}
+                                            </span>
+                                        ) : null}
+                                    </button>
+                                );
+                            })}
+                        </div>
                     ))}
                 </div>
-                <p className="keys">
-                    Keys: 1–9 to place, Shift+digit for a note, arrows or WASD to move, Space or N for notes, Backspace to erase,
-                    Ctrl+Z to undo.
-                </p>
+                {paused && g && (
+                    <div className="cover">
+                        <button className="btn primary" onClick={() => setPaused(false)} autoFocus>
+                            Resume
+                        </button>
+                    </div>
+                )}
+            </div>
+
+            <p className="notice" aria-live="polite">
+                {notice}
+            </p>
+
+            <div className="tools">
+                {tool("Undo", Undo2, back, { disabled: !live || !g?.past.length })}
+                {tool("Redo", Redo2, forward, { disabled: !live || !g?.future.length })}
+                {tool("Erase", Eraser, clear)}
+                {tool("Notes", Pencil, () => setNoteMode((m) => !m), { pressed: noteMode, disabled: false })}
+                {tool("Auto notes", Sparkles, toggleAuto, { pressed: !!g?.auto })}
+                {tool("Hint", Lightbulb, hint)}
+                <div
+                    className="check"
+                    onBlur={(e) => !e.currentTarget.contains(e.relatedTarget) && setCheckMenu(false)}
+                    onKeyDown={(e) => e.key === "Escape" && setCheckMenu(false)}
+                >
+                    {tool("Check", CheckCheck, () => setCheckMenu((m) => !m), { pressed: checkMenu })}
+                    {checkMenu && (
+                        <div className="menu">
+                            <button onClick={checkCell}>Check cell</button>
+                            <button onClick={checkPuzzle}>Check puzzle</button>
+                        </div>
+                    )}
+                </div>
+                {tool("Lens", Focus, () => setLens((l) => !l), { pressed: lens, disabled: false })}
+            </div>
+
+            <div className={`pad${noteMode ? " noting" : ""}`} role="group" aria-label={noteMode ? "Notes" : "Digits"}>
+                {Array.from({ length: 9 }, (_, k) => k + 1).map((d) => (
+                    <button
+                        key={d}
+                        className={left[d] <= 0 ? "spent" : undefined}
+                        aria-label={`${noteMode ? "Note" : "Place"} ${d}, ${Math.max(0, left[d])} left`}
+                        onClick={() => input(d)}
+                    >
+                        {d}
+                    </button>
+                ))}
             </div>
 
             <SettingsDialog open={dialog === "settings"} onClose={() => setDialog(null)} settings={settings} onChange={updateSettings} />
             <StatsDialog open={dialog === "stats"} onClose={() => setDialog(null)} stats={stats} daily={daily} date={date} />
-            <ChartDialog open={dialog === "chart"} onClose={() => setDialog(null)} entries={chart} />
             {slot?.solved && (
-                <DoneDialog
-                    open={dialog === "done"}
-                    onClose={() => setDialog(null)}
-                    slot={slot}
-                    saved={chart.some((e) => e.key === `${slot.key}:${slot.puzzle.seed}`)}
-                    onSave={saveToChart}
-                    onNext={slot.kind === "classic" ? newPuzzle : undefined}
-                />
+                <DoneDialog open={dialog === "done"} onClose={() => setDialog(null)} slot={slot} onNext={slot.kind === "classic" ? newPuzzle : undefined} />
             )}
         </div>
     );
@@ -598,5 +484,5 @@ const noop = () => () => {};
 export default function Sudoku() {
     // localStorage and Workers only exist in the browser, so the game mounts there.
     const mounted = useSyncExternalStore(noop, () => true, () => false);
-    return mounted ? <Lumen /> : <div className="lumen-page" data-theme="system" />;
+    return mounted ? <Game /> : <div className="sudoku" />;
 }

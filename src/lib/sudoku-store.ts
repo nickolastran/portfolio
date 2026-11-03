@@ -1,4 +1,4 @@
-// Everything Lumen Sudoku keeps between visits, in localStorage. Reads fall
+// Everything Sudoku keeps between visits, in localStorage. Reads fall
 // back to defaults when storage is empty, corrupt, or blocked.
 import type { generate } from "./sudoku.mjs";
 import type { createGame } from "./sudoku-game.mjs";
@@ -14,7 +14,6 @@ export type Slot = {
     puzzle: Puzzle;
     game: Game;
     seconds: number;
-    auto: boolean;
     /* Technique id per hint, or "solution" when logic had nothing. */
     hints: string[];
     /* Cells marked wrong by Check, with the digit that was wrong. */
@@ -25,7 +24,6 @@ export type Slot = {
 };
 
 export type Settings = {
-    theme: "system" | "night" | "dawn";
     conflicts: boolean;
     autoRemove: boolean;
     sameDigits: boolean;
@@ -35,10 +33,8 @@ export type Settings = {
 };
 
 export type TierStats = { played: number; wins: number; best: number | null; total: number; streak: number; longest: number };
-export type ChartEntry = { key: string; seed: number; name: string; difficulty: Difficulty; date: string; seconds: number };
 
 export const DEFAULT_SETTINGS: Settings = {
-    theme: "system",
     conflicts: true,
     autoRemove: true,
     sameDigits: true,
@@ -49,6 +45,15 @@ export const DEFAULT_SETTINGS: Settings = {
 const EMPTY_TIER: TierStats = { played: 0, wins: 0, best: null, total: 0, streak: 0, longest: 0 };
 export const LEVELS: Difficulty[] = ["easy", "medium", "hard", "expert"];
 const perTier = <T>(make: () => T) => Object.fromEntries(LEVELS.map((d) => [d, make()])) as Record<Difficulty, T>;
+
+// ponytail: one-time move off the old "lumen-" keys; delete once old saves are gone.
+try {
+    for (const key of Object.keys(localStorage))
+        if (key.startsWith("lumen-")) {
+            if (key !== "lumen-chart") localStorage.setItem(key.replace("lumen-", "sudoku-"), localStorage.getItem(key)!);
+            localStorage.removeItem(key);
+        }
+} catch {}
 
 function read<T>(key: string, fallback: T): T {
     try {
@@ -65,37 +70,34 @@ function write(key: string, value: unknown) {
     } catch {}
 }
 
-export const loadSettings = () => read("lumen-settings", DEFAULT_SETTINGS);
-export const saveSettings = (s: Settings) => write("lumen-settings", s);
+export const loadSettings = () => read("sudoku-settings", DEFAULT_SETTINGS);
+export const saveSettings = (s: Settings) => write("sudoku-settings", s);
 
-export const loadStats = () => read("lumen-stats", perTier(() => EMPTY_TIER));
-export const saveStats = (s: Record<Difficulty, TierStats>) => write("lumen-stats", s);
+export const loadStats = () => read("sudoku-stats", perTier(() => EMPTY_TIER));
+export const saveStats = (s: Record<Difficulty, TierStats>) => write("sudoku-stats", s);
 
 /* Dates each tier's daily was solved, "YYYY-MM-DD". */
-export const loadDaily = () => read("lumen-daily", perTier((): string[] => []));
-export const saveDaily = (d: Record<Difficulty, string[]>) => write("lumen-daily", d);
+export const loadDaily = () => read("sudoku-daily", perTier((): string[] => []));
+export const saveDaily = (d: Record<Difficulty, string[]>) => write("sudoku-daily", d);
 
-export const loadChart = () => read<{ entries: ChartEntry[] }>("lumen-chart", { entries: [] }).entries;
-export const saveChart = (entries: ChartEntry[]) => write("lumen-chart", { entries });
-
-export const loadSeen = () => read<{ ids: string[] }>("lumen-seen", { ids: [] }).ids;
-export const saveSeen = (ids: string[]) => write("lumen-seen", { ids });
+export const loadSeen = () => read<{ ids: string[] }>("sudoku-seen", { ids: [] }).ids;
+export const saveSeen = (ids: string[]) => write("sudoku-seen", { ids });
 
 /* One ready-made puzzle per tier, so "New puzzle" never waits. */
-export const loadPool = () => read<Partial<Record<Difficulty, Puzzle>>>("lumen-pool", {});
-export const savePool = (p: Partial<Record<Difficulty, Puzzle>>) => write("lumen-pool", p);
+export const loadPool = () => read<Partial<Record<Difficulty, Puzzle>>>("sudoku-pool", {});
+export const savePool = (p: Partial<Record<Difficulty, Puzzle>>) => write("sudoku-pool", p);
 
-export const loadSlot = (key: string) => read<Slot | null>(`lumen-slot:${key}`, null);
-export const saveSlot = (slot: Slot) => write(`lumen-slot:${slot.key}`, slot);
+export const loadSlot = (key: string) => read<Slot | null>(`sudoku-slot:${key}`, null);
+export const saveSlot = (slot: Slot) => write(`sudoku-slot:${slot.key}`, slot);
 
-export const loadLast = () => read<{ kind: Slot["kind"]; difficulty: Difficulty }>("lumen-last", { kind: "daily", difficulty: "easy" });
-export const saveLast = (kind: Slot["kind"], difficulty: Difficulty) => write("lumen-last", { kind, difficulty });
+export const loadLast = () => read<{ kind: Slot["kind"]; difficulty: Difficulty }>("sudoku-last", { kind: "daily", difficulty: "easy" });
+export const saveLast = (kind: Slot["kind"], difficulty: Difficulty) => write("sudoku-last", { kind, difficulty });
 
 /** Yesterday's (and older) dailies can't be finished, so they're dropped. */
 export function pruneDailies(today: string) {
     try {
         for (const key of Object.keys(localStorage))
-            if (key.startsWith("lumen-slot:daily-") && !key.startsWith(`lumen-slot:daily-${today}`)) localStorage.removeItem(key);
+            if (key.startsWith("sudoku-slot:daily-") && !key.startsWith(`sudoku-slot:daily-${today}`)) localStorage.removeItem(key);
     } catch {}
 }
 

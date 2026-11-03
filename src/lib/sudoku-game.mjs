@@ -1,7 +1,7 @@
 // Board state for a game in progress: digits, pencil marks, hint locks, and an
 // undo/redo history of all three. Every action returns a new game object and
 // leaves the old one alone, so React state and saved JSON both just work.
-import { bit, candidates, hashSeed, mulberry32, PEERS, UNITS } from "./sudoku.mjs";
+import { bit, candidates, PEERS, UNITS } from "./sudoku.mjs";
 
 export function createGame(puzzle, solution) {
     return {
@@ -10,13 +10,17 @@ export function createGame(puzzle, solution) {
         values: puzzle.slice(),
         notes: Array(81).fill(0),
         hinted: /** @type {number[]} */ ([]),
-        past: /** @type {{ values: number[], notes: number[], hinted: number[] }[]} */ ([]),
-        future: /** @type {{ values: number[], notes: number[], hinted: number[] }[]} */ ([]),
+        /* Auto notes on, and the notes you had before turning them on. */
+        auto: false,
+        manual: Array(81).fill(0),
+        past: /** @type {Snapshot[]} */ ([]),
+        future: /** @type {Snapshot[]} */ ([]),
         mistakes: 0,
     };
 }
 
-const snapshot = (g) => ({ values: g.values, notes: g.notes, hinted: g.hinted });
+/** @typedef {{ values: number[], notes: number[], hinted: number[], auto: boolean, manual: number[] }} Snapshot */
+const snapshot = (g) => ({ values: g.values, notes: g.notes, hinted: g.hinted, auto: g.auto, manual: g.manual });
 const commit = (g, next) => ({ ...g, ...next, past: [...g.past, snapshot(g)], future: [] });
 
 export const isLocked = (g, cell) => g.givens[cell] !== 0 || g.hinted.includes(cell);
@@ -30,14 +34,14 @@ const without = (notes, cell, d) => {
 
 /**
  * Puts `d` in `cell`, or clears it if it's already there. With `autoRemove`
- * (or auto-candidates on) the digit leaves the notes of every peer.
+ * (or auto notes on) the digit leaves the notes of every peer.
  */
-export function place(g, cell, d, { autoRemove = true, auto = false } = {}) {
+export function place(g, cell, d, { autoRemove = true } = {}) {
     if (isLocked(g, cell)) return g;
-    if (g.values[cell] === d) return erase(g, cell, { auto });
+    if (g.values[cell] === d) return erase(g, cell);
     const values = g.values.slice();
     values[cell] = d;
-    const notes = autoRemove || auto ? without(g.notes, cell, d) : g.notes.slice();
+    const notes = autoRemove || g.auto ? without(g.notes, cell, d) : g.notes.slice();
     notes[cell] = 0;
     return { ...commit(g, { values, notes }), mistakes: g.mistakes + (d !== g.solution[cell]) };
 }
@@ -50,17 +54,17 @@ export function toggleNote(g, cell, d) {
 }
 
 /**
- * Clears a digit, else the notes. With auto-candidates on, the cell gets its
+ * Clears a digit, else the notes. With auto notes on, the cell gets its
  * candidates back, and so does every peer the digit was blocking.
  */
-export function erase(g, cell, { auto = false } = {}) {
+export function erase(g, cell) {
     if (isLocked(g, cell)) return g;
     const d = g.values[cell];
     if (!d) return g.notes[cell] ? commit(g, { notes: Object.assign(g.notes.slice(), { [cell]: 0 }) }) : g;
     const values = g.values.slice();
     values[cell] = 0;
     const notes = g.notes.slice();
-    if (auto) {
+    if (g.auto) {
         const legal = candidates(values);
         notes[cell] = legal[cell];
         for (const p of PEERS[cell]) if (legal[p] & bit(d)) notes[p] |= bit(d);
@@ -68,8 +72,17 @@ export function erase(g, cell, { auto = false } = {}) {
     return commit(g, { values, notes });
 }
 
-/** Auto-candidates: every empty cell gets exactly its legal digits. */
-export const fillCandidates = (g) => commit(g, { notes: candidates(g.values) });
+/**
+ * Auto notes, like the NYT's auto-candidate mode. On: every empty cell gets its
+ * legal digits, kept in step as you play, and you can still add or remove
+ * notes by hand. Off: your own notes come back, minus any now ruled out.
+ */
+export function setAuto(g, on) {
+    if (!!g.auto === on) return g;
+    const legal = candidates(g.values);
+    if (on) return commit(g, { auto: true, manual: g.notes, notes: legal });
+    return commit(g, { auto: false, notes: (g.manual ?? g.notes).map((n, i) => n & legal[i]) });
+}
 
 /** A hint is a correct digit that then stays locked, like a given. */
 export function applyHint(g, cell, d) {
@@ -137,42 +150,4 @@ export function streaks(dates, today) {
     let current = 0;
     for (let d = have.has(dayNum(today)) ? dayNum(today) : dayNum(today) - 1; have.has(d); d--) current++;
     return { current, longest };
-}
-
-/* ---------- Constellations ---------- */
-
-const ADJ = ["Quiet", "Wandering", "Silver", "Lantern", "Hollow", "Drifting", "Ember", "Patient", "Northern", "Veiled", "Distant", "Gilded", "Sleeping", "Tidal", "Hidden", "Lucent"];
-const NOUN = ["Heron", "Kite", "Lyre", "Fox", "Compass", "Moth", "Anchor", "Crown", "Serpent", "Lamp", "Bell", "Archer", "Wren", "Key", "Whale", "Loom"];
-
-/**
- * The puzzle's own constellation: 6-9 stars, spread apart and joined by a
- * minimum spanning tree (plus maybe one loop), the way star maps draw them.
- * Stars sit on the grid's inner intersections, 1 to 8 in cell units, so they
- * never cover a digit.
- */
-export function constellation(seed) {
-    const rng = mulberry32(hashSeed(`stars:${seed}`));
-    const want = 6 + Math.floor(rng() * 4);
-    const stars = [];
-    for (let tries = 0; stars.length < want && tries < 500; tries++) {
-        const p = { x: 1 + Math.floor(rng() * 8), y: 1 + Math.floor(rng() * 8), mag: rng() };
-        if (stars.every((q) => Math.hypot(p.x - q.x, p.y - q.y) >= 2)) stars.push(p);
-    }
-    const dist = (a, b) => Math.hypot(stars[a].x - stars[b].x, stars[a].y - stars[b].y);
-    /** @type {[number, number][]} */
-    const edges = [];
-    const inTree = [0];
-    while (inTree.length < stars.length) {
-        /** @type {[number, number] | null} */
-        let best = null;
-        for (const a of inTree)
-            for (let b = 0; b < stars.length; b++)
-                if (!inTree.includes(b) && (!best || dist(a, b) < dist(best[0], best[1]))) best = [a, b];
-        if (!best) break;
-        edges.push(best);
-        inTree.push(best[1]);
-    }
-    if (rng() < 0.4 && stars.length > 3) edges.push([inTree.at(-1), inTree.at(-3)]);
-    const name = `The ${ADJ[Math.floor(rng() * ADJ.length)]} ${NOUN[Math.floor(rng() * NOUN.length)]}`;
-    return { name, stars, edges };
 }
