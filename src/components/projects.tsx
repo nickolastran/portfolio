@@ -40,6 +40,16 @@ function previewSrc(project: Project) {
 
 const projects: Project[] = [
     {
+        id: 11,
+        title: "PDFolio",
+        period: "Nov. 2026",
+        description:
+            "Self-hosted PDF toolkit to merge, split, convert, edit, sign, redact, and OCR, with every job run in an offline sandbox.",
+        tech: ["Python", "FastAPI", "TypeScript", "React", "PyMuPDF", "Sandboxing", "Playwright"],
+        github: "https://github.com/nickolastran/PDFolio",
+        image: "/projects/pdfolio.png",
+    },
+    {
         id: 10,
         title: "MLB Player Value",
         period: "Oct. 2026",
