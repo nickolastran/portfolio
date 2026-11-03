@@ -1,7 +1,7 @@
 // Board state for a game in progress: digits, pencil marks, hint locks, and an
 // undo/redo history of all three. Every action returns a new game object and
 // leaves the old one alone, so React state and saved JSON both just work.
-import { bit, candidates, PEERS, UNITS } from "./sudoku.mjs";
+import { bit, candidates, PEERS, UNITS } from "./engine.mjs";
 
 export function createGame(puzzle, solution) {
     return {

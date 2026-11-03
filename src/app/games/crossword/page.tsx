@@ -1,7 +1,7 @@
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 
-import Crossword from "../../../components/crossword";
+import Crossword from "../../../games/crossword/crossword";
 import { SECTION } from "../../../components/section-header";
 
 export const metadata = { title: "Crossword - Nickolas Tran" };

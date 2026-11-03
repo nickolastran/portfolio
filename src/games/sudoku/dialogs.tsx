@@ -1,9 +1,9 @@
 import { X } from "lucide-react";
 import { useEffect, useRef } from "react";
 
-import { TECHNIQUES } from "../lib/sudoku.mjs";
-import { streaks } from "../lib/sudoku-game.mjs";
-import { type Difficulty, LEVELS, type Settings, type Slot, type TierStats, time } from "../lib/sudoku-store";
+import { TECHNIQUES } from "./engine.mjs";
+import { streaks } from "./game.mjs";
+import { type Difficulty, LEVELS, type Settings, type Slot, type TierStats, time } from "./store";
 
 type Id = keyof typeof TECHNIQUES;
 export const LABEL: Record<Difficulty, string> = { easy: "Easy", medium: "Medium", hard: "Hard", expert: "Expert" };

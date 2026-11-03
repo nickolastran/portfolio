@@ -1,4 +1,4 @@
-import Blocks from "../../../components/blocks";
+import Blocks from "../../../games/blocks/blocks";
 
 export const metadata = { title: "Blocks - Nickolas Tran" };
 

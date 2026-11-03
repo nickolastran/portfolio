@@ -1,11 +1,11 @@
-// Run: node src/lib/sudoku.test.mjs
+// Run: node src/games/sudoku/engine.test.mjs
 // Checks the engine end to end: each technique fires on a position built to
 // need it, generated puzzles land in their tier with one solution, dailies are
 // deterministic, and the board state's undo/redo and note clean-up behave.
 import assert from "node:assert";
 
-import { ALL, bit, candidates, countSolutions, DIFFICULTIES, findHint, generate, hashSeed, next, PEERS, solve, TIERS } from "./sudoku.mjs";
-import { applyHint, conflicts, createGame, erase, place, redo, setAuto, streaks, toggleNote, undo } from "./sudoku-game.mjs";
+import { ALL, bit, candidates, countSolutions, DIFFICULTIES, findHint, generate, hashSeed, next, PEERS, solve, TIERS } from "./engine.mjs";
+import { applyHint, conflicts, createGame, erase, place, redo, setAuto, streaks, toggleNote, undo } from "./game.mjs";
 
 const at = (r, c) => r * 9 + c;
 const blank = () => ({ grid: Array(81).fill(0), cands: Array(81).fill(ALL) });

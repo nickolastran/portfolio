@@ -3,8 +3,8 @@
 import { CheckCheck, ChevronLeft, ChevronRight, Eye, Lightbulb } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 
-import { generate } from "../lib/crossword.mjs";
-import { cn } from "../lib/utils";
+import { generate } from "./engine.mjs";
+import { cn } from "../../lib/utils";
 
 type Mode = "easy" | "medium" | "hard";
 type Dir = "across" | "down";

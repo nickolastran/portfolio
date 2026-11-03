@@ -4,7 +4,7 @@ import { ChartColumn, CheckCheck, ChevronLeft, Eraser, Focus, Lightbulb, Pause, 
 import Link from "next/link";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
-import { boxOf, colOf, describeHint, digitsOf, findHint, hashSeed, rowOf } from "../lib/sudoku.mjs";
+import { boxOf, colOf, describeHint, digitsOf, findHint, hashSeed, rowOf } from "./engine.mjs";
 import {
     applyHint,
     completeUnits,
@@ -20,18 +20,18 @@ import {
     setAuto,
     toggleNote,
     undo,
-} from "../lib/sudoku-game.mjs";
-import { chime } from "../lib/sudoku-sound";
-import * as store from "../lib/sudoku-store";
-import { type Difficulty, type Game, LEVELS, type Puzzle, type Slot, time } from "../lib/sudoku-store";
-import { DoneDialog, LABEL, SettingsDialog, StatsDialog } from "./sudoku-dialogs";
+} from "./game.mjs";
+import { chime } from "./sound";
+import * as store from "./store";
+import { type Difficulty, type Game, LEVELS, type Puzzle, type Slot, time } from "./store";
+import { DoneDialog, LABEL, SettingsDialog, StatsDialog } from "./dialogs";
 import "./sudoku.css";
 
 type Kind = Slot["kind"];
 
 function runWorker(difficulty: Difficulty, seed: number) {
     return new Promise<Puzzle>((resolve, reject) => {
-        const w = new Worker(new URL("../lib/sudoku-worker.mjs", import.meta.url), { type: "module" });
+        const w = new Worker(new URL("./worker.mjs", import.meta.url), { type: "module" });
         w.onmessage = (e) => {
             resolve(e.data);
             w.terminate();

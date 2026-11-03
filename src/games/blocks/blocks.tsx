@@ -4,8 +4,9 @@ import { ChevronLeft, RotateCcw, Trophy } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
-import { canMove, deal, dims, fits, place, randomPiece, SIZE } from "../lib/blocks.mjs";
-import { cn } from "../lib/utils";
+import { canMove, deal, dims, fits, place, randomPiece, SIZE } from "./engine.mjs";
+import { cn } from "../../lib/utils";
+import "./blocks.css";
 
 type Piece = ReturnType<typeof randomPiece>;
 type Game = { board: number[]; pieces: (Piece | null)[]; score: number };

@@ -1,7 +1,7 @@
-// Run: node src/lib/blocks.test.mjs
+// Run: node src/games/blocks/engine.test.mjs
 import assert from "node:assert";
 
-import { canMove, COLORS, deal, dims, fits, place, randomPiece, SIZE, solvable } from "./blocks.mjs";
+import { canMove, COLORS, deal, dims, fits, place, randomPiece, SIZE, solvable } from "./engine.mjs";
 
 const empty = () => Array(SIZE * SIZE).fill(0);
 const bar = { cells: [[0, 0], [0, 1], [0, 2], [0, 3]], color: 1 };
@@ -50,7 +50,11 @@ assert.equal(res.cleared.length, 0);
 
 // A row and a column filled by the same drop both clear: 15 squares, 2 lines.
 const cross = empty();
-for (let k = 0; k < SIZE; k++) if (k !== 5) (cross[5 * SIZE + k] = 4), (cross[k * SIZE + 5] = 4);
+for (let k = 0; k < SIZE; k++)
+    if (k !== 5) {
+        cross[5 * SIZE + k] = 4;
+        cross[k * SIZE + 5] = 4;
+    }
 res = place(cross, dot, 5, 5);
 assert.equal(res.cleared.length, 15);
 assert.equal(res.lines, 2);

@@ -1,4 +1,4 @@
-import Sudoku from "../../../components/sudoku";
+import Sudoku from "../../../games/sudoku/sudoku";
 
 export const metadata = { title: "Sudoku - Nickolas Tran" };
 

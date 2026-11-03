@@ -1,7 +1,7 @@
 // Everything Sudoku keeps between visits, in localStorage. Reads fall
 // back to defaults when storage is empty, corrupt, or blocked.
-import type { generate } from "./sudoku.mjs";
-import type { createGame } from "./sudoku-game.mjs";
+import type { generate } from "./engine.mjs";
+import type { createGame } from "./game.mjs";
 
 export type Difficulty = "easy" | "medium" | "hard" | "expert";
 export type Puzzle = Omit<ReturnType<typeof generate>, "difficulty"> & { difficulty: Difficulty };

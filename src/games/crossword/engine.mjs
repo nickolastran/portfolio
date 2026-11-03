@@ -1,7 +1,7 @@
 // Freeform crossword generator: every new word has to cross one already on the
 // board, the way you'd build a puzzle by hand on graph paper. Plain JS so the
 // check next to it runs under bare node.
-import { EASY, HARD } from "../constants/crossword-words.mjs";
+import { EASY, HARD } from "./words.mjs";
 
 export const MODES = {
     easy: { bank: EASY, count: 7, size: 9 },

@@ -3,91 +3,11 @@ import Link from "next/link";
 
 import BentoCard from "../../components/bento-card";
 import { SECTION } from "../../components/section-header";
+import BlocksBackdrop from "../../games/blocks/backdrop";
+import CrosswordBackdrop from "../../games/crossword/backdrop";
+import SudokuBackdrop from "../../games/sudoku/backdrop";
 
 export const metadata = { title: "Games - Nickolas Tran" };
-
-// A board mid-game for the Sudoku card: givens, a few of your entries, one
-// selected cell. 0 is empty.
-const PUZZLE = "530070000600195000098000060800060003400803001700020006060000280000419005000080079";
-const ENTRIES: Record<number, number> = { 2: 4, 11: 2, 20: 8, 30: 7 };
-const SELECTED = 21;
-
-function SudokuBackdrop() {
-    return (
-        <div
-            aria-hidden
-            className="pointer-events-none absolute -right-8 top-1/2 grid w-80 md:-right-12 md:w-[30rem] -translate-y-1/2 -rotate-6 grid-cols-3 gap-[2px] rounded-lg bg-neutral-600 p-[2px] opacity-40 transition-opacity duration-300 group-hover:opacity-70 [mask-image:linear-gradient(to_left,black_45%,transparent)]"
-        >
-            {Array.from({ length: 9 }, (_, b) => (
-                <div key={b} className="grid grid-cols-3 gap-px bg-neutral-800">
-                    {Array.from({ length: 9 }, (_, k) => {
-                        const i = (Math.floor(b / 3) * 3 + Math.floor(k / 3)) * 9 + (b % 3) * 3 + (k % 3);
-                        const given = Number(PUZZLE[i]);
-                        return (
-                            <span
-                                key={k}
-                                className={`grid aspect-square place-items-center text-lg md:text-2xl ${i === SELECTED ? "bg-blue-400/25" : "bg-neutral-900"} ${given ? "font-semibold text-neutral-200" : "text-blue-400"}`}
-                            >
-                                {given || ENTRIES[i] || ""}
-                            </span>
-                        );
-                    })}
-                </div>
-            ))}
-        </div>
-    );
-}
-
-// A crossword mid-solve: uppercase squares are filled, lowercase still empty,
-// "." is no square. PUZZLE is the active answer.
-const CROSSWORD = [".ACRoss.", "..L...e.", ".PUZzle.", "..E..e..", "....gaME", ".....f.."];
-const CLUES: Record<string, number> = { "0,1": 1, "0,2": 2, "0,6": 3, "2,1": 4, "2,5": 5, "4,4": 6 };
-
-function CrosswordBackdrop() {
-    return (
-        <div
-            aria-hidden
-            className="pointer-events-none absolute -right-6 -top-6 grid w-56 rotate-6 grid-cols-8 opacity-40 transition-opacity duration-300 group-hover:opacity-70 [mask-image:linear-gradient(to_left,black_45%,transparent)]"
-        >
-            {CROSSWORD.flatMap((row, r) =>
-                [...row].map((ch, c) =>
-                    ch === "." ? (
-                        <span key={`${r},${c}`} />
-                    ) : (
-                        <span
-                            key={`${r},${c}`}
-                            className={`relative grid aspect-square place-items-center text-sm font-medium text-neutral-200 shadow-[inset_1px_1px_0_#525252,1px_0_0_#525252,0_1px_0_#525252,1px_1px_0_#525252] ${r === 2 ? (c === 4 ? "bg-blue-400/30" : "bg-blue-400/15") : "bg-neutral-900"}`}
-                        >
-                            <span className="absolute left-[7%] top-[3%] text-[8px] leading-none text-neutral-500">{CLUES[`${r},${c}`]}</span>
-                            {ch === ch.toUpperCase() ? ch : ""}
-                        </span>
-                    ),
-                ),
-            )}
-        </div>
-    );
-}
-
-// A Blocks board mid-game: digits are block colors, 0 is empty.
-const BLOCKS = ["00000000", "00330000", "60330004", "66000044", "11105004", "77155550", "77122220", "00000000"];
-const BLOCK_COLORS = ["", "#f87171", "#fb923c", "#facc15", "#4ade80", "#22d3ee", "#60a5fa", "#c084fc"];
-
-function BlocksBackdrop() {
-    return (
-        <div
-            aria-hidden
-            className="pointer-events-none absolute -right-6 -top-6 grid w-56 rotate-6 grid-cols-8 gap-1 rounded-xl bg-neutral-950/60 p-1.5 opacity-50 transition-opacity duration-300 group-hover:opacity-80 [mask-image:linear-gradient(to_left,black_45%,transparent)]"
-        >
-            {[...BLOCKS.join("")].map((d, i) => (
-                <span
-                    key={i}
-                    className={`aspect-square rounded-[3px] ${d === "0" ? "bg-neutral-800/60" : "shadow-[inset_0_-2px_0_rgb(0_0_0/0.2)]"}`}
-                    style={d === "0" ? undefined : { backgroundColor: BLOCK_COLORS[+d] }}
-                />
-            ))}
-        </div>
-    );
-}
 
 const GAMES: { name: string; icon: typeof Type; className: string; href?: string; art?: React.ReactNode }[] = [
     { name: "Sudoku", icon: Grid3x3, className: "md:col-span-2 md:row-span-2", href: "/games/sudoku", art: <SudokuBackdrop /> },
