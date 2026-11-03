@@ -1,3 +1,4 @@
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { ImageIcon } from "lucide-react";
 import { Inter } from "next/font/google";
@@ -24,6 +25,9 @@ const SCHOOL = [
     { src: "/about/school3.png", caption: "UCSC VSA — Famolympics" },
     { src: "/about/school4.png", caption: "UCSC VSA — Retreat" },
 ];
+
+// three.js and the physics engine load only when this page does.
+const Lanyard = dynamic(() => import("../../components/lanyard"));
 
 const inter = Inter({ subsets: ["latin"], display: "swap" });
 
@@ -111,7 +115,11 @@ function Card({
 
 export default function About() {
     return (
-        <main className="min-h-screen">
+        <main className="relative min-h-screen overflow-hidden">
+            {/* The badge hangs over the top of the page; on phones it would cover the cards. */}
+            <div className="pointer-events-none absolute inset-x-0 top-0 z-20 hidden h-screen md:block">
+                <Lanyard />
+            </div>
             <section className={cn(SECTION, "max-w-7xl", inter.className)}>
                 <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">
                     About Me

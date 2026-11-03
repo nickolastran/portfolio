@@ -1,10 +1,10 @@
-// Run: node src/lib/crossword.test.mjs
+// Run: node src/games/crossword/engine.test.mjs
 // Generates a pile of puzzles and checks each one reads like a real crossword:
 // every run of 2+ letters on the board is an intended answer (no accidental
 // words from touching tiles), everything is connected, and it fits the size.
 import assert from "node:assert";
 
-import { generate, MODES } from "./crossword.mjs";
+import { generate, MODES } from "./engine.mjs";
 
 for (const mode of Object.keys(MODES)) {
     const { count, size } = MODES[mode];

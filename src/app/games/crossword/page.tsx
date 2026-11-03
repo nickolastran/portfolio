@@ -1,22 +1,26 @@
-import { Kalam } from "next/font/google";
+import { ChevronLeft } from "lucide-react";
+import Link from "next/link";
 
-import Crossword from "../../../components/crossword";
+import Crossword from "../../../games/crossword/crossword";
 import { SECTION } from "../../../components/section-header";
 
 export const metadata = { title: "Crossword - Nickolas Tran" };
 
-// Handwriting for the letters you fill in, so the board reads like pen on paper.
-const ink = Kalam({ weight: ["400", "700"], subsets: ["latin"], variable: "--font-ink" });
-
 export default function CrosswordPage() {
     return (
-        <main className={`${ink.variable} min-h-screen bg-white text-neutral-900`}>
+        <main className="min-h-screen">
             <section className={SECTION}>
-                <h1 className="text-3xl font-bold text-[#1c2a7a]">Crossword</h1>
-                <p className="mt-2 max-w-xl text-neutral-600">
-                    A new puzzle every time. Click a square and start typing. Click it again or press
-                    space to switch direction, and press tab for the next clue.
-                </p>
+                <header className="flex items-center">
+                    <Link
+                        href="/games"
+                        title="Games"
+                        aria-label="Back to games"
+                        className="-ml-3 grid size-10 place-items-center rounded-lg text-neutral-500 hover:bg-neutral-800/60 hover:text-neutral-200"
+                    >
+                        <ChevronLeft size={22} />
+                    </Link>
+                    <h1 className="text-2xl font-bold text-white">Crossword</h1>
+                </header>
                 <Crossword />
             </section>
         </main>

@@ -12,6 +12,12 @@
     --gh-empty: #262626;
 }
 
+/* Always reserve the scrollbar's space, so pages short enough not to scroll
+   don't shift sideways next to ones that do. */
+html {
+    scrollbar-gutter: stable;
+}
+
 body {
     @apply bg-neutral-50 text-neutral-800 dark:bg-neutral-950 dark:text-neutral-200;
     letter-spacing: -0.04em;

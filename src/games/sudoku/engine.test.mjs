@@ -1,11 +1,11 @@
-// Run: node src/lib/sudoku.test.mjs
+// Run: node src/games/sudoku/engine.test.mjs
 // Checks the engine end to end: each technique fires on a position built to
 // need it, generated puzzles land in their tier with one solution, dailies are
 // deterministic, and the board state's undo/redo and note clean-up behave.
 import assert from "node:assert";
 
-import { ALL, bit, countSolutions, DIFFICULTIES, findHint, generate, hashSeed, next, PEERS, solve, TIERS } from "./sudoku.mjs";
-import { applyHint, conflicts, constellation, createGame, erase, fillCandidates, place, redo, streaks, toggleNote, undo } from "./sudoku-game.mjs";
+import { ALL, bit, candidates, countSolutions, DIFFICULTIES, findHint, generate, hashSeed, next, PEERS, solve, TIERS } from "./engine.mjs";
+import { applyHint, conflicts, createGame, erase, place, redo, setAuto, streaks, toggleNote, undo } from "./game.mjs";
 
 const at = (r, c) => r * 9 + c;
 const blank = () => ({ grid: Array(81).fill(0), cands: Array(81).fill(ALL) });
@@ -128,7 +128,6 @@ assert.equal(countSolutions(Array(81).fill(0)), 2, "empty grid has many solution
 const seed = hashSeed("2026-10-07:hard");
 assert.deepEqual(generate("hard", seed).puzzle, generate("hard", seed).puzzle);
 assert.notDeepEqual(generate("hard", seed).puzzle, generate("hard", hashSeed("2026-10-08:hard")).puzzle);
-assert.deepEqual(constellation(seed), constellation(seed));
 
 /* ---------- Hints ---------- */
 
@@ -159,7 +158,7 @@ assert.deepEqual(constellation(seed), constellation(seed));
     assert.equal(place(g, given, 1), g);
 
     // Notes, then a placement that clears that digit from every peer.
-    g = fillCandidates(g);
+    g = setAuto(g, true);
     const peerWithD = PEERS[empty].find((c) => g.notes[c] & bit(d));
     assert.ok(peerWithD !== undefined, "some peer has the digit as a candidate");
     g = place(g, empty, d);
@@ -167,14 +166,39 @@ assert.deepEqual(constellation(seed), constellation(seed));
     assert.equal(g.notes[empty], 0);
     assert.equal(g.notes[peerWithD] & bit(d), 0, "placed digit leaves peers' notes");
 
-    // With auto-remove off the notes stay.
-    const kept = place(fillCandidates(createGame(p.puzzle, p.solution)), empty, d, { autoRemove: false });
-    assert.ok(kept.notes[peerWithD] & bit(d));
+    // With auto-remove off, hand-made notes stay.
+    const mine = toggleNote(createGame(p.puzzle, p.solution), peerWithD, d);
+    assert.ok(place(mine, empty, d, { autoRemove: false }).notes[peerWithD] & bit(d));
 
-    // Erasing with auto-candidates on puts the candidates back.
-    const back = erase(g, empty, { auto: true });
+    // Erasing with auto notes on puts the candidates back.
+    const back = erase(g, empty);
     assert.ok(back.notes[peerWithD] & bit(d));
     assert.ok(back.notes[empty] & bit(d));
+
+    // Auto notes: on fills candidates, hand edits still work, off restores
+    // your own notes (minus any a placed digit rules out), undo flips it back.
+    {
+        const other = PEERS[empty].find((c) => !p.puzzle[c] && c !== peerWithD);
+        const e = [1, 2, 3, 4, 5, 6, 7, 8, 9].find((x) => x !== d && candidates(p.puzzle)[other] & bit(x));
+        let a = toggleNote(toggleNote(createGame(p.puzzle, p.solution), other, d), other, e);
+        const own = a.notes.slice();
+        a = setAuto(a, true);
+        assert.equal(a.auto, true);
+        assert.deepEqual(a.notes, candidates(p.puzzle));
+        assert.equal(setAuto(a, true), a, "already on");
+        a = toggleNote(a, other, d);
+        assert.equal(a.notes[other] & bit(d), 0, "removed by hand");
+        a = toggleNote(a, other, d);
+        assert.ok(a.notes[other] & bit(d), "added back by hand");
+        a = place(a, empty, d);
+        a = setAuto(a, false);
+        assert.equal(a.auto, false);
+        assert.equal(a.notes[other], bit(e), "own notes back, placed digit ruled out");
+        assert.equal(own[other], bit(d) | bit(e));
+        a = undo(a);
+        assert.equal(a.auto, true);
+        assert.ok(a.notes.some((n, i) => n !== own[i]));
+    }
 
     // Undo/redo walks the full history, notes included.
     let h = createGame(p.puzzle, p.solution);

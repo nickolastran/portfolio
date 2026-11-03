@@ -4,12 +4,11 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { Gamepad2, Home, PartyPopper, User } from "lucide-react";
+import { Gamepad2, Home, User } from "lucide-react";
 
 const TABS = [
     { label: "Home", href: "/", icon: Home },
     { label: "About Me", href: "/about", icon: User },
-    { label: "Fun", href: "/fun", icon: PartyPopper },
     { label: "Games", href: "/games", icon: Gamepad2 },
 ];
 
