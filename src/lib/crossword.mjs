@@ -5,6 +5,8 @@ import { EASY, HARD } from "../constants/crossword-words.mjs";
 
 export const MODES = {
     easy: { bank: EASY, count: 7, size: 9 },
+    // Both banks: half everyday words, half longer ones with trickier clues.
+    medium: { bank: EASY + HARD, count: 10, size: 11 },
     hard: { bank: HARD, count: 14, size: 13 },
 };
 
@@ -12,6 +14,7 @@ const parse = (bank) =>
     bank
         .trim()
         .split("\n")
+        .filter((line) => line.trim())
         .map((line) => {
             const [answer, ...clue] = line.trim().split(" ");
             return { answer, clue: clue.join(" ") };

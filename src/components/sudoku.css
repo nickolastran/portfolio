@@ -1,5 +1,5 @@
 /* Sudoku. Neutral grays from the site, one accent for your own entries and
-   the selection. Scoped under .sudoku because crossword.css also styles .cell. */
+   the selection. */
 
 .sudoku,
 .sudoku-dialog {
@@ -192,7 +192,6 @@
     min-width: 0;
     border-right: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
-    box-shadow: none;
     transition: none;
 }
 
