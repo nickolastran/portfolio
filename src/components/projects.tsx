@@ -121,7 +121,7 @@ const projects: Project[] = [
         tech: ["Python", "sklearn", "Matplotlib", "PostgreSQL", "TypeScript", "Data Queries"],
         demo: "https://stat-sightline.vercel.app/",
         github: "https://github.com/nickolastran/stat-sightline",
-        image: "/projects/statsightline.png",
+        image: "/projects/stat-sightline.png",
         featured: true
     },
     {
