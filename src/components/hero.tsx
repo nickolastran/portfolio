@@ -174,22 +174,38 @@ function LocationCard() {
 }
 
 function SocialsCard() {
+    const [copied, setCopied] = useState(false);
+
+    // mailto opens the visitor's mail app, if they have one. Copy the address
+    // too, so it still works on machines with no mail app set up.
+    const copy = (address: string) =>
+        navigator.clipboard
+            ?.writeText(address)
+            .then(() => {
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+            })
+            .catch(() => {});
+
     return (
         <BentoCard delay={0.2}>
             <div className="grid grid-cols-2 gap-3 h-full content-center">
                 {PORTFOLIO.socials.map((link) => {
                     const Icon = SOCIAL_ICONS[link.label];
+                    const mail = link.href.startsWith("mailto:");
                     return (
                         <a
                             key={link.label}
                             href={link.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            // A mailto in a new tab just shows the address; in place it opens the mail app.
+                            {...(mail
+                                ? { onClick: () => copy(link.href.slice("mailto:".length)) }
+                                : { target: "_blank", rel: "noopener noreferrer" })}
                             className="flex flex-col items-center justify-center p-3 rounded-xl bg-neutral-100 dark:bg-white/5 hover:bg-neutral-200 dark:hover:bg-white/10 hover:scale-105 transition-all duration-300 group"
                         >
                             <Icon className="w-5 h-5 mb-2 text-neutral-600 dark:text-neutral-400 group-hover:text-black dark:group-hover:text-white transition-colors" />
-                            <span className="text-[10px] text-neutral-600 dark:text-neutral-500">
-                                {link.label}
+                            <span className="text-[10px] text-neutral-600 dark:text-neutral-500" aria-live={mail ? "polite" : undefined}>
+                                {mail && copied ? "Copied" : link.label}
                             </span>
                         </a>
                     );
