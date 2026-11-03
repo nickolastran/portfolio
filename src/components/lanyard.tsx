@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import {
     Canvas,
+    events,
     extend,
     useFrame,
     useThree,
@@ -35,6 +36,17 @@ const LANYARD_PNG = "/lanyard/lanyard.png";
 
 extend({ MeshLineGeometry, MeshLineMaterial });
 
+// ponytail: @react-three/rapier pins rapier 0.19.2, which starts its wasm the
+// old way and logs this on every load. 0.21 fixes the log but breaks the rope
+// joints, so mute just this line; delete once @react-three/rapier moves on.
+if (typeof window !== "undefined") {
+    const warn = console.warn;
+    console.warn = (...args: unknown[]) => {
+        if (String(args[0]).startsWith("using deprecated parameters for the initialization function")) return;
+        warn(...args);
+    };
+}
+
 declare module "@react-three/fiber" {
     interface ThreeElements {
         meshLineGeometry: ThreeElement<typeof MeshLineGeometry>;
@@ -49,6 +61,12 @@ export default function Lanyard({
     transparent = true,
 }) {
     const [isMobile, setIsMobile] = useState(false);
+    // Flipped straight on the canvas element: hover changes often, and a React
+    // re-render here would re-render the whole 3D scene each time.
+    const canvas = useRef<HTMLCanvasElement>(null);
+    const setActive = useCallback((on: boolean) => {
+        if (canvas.current) canvas.current.style.pointerEvents = on ? "auto" : "none";
+    }, []);
 
     useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -58,8 +76,28 @@ export default function Lanyard({
     }, []);
 
     return (
-        <div className="relative z-0 flex h-full w-full items-center justify-center">
+        // The canvas floats over the page but lets clicks through to it. It
+        // listens on the whole page, so it still sees the pointer, and only
+        // takes clicks itself while the badge is under the pointer.
+        <div className="pointer-events-none relative z-0 flex h-full w-full items-center justify-center">
             <Canvas
+                ref={canvas}
+                style={{ pointerEvents: "none" }}
+                eventSource={typeof document === "undefined" ? undefined : document.body}
+                // Locate the canvas at each pointer event rather than on every
+                // scroll, so scrolling the page never re-renders the scene.
+                resize={{ scroll: false }}
+                events={(store) => ({
+                    ...events(store),
+                    compute(event, state) {
+                        const rect = state.gl.domElement.getBoundingClientRect();
+                        state.pointer.set(
+                            ((event.clientX - rect.left) / rect.width) * 2 - 1,
+                            -((event.clientY - rect.top) / rect.height) * 2 + 1,
+                        );
+                        state.raycaster.setFromCamera(state.pointer, state.camera);
+                    },
+                })}
                 camera={{ position, fov }}
                 dpr={[1, isMobile ? 1.5 : 2]}
                 gl={{ alpha: transparent }}
@@ -69,7 +107,7 @@ export default function Lanyard({
             >
                 <ambientLight intensity={Math.PI} />
                 <Physics gravity={gravity} timeStep={isMobile ? 1 / 30 : 1 / 60}>
-                    <Band isMobile={isMobile} />
+                    <Band isMobile={isMobile} onActive={setActive} />
                 </Physics>
                 <Environment blur={0.75}>
                     <Lightformer
@@ -113,10 +151,13 @@ function Band({
     maxSpeed = 50,
     minSpeed = 0,
     isMobile = false,
+    onActive,
 }: {
     maxSpeed?: number;
     minSpeed?: number;
     isMobile?: boolean;
+    /** Called with true while the badge is hovered or held, so it can take clicks. */
+    onActive: (active: boolean) => void;
 }) {
     const band = useRef<THREE.Mesh & { geometry: MeshLineGeometry }>(null!);
     const fixed = useRef<RapierRigidBody>(null!);
@@ -169,6 +210,8 @@ function Band({
         [0, 0, 0],
         [0, 1.5, 0],
     ]);
+
+    useEffect(() => onActive(hovered || !!dragged), [onActive, hovered, dragged]);
 
     useEffect(() => {
         if (hovered) {
