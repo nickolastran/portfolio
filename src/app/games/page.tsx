@@ -68,10 +68,31 @@ function CrosswordBackdrop() {
     );
 }
 
+// A Blocks board mid-game: digits are block colors, 0 is empty.
+const BLOCKS = ["00000000", "00330000", "60330004", "66000044", "11105004", "77155550", "77122220", "00000000"];
+const BLOCK_COLORS = ["", "#f87171", "#fb923c", "#facc15", "#4ade80", "#22d3ee", "#60a5fa", "#c084fc"];
+
+function BlocksBackdrop() {
+    return (
+        <div
+            aria-hidden
+            className="pointer-events-none absolute -right-6 -top-6 grid w-56 rotate-6 grid-cols-8 gap-1 rounded-xl bg-neutral-950/60 p-1.5 opacity-50 transition-opacity duration-300 group-hover:opacity-80 [mask-image:linear-gradient(to_left,black_45%,transparent)]"
+        >
+            {[...BLOCKS.join("")].map((d, i) => (
+                <span
+                    key={i}
+                    className={`aspect-square rounded-[3px] ${d === "0" ? "bg-neutral-800/60" : "shadow-[inset_0_-2px_0_rgb(0_0_0/0.2)]"}`}
+                    style={d === "0" ? undefined : { backgroundColor: BLOCK_COLORS[+d] }}
+                />
+            ))}
+        </div>
+    );
+}
+
 const GAMES: { name: string; icon: typeof Type; className: string; href?: string; art?: React.ReactNode }[] = [
     { name: "Sudoku", icon: Grid3x3, className: "md:col-span-2 md:row-span-2", href: "/games/sudoku", art: <SudokuBackdrop /> },
     { name: "Crossword", icon: Type, className: "", href: "/games/crossword", art: <CrosswordBackdrop /> },
-    { name: "Block Blast", icon: Blocks, className: "" },
+    { name: "Blocks", icon: Blocks, className: "", href: "/games/blocks", art: <BlocksBackdrop /> },
     { name: "Tetris", icon: Gamepad2, className: "md:col-span-3" },
 ];
 
