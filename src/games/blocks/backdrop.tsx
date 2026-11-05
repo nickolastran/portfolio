@@ -1,6 +1,7 @@
-// A Blocks board mid-game: digits are block colors, 0 is empty.
+import { paint } from "../palette";
+
+// A Blocks board mid-game: digits are palette colors (x2, to spread them around the wheel), 0 is empty.
 const BLOCKS = ["00000000", "00330000", "60330004", "66000044", "11105004", "77155550", "77122220", "00000000"];
-const BLOCK_COLORS = ["", "#f87171", "#fb923c", "#facc15", "#4ade80", "#22d3ee", "#60a5fa", "#c084fc"];
 
 export default function BlocksBackdrop() {
     return (
@@ -12,7 +13,7 @@ export default function BlocksBackdrop() {
                 <span
                     key={i}
                     className={`aspect-square rounded-[3px] ${d === "0" ? "bg-neutral-800/60" : "shadow-[inset_0_-2px_0_rgb(0_0_0/0.2)]"}`}
-                    style={d === "0" ? undefined : { backgroundColor: BLOCK_COLORS[+d] }}
+                    style={d === "0" ? undefined : { backgroundColor: paint(+d * 2) }}
                 />
             ))}
         </div>

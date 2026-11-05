@@ -1,10 +1,13 @@
-import { Blocks, Gamepad2, Grid3x3, Type } from "lucide-react";
+import { ArrowDownToLine, Blocks, Bomb, Combine, Grid3x3, Type } from "lucide-react";
 import Link from "next/link";
 
 import BentoCard from "../../components/bento-card";
 import { SECTION } from "../../components/section-header";
 import BlocksBackdrop from "../../games/blocks/backdrop";
 import CrosswordBackdrop from "../../games/crossword/backdrop";
+import MergeBackdrop from "../../games/merge/backdrop";
+import StackBackdrop from "../../games/stack/backdrop";
+import MinesweeperBackdrop from "../../games/minesweeper/backdrop";
 import SudokuBackdrop from "../../games/sudoku/backdrop";
 
 export const metadata = { title: "Games - Nickolas Tran" };
@@ -13,7 +16,9 @@ const GAMES: { name: string; icon: typeof Type; className: string; href?: string
     { name: "Sudoku", icon: Grid3x3, className: "md:col-span-2 md:row-span-2", href: "/games/sudoku", art: <SudokuBackdrop /> },
     { name: "Crossword", icon: Type, className: "", href: "/games/crossword", art: <CrosswordBackdrop /> },
     { name: "Blocks", icon: Blocks, className: "", href: "/games/blocks", art: <BlocksBackdrop /> },
-    { name: "Tetris", icon: Gamepad2, className: "md:col-span-3" },
+    { name: "Minesweeper", icon: Bomb, className: "", href: "/games/minesweeper", art: <MinesweeperBackdrop /> },
+    { name: "Stack", icon: ArrowDownToLine, className: "", href: "/games/stack", art: <StackBackdrop /> },
+    { name: "Merge", icon: Combine, className: "", href: "/games/merge", art: <MergeBackdrop /> },
 ];
 
 export default function Games() {
