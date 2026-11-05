@@ -1,10 +1,11 @@
-import { Blocks, Bomb, Gamepad2, Grid3x3, Type } from "lucide-react";
+import { ArrowDownToLine, Blocks, Bomb, Grid3x3, Type } from "lucide-react";
 import Link from "next/link";
 
 import BentoCard from "../../components/bento-card";
 import { SECTION } from "../../components/section-header";
 import BlocksBackdrop from "../../games/blocks/backdrop";
 import CrosswordBackdrop from "../../games/crossword/backdrop";
+import StackBackdrop from "../../games/stack/backdrop";
 import MinesweeperBackdrop from "../../games/minesweeper/backdrop";
 import SudokuBackdrop from "../../games/sudoku/backdrop";
 
@@ -15,7 +16,7 @@ const GAMES: { name: string; icon: typeof Type; className: string; href?: string
     { name: "Crossword", icon: Type, className: "", href: "/games/crossword", art: <CrosswordBackdrop /> },
     { name: "Blocks", icon: Blocks, className: "", href: "/games/blocks", art: <BlocksBackdrop /> },
     { name: "Minesweeper", icon: Bomb, className: "", href: "/games/minesweeper", art: <MinesweeperBackdrop /> },
-    { name: "Tetris", icon: Gamepad2, className: "md:col-span-2" },
+    { name: "Stack", icon: ArrowDownToLine, className: "md:col-span-2", href: "/games/stack", art: <StackBackdrop /> },
 ];
 
 export default function Games() {

@@ -16,6 +16,7 @@ node src/games/sudoku/engine.test.mjs      # ~3 s
 node src/games/crossword/engine.test.mjs
 node src/games/blocks/engine.test.mjs
 node src/games/minesweeper/engine.test.mjs
+node src/games/stack/engine.test.mjs
 ```
 
 Adding a game: make the folder, add `src/app/games/<game>/page.tsx`, and add a card in `src/app/games/page.tsx`.
@@ -46,3 +47,7 @@ Drop pieces on an 8x8 board; full rows and columns clear. Three pieces per round
 ## Minesweeper
 
 Easy 9x9 with 10 mines, Medium 16x16 with 40, Hard 30x16 with 99. Mines are laid on the first click, never on or next to it, and only on boards that logic alone can clear from there, so there's never a forced guess (the engine solves each board before dealing it). Click to open, right-click or long-press to flag, click a number whose flags are all placed to open the rest around it. The flag button (or Space) swaps what a tap does. Arrows, Enter and F work too. Best time per difficulty.
+
+## Stack
+
+Blocks' shapes fall into an 8x16 well; full rows clear. Same colors and scoring as Blocks (a point per block, plus 10 x rows² per clear), and it gets faster every 10 lines. Arrows move and turn, Space drops, Esc pauses. On touch, drag to move, tap to turn, flick down to drop. It starts paused and pauses when you leave the tab. Borrows `randomPiece` and `dims` from `blocks/engine.mjs`.
