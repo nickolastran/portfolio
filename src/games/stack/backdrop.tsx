@@ -1,6 +1,7 @@
-// A Stack well mid-game: digits are shape colors, 0 is empty. The 3 near the top is falling.
+import { paint } from "../palette";
+
+// A Stack well mid-game: digits are palette colors (x2, to spread them around the wheel), 0 is empty. The 3 near the top is falling.
 const WELL = ["00033000", "00003000", "00000000", "00000000", "00000000", "60000004", "66000744", "11155774"];
-const paint = (n: number) => `oklch(${n % 2 ? 0.72 : 0.84} 0.16 ${n * 24})`;
 
 export default function StackBackdrop() {
     return (
@@ -12,7 +13,7 @@ export default function StackBackdrop() {
                 <span
                     key={i}
                     className={`aspect-square rounded-[3px] ${d === "0" ? "bg-neutral-800/60" : "shadow-[inset_0_-2px_0_rgb(0_0_0/0.2)]"}`}
-                    style={d === "0" ? undefined : { backgroundColor: paint(+d) }}
+                    style={d === "0" ? undefined : { backgroundColor: paint(+d * 2) }}
                 />
             ))}
         </div>

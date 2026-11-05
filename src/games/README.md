@@ -17,6 +17,7 @@ node src/games/crossword/engine.test.mjs
 node src/games/blocks/engine.test.mjs
 node src/games/minesweeper/engine.test.mjs
 node src/games/stack/engine.test.mjs
+node src/games/merge/engine.test.mjs
 ```
 
 Adding a game: make the folder, add `src/app/games/<game>/page.tsx`, and add a card in `src/app/games/page.tsx`.
@@ -51,3 +52,7 @@ Easy 9x9 with 10 mines, Medium 16x16 with 40, Hard 30x16 with 99. Mines are laid
 ## Stack
 
 Blocks' shapes fall into an 8x16 well; full rows clear. Same colors and scoring as Blocks (a point per block, plus 10 x rows² per clear), and it gets faster every 10 lines. Arrows move and turn, Space drops, Esc pauses. On touch, drag to move, tap to turn, flick down to drop. It starts paused and pauses when you leave the tab. Borrows `randomPiece` and `dims` from `blocks/engine.mjs`.
+
+## Merge
+
+Slide every tile one way on a 4x4 board; two equal tiles that meet become one worth double, and a new 2 (sometimes a 4) appears. Each tile merges once per move. Score is the sum of every merged tile; no end goal, just your best. Arrows or WASD, or swipe. Tiles keep their ids so they slide; `merge.css` holds the grow and pop.

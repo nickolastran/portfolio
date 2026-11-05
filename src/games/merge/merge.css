@@ -1,0 +1,29 @@
+/* A new tile grows in once the slide has finished. */
+.merge-in {
+    animation: merge-in 0.18s ease-out 0.1s both;
+}
+
+@keyframes merge-in {
+    from {
+        transform: scale(0);
+        opacity: 0;
+    }
+}
+
+/* A merged tile pops as it lands. */
+.merge-pop {
+    animation: merge-pop 0.2s ease-out 0.08s;
+}
+
+@keyframes merge-pop {
+    50% {
+        transform: scale(1.15);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .merge-in,
+    .merge-pop {
+        animation: none;
+    }
+}

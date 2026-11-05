@@ -6,15 +6,13 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 import { canMove, deal, dims, fits, place, randomPiece, SIZE } from "./engine.mjs";
 import { cn } from "../../lib/utils";
+import { paint } from "../palette";
 import "./blocks.css";
 
 type Piece = ReturnType<typeof randomPiece>;
 type Game = { board: number[]; pieces: (Piece | null)[]; score: number };
 type Spot = [number, number];
 
-// One color per shape: hues spread evenly around the wheel, alternating light
-// and dark so neighbors still read as different.
-const paint = (n: number) => `oklch(${n % 2 ? 0.72 : 0.84} 0.16 ${n * 24})`;
 const calm = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 type Flash = { id: number; colors: Record<number, number>; delays: Record<number, number>; color: number; points: number; lines: number; x: number; y: number };
 const GAME_KEY = "blocks-game";

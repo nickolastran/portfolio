@@ -6,6 +6,7 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 import { board, chord, FLAG, generate, HIDDEN, lost, MODES, OPEN, reveal, won } from "./engine.mjs";
 import { cn } from "../../lib/utils";
+import { paint } from "../palette";
 
 type Mode = keyof typeof MODES;
 type Board = ReturnType<typeof board>;
@@ -13,9 +14,13 @@ type Saved = { mines: number[]; shown: number[]; seconds: number };
 type Best = Record<Mode, number | null>;
 
 const NAMES: Record<Mode, string> = { easy: "Easy", medium: "Medium", hard: "Hard" };
-const NUM_COLORS = ["", "text-blue-400", "text-green-400", "text-red-400", "text-violet-400", "text-orange-400", "text-cyan-400", "text-pink-400", "text-neutral-300"];
+// The classic number hues (1 blue, 2 green, 3 red, 4 violet...) taken from the shared palette; 8 is gray.
+const NUM_COLORS = ["", paint(10), paint(6), paint(1), paint(13), paint(2), paint(8), paint(14), "#d4d4d4"];
 const BEST_KEY = "minesweeper-best";
 const ICON = "size-[55%]";
+// Status colors, from the same palette: red for flags and mines, green for a win.
+const RED = paint(1);
+const GREEN = paint(6);
 
 const time = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
 const calm = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -80,7 +85,7 @@ function Game({ mode, best, onWin, onNew }: { mode: Mode; best: number | null; o
         if (won(g, next)) {
             setShown(next.map((v, j) => (g.mines[j] ? FLAG : v)));
             onWin(seconds);
-            glow([{ boxShadow: "0 0 0 2px #4ade80, 0 0 48px #4ade80" }, { boxShadow: "0 0 0 0 transparent" }], 900);
+            glow([{ boxShadow: `0 0 0 2px ${GREEN}, 0 0 48px ${GREEN}` }, { boxShadow: "0 0 0 0 transparent" }], 900);
         } else {
             setShown(next);
             if (lost(g, next))
@@ -195,17 +200,17 @@ function Game({ mode, best, onWin, onNew }: { mode: Mode; best: number | null; o
                                     "grid size-[var(--cell)] place-items-center rounded-[4px] font-bold leading-none",
                                     s === OPEN
                                         ? mine
-                                            ? "bg-red-500 text-neutral-950"
-                                            : cn("bg-neutral-800/40", NUM_COLORS[n])
+                                            ? "text-neutral-950"
+                                            : "bg-neutral-800/40"
                                         : cn("bg-neutral-700 shadow-[inset_0_-3px_0_rgb(0_0_0/0.25)]", !over && "hover:bg-neutral-600"),
                                     cur === i && "ring-2 ring-inset ring-white/70",
                                 )}
-                                style={{ fontSize: "calc(var(--cell) * 0.55)" }}
+                                style={{ fontSize: "calc(var(--cell) * 0.55)", color: s === OPEN && !mine ? NUM_COLORS[n] : undefined, backgroundColor: s === OPEN && mine ? RED : undefined }}
                             >
                                 {s === OPEN ? (
                                     mine ? <Bomb className={ICON} /> : n || ""
                                 ) : s === FLAG ? (
-                                    dead && !mine ? <X className={cn(ICON, "text-red-400")} /> : <Flag className={cn(ICON, cleared ? "text-green-400" : "text-red-400")} />
+                                    dead && !mine ? <X className={ICON} color={RED} /> : <Flag className={ICON} color={cleared ? GREEN : RED} />
                                 ) : (
                                     dead && mine && <Bomb className={cn(ICON, "text-neutral-400")} />
                                 )}
@@ -234,8 +239,9 @@ function Game({ mode, best, onWin, onNew }: { mode: Mode; best: number | null; o
                             onClick={() => setFlagging((f) => !f)}
                             className={cn(
                                 "grid size-10 place-items-center rounded-lg",
-                                flagging ? "bg-red-400/15 text-red-400" : "text-neutral-500 hover:bg-neutral-800/60 hover:text-neutral-200",
+                                flagging ? "bg-neutral-800" : "text-neutral-500 hover:bg-neutral-800/60 hover:text-neutral-200",
                             )}
+                            style={flagging ? { color: RED } : undefined}
                         >
                             <Flag size={18} />
                         </button>

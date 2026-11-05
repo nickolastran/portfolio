@@ -7,13 +7,12 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { act, H, landing, newGame, speed, W } from "./engine.mjs";
 import { dims } from "../blocks/engine.mjs";
 import { cn } from "../../lib/utils";
+import { paint } from "../palette";
 
 type Piece = { cells: [number, number][]; color: number };
 type Game = { board: number[]; cur: { piece: Piece; r: number; c: number }; next: Piece; score: number; lines: number; cleared: number; over: boolean };
 type Action = "left" | "right" | "rotate" | "down" | "drop";
 
-// Same colors as Blocks: one per shape.
-const paint = (n: number) => `oklch(${n % 2 ? 0.72 : 0.84} 0.16 ${n * 24})`;
 const calm = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 const GAME_KEY = "stack-game";
 const BEST_KEY = "stack-best";

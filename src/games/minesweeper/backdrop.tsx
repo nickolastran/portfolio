@@ -1,6 +1,8 @@
+import { paint } from "../palette";
+
 // A Minesweeper board mid-game: # is hidden, F a flag, digits are open squares.
 const BOARD = ["##1000##", "#F1001F#", "##211122", "###1####", "1121####", "000F####", "0012####", "0001####"];
-const NUM_COLORS = ["", "#60a5fa", "#4ade80", "#f87171"];
+const NUM_COLORS = ["", paint(10), paint(6), paint(1)];
 
 export default function MinesweeperBackdrop() {
     return (
@@ -12,7 +14,7 @@ export default function MinesweeperBackdrop() {
                 <span
                     key={i}
                     className={`grid aspect-square place-items-center rounded-[3px] text-xs font-bold ${ch === "#" || ch === "F" ? "bg-neutral-700 shadow-[inset_0_-2px_0_rgb(0_0_0/0.25)]" : "bg-neutral-800/40"}`}
-                    style={{ color: ch === "F" ? "#f87171" : NUM_COLORS[+ch] }}
+                    style={{ color: ch === "F" ? paint(1) : NUM_COLORS[+ch] }}
                 >
                     {ch === "F" ? "⚑" : ch === "#" || ch === "0" ? "" : ch}
                 </span>
