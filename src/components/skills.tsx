@@ -93,6 +93,14 @@ export const techCategories: TechCategory[] = [
             name: "Framer Motion",
             logo: "https://cdn.worldvectorlogo.com/logos/framer-motion.svg",
           },
+          {
+            name: "Radix UI",
+            logo: "https://cdn.simpleicons.org/radixui/white",
+          },
+          {
+            name: "Three.js",
+            logo: "https://cdn.simpleicons.org/threedotjs/white",
+          },
         ],
       },
       {
@@ -139,6 +147,10 @@ export const techCategories: TechCategory[] = [
             logo: "https://cdn.simpleicons.org/flask/white",
           },
           {
+            name: "FastAPI",
+            logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/fastapi/fastapi-original.svg",
+          },
+          {
             name: "Plotly",
             logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/plotly/plotly-original.svg",
           },
@@ -176,6 +188,14 @@ export const techCategories: TechCategory[] = [
       {
         name: "Qlik Sense",
         logo: "https://cdn.simpleicons.org/qlik",
+      },
+      {
+        name: "Vitest",
+        logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vitest/vitest-original.svg",
+      },
+      {
+        name: "Playwright",
+        logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/playwright/playwright-original.svg",
       },
     ],
   },
