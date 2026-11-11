@@ -40,6 +40,29 @@ function previewSrc(project: Project) {
 
 const projects: Project[] = [
     {
+        id: 13,
+        title: "Umbra UI",
+        period: "Nov. 2026",
+        description:
+            "Dark-first React component library with 44 static, animated, and 3D components on one design-token system.",
+        tech: ["TypeScript", "React", "Radix UI", "Motion", "React Three Fiber", "MDX", "Vitest"],
+        github: "https://github.com/nickolastran/umbraui",
+        demo: "https://nickolastran.github.io/umbraui/",
+        image: "/projects/umbraui.png",
+        featured: true,
+    },
+    {
+        id: 12,
+        title: "EdgeCall",
+        period: "Nov. 2026",
+        description:
+            "Decision engine for MLB's 2026 ABS challenge system, worth about 0.9 wins a season over real players' calls.",
+        tech: ["Python", "TypeScript", "LightGBM", "Statcast", "Dynamic Programming", "REST API"],
+        github: "https://github.com/nickolastran/edgecall",
+        demo: "https://nickolastran.github.io/edgecall/",
+        image: "/projects/edgecall.png",
+    },
+    {
         id: 11,
         title: "PDFolio",
         period: "Nov. 2026",
