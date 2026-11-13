@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, SquareArrowOutUpRight } from "lucide-react";
 import { FaGithub } from "react-icons/fa";
@@ -9,8 +8,8 @@ import { FaGithub } from "react-icons/fa";
 import BentoCard from "./bento-card";
 import SectionHeader, { SECTION } from "./section-header";
 
-const VISIBLE_COUNT = 3;
-const PEEK = 90;
+const VISIBLE_COUNT = 6;
+const PEEK = 180;
 
 interface Project {
     id: number;
@@ -23,7 +22,7 @@ interface Project {
     /* Live site. Without one the demo button just points at the repo. */
     demo?: string;
     featured?: boolean;
-    /* Hover preview. Drop a file in /public and point at it, e.g.
+    /* Card header image. Drop a file in /public and point at it, e.g.
        image: "/projects/stat-sightline.png". Without one the card falls back
        to GitHub's own social-preview card for the repo. */
     image?: string;
@@ -190,54 +189,30 @@ const sortedProjects = [...projects].sort(
 const foldButton =
     "group/btn flex items-center gap-2 px-6 py-3 rounded-full bg-white/70 dark:bg-neutral-900/70 backdrop-blur-md border border-neutral-200 dark:border-white/10 text-neutral-800 dark:text-neutral-200 font-semibold text-sm shadow-md hover:shadow-lg hover:border-blue-500/50 hover:scale-105 transition-all duration-300 cursor-pointer";
 
-const iconLink =
-    "rounded-lg p-1.5 text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-white/10 dark:hover:text-white transition-colors";
+// Pure-CSS tooltip, shown while the parent icon link is hovered or focused.
+const tip =
+    "pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-neutral-900 px-2 py-1 text-[11px] font-medium text-white opacity-0 shadow-md transition-opacity group-hover/tip:opacity-100 group-focus-visible/tip:opacity-100 dark:bg-white dark:text-neutral-900";
 
-const PREVIEW_W = 280;
-const PREVIEW_H = 190;
+const iconLink =
+    "group/tip relative rounded-lg p-1.5 text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-white/10 dark:hover:text-white transition-colors";
 
 function ProjectCard({ project }: { project: Project }) {
     const [broken, setBroken] = useState(false);
-    const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
     const src = broken ? null : previewSrc(project);
 
-    // Offset from the cursor, clamped so the popup never leaves the viewport.
-    const track = (e: React.MouseEvent) =>
-        setPos({
-            x: Math.min(e.clientX + 20, window.innerWidth - PREVIEW_W - 12),
-            y: Math.min(e.clientY + 20, window.innerHeight - PREVIEW_H - 12),
-        });
-
     return (
-        <div
-            className="flex flex-col h-full gap-4"
-            onMouseMove={src ? track : undefined}
-            onMouseLeave={() => setPos(null)}
-        >
-            {/* Portal: the card clips its overflow, the popup must not be cut. */}
-            {src &&
-                pos &&
-                createPortal(
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.96 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.15 }}
-                        style={{ left: pos.x, top: pos.y, width: PREVIEW_W }}
-                        className="pointer-events-none fixed z-50 overflow-hidden rounded-xl border border-white/10 bg-neutral-900 shadow-2xl"
-                    >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                            src={src}
-                            alt=""
-                            onError={() => setBroken(true)}
-                            className="aspect-[2/1] w-full object-cover"
-                        />
-                        <p className="truncate px-3 py-2 text-center text-xs font-bold text-white">
-                            {project.title}
-                        </p>
-                    </motion.div>,
-                    document.body,
-                )}
+        <div className="flex flex-col h-full gap-4">
+            {/* Negative margins cancel the card's p-4 so the image sits flush. */}
+            {src && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                    src={src}
+                    alt={`${project.title} preview`}
+                    loading="lazy"
+                    onError={() => setBroken(true)}
+                    className="-mx-4 -mt-4 aspect-video w-[calc(100%+2rem)] max-w-none object-cover object-top border-b border-neutral-200 dark:border-white/5"
+                />
+            )}
             <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                     <div className="flex items-center gap-2">
@@ -265,6 +240,7 @@ function ProjectCard({ project }: { project: Project }) {
                             className={iconLink}
                         >
                             <SquareArrowOutUpRight className="h-4 w-4" />
+                            <span className={tip}>Demo</span>
                         </a>
                     )}
                     {project.github && (
@@ -276,6 +252,7 @@ function ProjectCard({ project }: { project: Project }) {
                             className={iconLink}
                         >
                             <FaGithub className="h-4 w-4" />
+                            <span className={tip}>Code</span>
                         </a>
                     )}
                 </div>
